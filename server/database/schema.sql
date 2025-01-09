@@ -18,32 +18,12 @@ CREATE SCHEMA IF NOT EXISTS `goat_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8
 USE `goat_db` ;
 
 -- -----------------------------------------------------
--- Table `goat_db`.`goat`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `goat_db`.`goat` (
-  `goat_id` INT NOT NULL AUTO_INCREMENT,
-  `lastname` VARCHAR(255) NOT NULL,
-  `firstname` VARCHAR(255) NOT NULL,
-  `born_at` DATE NOT NULL,
-  `email` VARCHAR(255) NOT NULL,
-  `password` VARCHAR(255) NOT NULL,
-  `picture` TEXT NOT NULL,
-  `presentation` TEXT NOT NULL,
-  `video` TEXT NULL DEFAULT NULL,
-  PRIMARY KEY (`goat_id`),
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
 -- Table `goat_db`.`main_tag`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `goat_db`.`main_tag` (
-  `main_tag_id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`main_tag_id`))
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -53,9 +33,29 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- Table `goat_db`.`sub_tag`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `goat_db`.`sub_tag` (
-  `sub_tag_id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL DEFAULT NULL,
-  PRIMARY KEY (`sub_tag_id`))
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `goat_db`.`goat`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `goat_db`.`goat` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `lastname` VARCHAR(255) NOT NULL,
+  `firstname` VARCHAR(255) NOT NULL,
+  `born_at` DATE NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `picture` VARCHAR(255) NOT NULL,
+  `presentation` TEXT NOT NULL,
+  `video` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -65,29 +65,25 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- Table `goat_db`.`advert`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `goat_db`.`advert` (
-  `advert_id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `description` TEXT NOT NULL,
   `goat_id` INT NULL DEFAULT NULL,
   `main_tag_id` INT NOT NULL,
   `sub_tag_id` INT NOT NULL,
-  PRIMARY KEY (`advert_id`),
-  UNIQUE INDEX `advert_id_UNIQUE` (`advert_id` ASC) VISIBLE,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `advert_id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_goat_id_idx` (`goat_id` ASC) VISIBLE,
   INDEX `fk_advert_main_tag1_idx` (`main_tag_id` ASC) VISIBLE,
   INDEX `fk_advert_sub_tag1_idx` (`sub_tag_id` ASC) VISIBLE,
-  CONSTRAINT `fk_goat_id`
-    FOREIGN KEY (`goat_id`)
-    REFERENCES `goat_db`.`goat` (`goat_id`),
   CONSTRAINT `fk_advert_main_tag1`
     FOREIGN KEY (`main_tag_id`)
-    REFERENCES `goat_db`.`main_tag` (`main_tag_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    REFERENCES `goat_db`.`main_tag` (`id`),
   CONSTRAINT `fk_advert_sub_tag1`
     FOREIGN KEY (`sub_tag_id`)
-    REFERENCES `goat_db`.`sub_tag` (`sub_tag_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `goat_db`.`sub_tag` (`id`),
+  CONSTRAINT `fk_goat_id`
+    FOREIGN KEY (`goat_id`)
+    REFERENCES `goat_db`.`goat` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -103,10 +99,10 @@ CREATE TABLE IF NOT EXISTS `goat_db`.`main_sub_tag` (
   INDEX `fk_sub_tag_id_idx` (`sub_tag_id` ASC) VISIBLE,
   CONSTRAINT `fk_main_tag_id`
     FOREIGN KEY (`main_tag_id`)
-    REFERENCES `goat_db`.`main_tag` (`main_tag_id`),
+    REFERENCES `goat_db`.`main_tag` (`id`),
   CONSTRAINT `fk_sub_tag_id`
     FOREIGN KEY (`sub_tag_id`)
-    REFERENCES `goat_db`.`sub_tag` (`sub_tag_id`))
+    REFERENCES `goat_db`.`sub_tag` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -116,23 +112,23 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- Table `goat_db`.`slot`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `goat_db`.`slot` (
-  `slot_id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `start_at` DATETIME NOT NULL,
-  `duration` TIME NOT NULL,
+  `duration` INT NOT NULL,
   `meet_link` VARCHAR(255) NOT NULL,
   `comment` TEXT NULL DEFAULT NULL,
   `advert_id` INT NOT NULL,
-  `goat_id` INT NULL,
-  PRIMARY KEY (`slot_id`),
+  `goat_id` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
   INDEX `fk_advert_id_idx` (`advert_id` ASC) VISIBLE,
   INDEX `fk_goat_id_idx` (`goat_id` ASC) VISIBLE,
   CONSTRAINT `fk_advert_id`
     FOREIGN KEY (`advert_id`)
-    REFERENCES `goat_db`.`advert` (`advert_id`)
+    REFERENCES `goat_db`.`advert` (`id`)
     ON DELETE CASCADE,
   CONSTRAINT `fk_slot_goat_id`
     FOREIGN KEY (`goat_id`)
-    REFERENCES `goat_db`.`goat` (`goat_id`))
+    REFERENCES `goat_db`.`goat` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -169,7 +165,7 @@ values
 
 insert into slot(start_at, duration, meet_link, comment, advert_id, goat_id)
 values
-  ("2025-02-21 18:00:00", "01:00:00", "https://meet.google.com/bje-qapy-ysj", "Je veux découvrir les secrets des carrés", 1, 2),
-  ("2025-08-21 12:00:00", "02:00:00", "https://meet.google.com/bje-qapy-ysj", "Il y aura beaucoup de sang ?", 2, 1);
+  ("2025-02-21 18:00:00", 60, "https://meet.google.com/bje-qapy-ysj", "Je veux découvrir les secrets des carrés", 1, 2),
+  ("2025-08-21 12:00:00", 120, "https://meet.google.com/bje-qapy-ysj", "Il y aura beaucoup de sang ?", 2, 1);
 
 
