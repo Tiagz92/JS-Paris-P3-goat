@@ -36,7 +36,6 @@ class AdvertSeeder extends AbstractSeeder {
         main_tag_id: randomMainTagId,
         sub_tag_id: randomSubTagId,
       };
-      console.log(fakeAdvert);
       this.insert(fakeAdvert);
     }
   }
