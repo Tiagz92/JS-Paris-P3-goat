@@ -1,3 +1,4 @@
+-- SQLBook: Code
 -- MySQL Workbench Forward Engineering
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
@@ -138,34 +139,163 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
-insert into goat(lastname, firstname, born_at, email, password, picture, presentation, video)
+insert into goat(id, lastname, firstname, born_at, email, password, picture, presentation, video)
 values
- ("Valjean", "Jean", "1984-01-01", "jean.valjean@mail.com", "123456", "https://www.zoologiste.com/images/xl/chevre.jpg", "Salut, moi c’est Jean, j’ai 24 ans et je suis étudiant en 2ème année en Histoire classique à Paris Sorbonne.", "https://www.youtube.com/watch?v=3wvatkyji1w"),
- ("Martin", "Julie", "1999-12-24", "julie.martin@mail.com", "abcd", "https://media.istockphoto.com/id/177369626/fr/photo/dr%C3%B4le-de-ch%C3%A8vre-envoie-sa-languette.jpg?s=612x612&w=0&k=20&c=qi4mhhIVM80vPLFztpO9ki0mO-6YwQXOifq72TyW7Tw=", "Hello, je suis Julie, j'aime la vie et manger.", NULL);
+ (1, "Valjean", "Jean", "1984-01-01", "jean.valjean@mail.com", "123456", "https://www.zoologiste.com/images/xl/chevre.jpg", "Salut, moi c’est Jean, j’ai 24 ans et je suis étudiant en 2ème année en Histoire classique à Paris Sorbonne.", "https://www.youtube.com/watch?v=3wvatkyji1w"),
+ (2, "Martin", "Julie", "1999-12-24", "julie.martin@mail.com", "abcd", "https://media.istockphoto.com/id/177369626/fr/photo/dr%C3%B4le-de-ch%C3%A8vre-envoie-sa-languette.jpg?s=612x612&w=0&k=20&c=qi4mhhIVM80vPLFztpO9ki0mO-6YwQXOifq72TyW7Tw=", "Hello, je suis Julie, j'aime la vie et manger.", NULL);
 
-insert into main_tag(name)
-values
-  ("Math"),
-  ("Histoire");
+INSERT INTO main_tag (name)
+VALUES
+  ('Maths'),
+  ('Français'),
+  ('Histoire géographie'),
+  ('Sciences'),
+  ('Langues'),
+  ('Culture'),
+  ('Musique'),
+  ('Art & design'),
+  ('Numérique'),
+  ('Développement personnel'),
+  ('Finance / Administratif'),
+  ('Sport'),
+  ('Santé / Bien-être'),
+  ('Voyage'),
+  ('Autres');
 
-insert into sub_tag(name)
-values
-  ("Géométrie"),
-  ("Révolution française");
+-- Insérer les sub_tags avec leurs main_tags correspondants
+INSERT INTO sub_tag (name, main_tag_id)
+VALUES
+  -- Maths
+  ('Géométrie', 1),
+  ('Algèbre', 1),
+  ('Statistiques et probabilités', 1),
+  ('Analyse', 1),
+  ('Arithmétique', 1),
+  ('Logique et raisonnement', 1),
+  ('Maths appliquées', 1),
 
-insert into advert(description, goat_id, main_tag_id, sub_tag_id)
-values
-  ("Découvrez les carrés, les triangles et toutes autres formes géométriques", 1, 1, 1),
-  ("Vive la révolution, vive la décapitation", 2, 2, 2);
+  -- Français
+  ('Grammaire', 2),
+  ('Conjugaison', 2),
+  ('Orthographe', 2),
+  ('Rédaction', 2),
+  ('Analyse littéraire', 2),
+  ('Littérature', 2),
+  ('Poésie', 2),
+  ('Prise de parole', 2),
 
-insert into main_sub_tag(main_tag_id, sub_tag_id)
-values
-  (1, 1),
-  (2, 2);
+  -- Histoire géographie
+  ('Histoire ancienne', 3),
+  ('Histoire moderne', 3),
+  ('Géopolitique', 3),
+  ('Cartographie', 3),
+  ('Enjeux environnementaux', 3),
+  ('Civilisations', 3),
+  ('Personnages historiques', 3),
+  ('Histoire locale', 3),
 
-insert into slot(start_at, duration, meet_link, comment, advert_id, goat_id)
-values
-  ("2025-02-21 18:00:00", 60, "https://meet.google.com/bje-qapy-ysj", "Je veux découvrir les secrets des carrés", 1, 2),
-  ("2025-08-21 12:00:00", 120, "https://meet.google.com/bje-qapy-ysj", "Il y aura beaucoup de sang ?", 2, 1);
+  -- Sciences
+  ('S.V.T.', 4),
+  ('Physique', 4),
+  ('Chimie', 4),
+  ('Sciences avancées', 4),
+  ('Ingénierie', 4),
+  ('Astronomie', 4),
+  ('Neurosciences', 4),
+
+  -- Langues
+  ('Anglais', 5),
+  ('Espagnol', 5),
+  ('Allemand', 5),
+  ('Portuguais', 5),
+  ('Italien', 5),
+  ('Chinois', 5),
+  ('Japonais', 5),
+  ('Coréen', 5),
+
+  -- Culture
+  ('Histoire de l’art', 6),
+  ('Cinéma et audiovisuel', 6),
+  ('Traditions et folklore', 6),
+  ('Mythologie et légendes', 6),
+  ('Sciences humaines', 6),
+  ('Philosophie', 6),
+  ('Médias et actualités', 6),
+
+  -- Musique
+  ('Solfège', 7),
+  ('Instruments', 7),
+  ('Chant', 7),
+  ('Composition', 7),
+  ('Musique électronique', 7),
+  ('Histoire de la musique', 7),
+  ('Genres musicaux', 7),
+
+  -- Art & design
+  ('Arts plastiques', 8),
+  ('Design graphique', 8),
+  ('Architecture', 8),
+  ('Sculpture', 8),
+  ('Photographie', 8),
+  ('Mode et textile', 8),
+
+  -- Numérique
+  ('Programmation', 9),
+  ('Création de sites web', 9),
+  ('Marketing digital', 9),
+  ('IA et machine learning', 9),
+  ('Cybersécurité', 9),
+  ('Logiciels informatiques', 9),
+  ('Analyse de données', 9),
+
+  -- Développement personnel
+  ('Gestion du temps', 10),
+  ('Communication', 10),
+  ('Leadership', 10),
+  ('Coaching de vie', 10),
+  ('Créativité', 10),
+
+  -- Finance / Administratif
+  ('Comptabilité', 11),
+  ('Épargne et investissement', 11),
+  ('Fiscalité et impôts', 11),
+  ('Gestion d’entreprise', 11),
+  ('Documents administratifs', 11),
+  ('Gestion des dettes et crédits', 11),
+  ('Création de budgets', 11),
+  ('Éducation financière', 11),
+
+  -- Sport
+  ('Musculation et fitness', 12),
+  ('Yoga et pilates', 12),
+  ('Préparation physique', 12),
+  ('Nutrition sportive', 12),
+  ('Équipements et techniques', 12),
+  ('Coaching', 12),
+
+  -- Santé / Bien-être
+  ('Nutrition', 13),
+  ('Méditation et relaxation', 13),
+  ('Santé mentale', 13),
+  ('Médecine douce', 13),
+  ('Premiers secours', 13),
+  ('Soins du corps', 13),
+  ('Sommeil', 13),
+  ('Gestes et postures', 13),
+
+  -- Voyage
+  ('Guides de voyage', 14),
+  ('Voyager pas cher', 14),
+  ('Voyager durablement', 14),
+  ('Cultures et traditions locales', 14),
+  ('Organisation et logistique', 14),
+  ('Conseils pour expatriés', 14),
+  ('Exploration insolite', 14),
+
+  -- Autres
+  ('Autres', 15);
+
+
+
 
 
