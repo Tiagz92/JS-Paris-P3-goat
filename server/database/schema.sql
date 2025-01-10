@@ -163,139 +163,266 @@ VALUES
   ('Autres');
 
 -- Insérer les sub_tags avec leurs main_tags correspondants
-INSERT INTO sub_tag (name, main_tag_id)
+INSERT INTO sub_tag (name)
 VALUES
   -- Maths
-  ('Géométrie', 1),
-  ('Algèbre', 1),
-  ('Statistiques et probabilités', 1),
-  ('Analyse', 1),
-  ('Arithmétique', 1),
-  ('Logique et raisonnement', 1),
-  ('Maths appliquées', 1),
+('Géométrie'),
+('Algèbre'),
+('Statistiques et probabilités'),
+('Analyse'),
+('Arithmétique'),
+('Logique et raisonnement'),
+('Maths appliquées'),
+
+-- Français
+('Grammaire'),
+('Conjugaison'),
+('Orthographe'),
+('Rédaction'),
+('Analyse littéraire'),
+('Littérature'),
+('Poésie'),
+('Prise de parole'),
+
+-- Histoire géographie
+('Histoire ancienne'),
+('Histoire moderne'),
+('Géopolitique'),
+('Cartographie'),
+('Enjeux environnementaux'),
+('Civilisations'),
+('Personnages historiques'),
+('Histoire locale'),
+
+-- Sciences
+('S.V.T.'),
+('Physique'),
+('Chimie'),
+('Sciences avancées'),
+('Ingénierie'),
+('Astronomie'),
+('Neurosciences'),
+
+-- Langues
+('Anglais'),
+('Espagnol'),
+('Allemand'),
+('Portuguais'),
+('Italien'),
+('Chinois'),
+('Japonais'),
+('Coréen'),
+
+-- Culture
+('Histoire de l’art'),
+('Cinéma et audiovisuel'),
+('Traditions et folklore'),
+('Mythologie et légendes'),
+('Sciences humaines'),
+('Philosophie'),
+('Médias et actualités'),
+
+-- Musique
+('Solfège'),
+('Instruments'),
+('Chant'),
+('Composition'),
+('Musique électronique'),
+('Histoire de la musique'),
+('Genres musicaux'),
+
+-- Art & design
+('Arts plastiques'),
+('Design graphique'),
+('Architecture'),
+('Sculpture'),
+('Photographie'),
+('Mode et textile'),
+
+-- Numérique
+('Programmation'),
+('Création de sites web'),
+('Marketing digital'),
+('IA et machine learning'),
+('Cybersécurité'),
+('Logiciels informatiques'),
+('Analyse de données'),
+
+-- Développement personnel
+('Gestion du temps'),
+('Communication'),
+('Leadership'),
+('Coaching de vie'),
+('Créativité'),
+
+-- Finance / Administratif
+('Comptabilité'),
+('Épargne et investissement'),
+('Fiscalité et impôts'),
+('Gestion d’entreprise'),
+('Documents administratifs'),
+('Gestion des dettes et crédits'),
+('Création de budgets'),
+('Éducation financière'),
+
+-- Sport
+('Musculation et fitness'),
+('Yoga et pilates'),
+('Préparation physique'),
+('Nutrition sportive'),
+('Équipements et techniques'),
+('Coaching'),
+
+-- Santé / Bien-être
+('Nutrition'),
+('Méditation et relaxation'),
+('Santé mentale'),
+('Médecine douce'),
+('Premiers secours'),
+('Soins du corps'),
+('Sommeil'),
+('Gestes et postures'),
+
+-- Voyage
+('Guides de voyage'),
+('Voyager pas cher'),
+('Voyager durablement'),
+('Cultures et traditions locales'),
+('Organisation et logistique'),
+('Conseils pour expatriés'),
+('Exploration insolite'),
+
+-- Autres
+('Autres');
+
+INSERT INTO main_sub_tag (main_tag_id, sub_tag_id)
+VALUES
+  -- Maths
+  (1, 1),
+  (1, 2),
+  (1, 3),
+  (1, 4),
+  (1, 5),
+  (1, 6),
+  (1, 7),
 
   -- Français
-  ('Grammaire', 2),
-  ('Conjugaison', 2),
-  ('Orthographe', 2),
-  ('Rédaction', 2),
-  ('Analyse littéraire', 2),
-  ('Littérature', 2),
-  ('Poésie', 2),
-  ('Prise de parole', 2),
+  (2, 8),
+  (2, 9),
+  (2, 10),
+  (2, 11),
+  (2, 12),
+  (2, 13),
+  (2, 14),
+  (2, 15),
 
   -- Histoire géographie
-  ('Histoire ancienne', 3),
-  ('Histoire moderne', 3),
-  ('Géopolitique', 3),
-  ('Cartographie', 3),
-  ('Enjeux environnementaux', 3),
-  ('Civilisations', 3),
-  ('Personnages historiques', 3),
-  ('Histoire locale', 3),
+  (3, 16),
+  (3, 17),
+  (3, 18),
+  (3, 19),
+  (3, 20),
+  (3, 21),
+  (3, 22),
+  (3, 23),
 
   -- Sciences
-  ('S.V.T.', 4),
-  ('Physique', 4),
-  ('Chimie', 4),
-  ('Sciences avancées', 4),
-  ('Ingénierie', 4),
-  ('Astronomie', 4),
-  ('Neurosciences', 4),
+  (4, 24),
+  (4, 25),
+  (4, 26),
+  (4, 27),
+  (4, 28),
+  (4, 29),
+  (4, 30),
 
   -- Langues
-  ('Anglais', 5),
-  ('Espagnol', 5),
-  ('Allemand', 5),
-  ('Portuguais', 5),
-  ('Italien', 5),
-  ('Chinois', 5),
-  ('Japonais', 5),
-  ('Coréen', 5),
+  (5, 31),
+  (5, 32),
+  (5, 33),
+  (5, 34),
+  (5, 35),
+  (5, 36),
+  (5, 37),
+  (5, 38),
 
   -- Culture
-  ('Histoire de l’art', 6),
-  ('Cinéma et audiovisuel', 6),
-  ('Traditions et folklore', 6),
-  ('Mythologie et légendes', 6),
-  ('Sciences humaines', 6),
-  ('Philosophie', 6),
-  ('Médias et actualités', 6),
+  (6, 39),
+  (6, 40),
+  (6, 41),
+  (6, 42),
+  (6, 43),
+  (6, 44),
+  (6, 45),
 
   -- Musique
-  ('Solfège', 7),
-  ('Instruments', 7),
-  ('Chant', 7),
-  ('Composition', 7),
-  ('Musique électronique', 7),
-  ('Histoire de la musique', 7),
-  ('Genres musicaux', 7),
+  (7, 46),
+  (7, 47),
+  (7, 48),
+  (7, 49),
+  (7, 50),
+  (7, 51),
+  (7, 52),
 
   -- Art & design
-  ('Arts plastiques', 8),
-  ('Design graphique', 8),
-  ('Architecture', 8),
-  ('Sculpture', 8),
-  ('Photographie', 8),
-  ('Mode et textile', 8),
+  (8, 53),
+  (8, 54),
+  (8, 55),
+  (8, 56),
+  (8, 57),
+  (8, 58),
 
   -- Numérique
-  ('Programmation', 9),
-  ('Création de sites web', 9),
-  ('Marketing digital', 9),
-  ('IA et machine learning', 9),
-  ('Cybersécurité', 9),
-  ('Logiciels informatiques', 9),
-  ('Analyse de données', 9),
+  (9, 59),
+  (9, 60),
+  (9, 61),
+  (9, 62),
+  (9, 63),
+  (9, 64),
+  (9, 65),
 
   -- Développement personnel
-  ('Gestion du temps', 10),
-  ('Communication', 10),
-  ('Leadership', 10),
-  ('Coaching de vie', 10),
-  ('Créativité', 10),
+  (10, 66),
+  (10, 67),
+  (10, 68),
+  (10, 69),
+  (10, 70),
 
   -- Finance / Administratif
-  ('Comptabilité', 11),
-  ('Épargne et investissement', 11),
-  ('Fiscalité et impôts', 11),
-  ('Gestion d’entreprise', 11),
-  ('Documents administratifs', 11),
-  ('Gestion des dettes et crédits', 11),
-  ('Création de budgets', 11),
-  ('Éducation financière', 11),
+  (11, 71),
+  (11, 72),
+  (11, 73),
+  (11, 74),
+  (11, 75),
+  (11, 76),
+  (11, 77),
+  (11, 78),
 
   -- Sport
-  ('Musculation et fitness', 12),
-  ('Yoga et pilates', 12),
-  ('Préparation physique', 12),
-  ('Nutrition sportive', 12),
-  ('Équipements et techniques', 12),
-  ('Coaching', 12),
+  (12, 79),
+  (12, 80),
+  (12, 81),
+  (12, 82),
+  (12, 83),
+  (12, 84),
 
   -- Santé / Bien-être
-  ('Nutrition', 13),
-  ('Méditation et relaxation', 13),
-  ('Santé mentale', 13),
-  ('Médecine douce', 13),
-  ('Premiers secours', 13),
-  ('Soins du corps', 13),
-  ('Sommeil', 13),
-  ('Gestes et postures', 13),
+  (13, 85),
+  (13, 86),
+  (13, 87),
+  (13, 88),
+  (13, 89),
+  (13, 90),
+  (13, 91),
+  (13, 92),
 
   -- Voyage
-  ('Guides de voyage', 14),
-  ('Voyager pas cher', 14),
-  ('Voyager durablement', 14),
-  ('Cultures et traditions locales', 14),
-  ('Organisation et logistique', 14),
-  ('Conseils pour expatriés', 14),
-  ('Exploration insolite', 14),
+  (14, 93),
+  (14, 94),
+  (14, 95),
+  (14, 96),
+  (14, 97),
+  (14, 98),
+  (14, 99),
 
   -- Autres
-  ('Autres', 15);
-
-
-
-
-
+  (15, 100);
