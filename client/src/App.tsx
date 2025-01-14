@@ -1,11 +1,10 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import About from "./pages/About";
-import Advert from "./pages/Advert";
+import AdvertList from "./pages/Advert";
 import AdvertDetails from "./pages/AdvertDetails";
-import AdvertResults from "./pages/AdvertResults";
 import Faq from "./pages/Faq";
 import Home from "./pages/Home";
-import ProfilDetails from "./pages/ProfilDetails";
+import ProfileDetails from "./pages/ProfileDetails";
 
 import "./App.css";
 
@@ -15,23 +14,19 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/resultats-annonces",
-    element: <AdvertResults />,
+    path: "/advertList",
+    element: <AdvertList />,
   },
   {
-    path: "/annonces",
-    element: <Advert />,
-  },
-  {
-    path: "/annonces/:id",
+    path: "/advertList/:id",
     element: <AdvertDetails />,
   },
   {
-    path: "/profil/:id",
-    element: <ProfilDetails />,
+    path: "/profile/:id",
+    element: <ProfileDetails />,
   },
   {
-    path: "/a-propos",
+    path: "/about",
     element: <About />,
   },
   {

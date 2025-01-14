@@ -1,2 +1,2 @@
-const Advert = () => <div>Advert page</div>;
-export default Advert;
+const AdvertList = () => <div>Advert page</div>;
+export default AdvertList;
