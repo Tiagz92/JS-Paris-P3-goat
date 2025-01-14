@@ -20,11 +20,3 @@ class SlotSeeder extends AbstractSeeder {
 }
 
 export default SlotSeeder;
-
-// `id` INT NOT NULL AUTO_INCREMENT,
-// `start_at` DATETIME NOT NULL,
-//  `duration` INT NOT NULL,
-// `meet_link` VARCHAR(255) NOT NULL,
-// `comment` TEXT NULL DEFAULT NULL,
-// `advert_id` INT NOT NULL,
-// `goat_id` INT NULL DEFAULT NULL,
