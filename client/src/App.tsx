@@ -1,6 +1,7 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import About from "./pages/About";
 import AdvertDetails from "./pages/AdvertDetails";
+import AdvertForm from "./pages/AdvertForm";
 import AdvertList from "./pages/AdvertList";
 import Faq from "./pages/Faq";
 import Home from "./pages/Home";
@@ -12,6 +13,10 @@ const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <Home />,
+	},
+	{
+		path: "/advert-form",
+		element: <AdvertForm />,
 	},
 	{
 		path: "/adverts",
