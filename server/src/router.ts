@@ -1,4 +1,7 @@
 import express from "express";
+//import goatActions from "./modules/goat/goatActions";
+import itemActions from "./modules/item/itemActions";
+//import tagsActions from "./modules/tags/tagsActions";
 
 const router = express.Router();
 
@@ -7,7 +10,6 @@ const router = express.Router();
 /* ************************************************************************* */
 
 // Define item-related routes
-import itemActions from "./modules/item/itemActions";
 
 router.get("/api/items", itemActions.browse);
 router.get("/api/items/:id", itemActions.read);
