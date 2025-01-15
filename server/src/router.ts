@@ -1,7 +1,6 @@
 import express from "express";
-//import goatActions from "./modules/goat/goatActions";
+import advertActions from "./modules/advert/advertActions";
 import itemActions from "./modules/item/itemActions";
-//import tagsActions from "./modules/tags/tagsActions";
 
 const router = express.Router();
 
@@ -14,6 +13,10 @@ const router = express.Router();
 router.get("/api/items", itemActions.browse);
 router.get("/api/items/:id", itemActions.read);
 router.post("/api/items", itemActions.add);
+
+router.get("/api/advert", advertActions.browse);
+router.get("/api/advert/:id", advertActions.read);
+router.post("/api/advert", advertActions.add);
 
 /* ************************************************************************* */
 
