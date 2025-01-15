@@ -9,34 +9,34 @@ import ProfileDetails from "./pages/ProfileDetails";
 import "./App.css";
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Home />,
-  },
-  {
-    path: "/adverts",
-    element: <AdvertList />,
-  },
-  {
-    path: "/adverts/:id",
-    element: <AdvertDetails />,
-  },
-  {
-    path: "/profile/:id",
-    element: <ProfileDetails />,
-  },
-  {
-    path: "/about",
-    element: <About />,
-  },
-  {
-    path: "/faq",
-    element: <Faq />,
-  },
+	{
+		path: "/",
+		element: <Home />,
+	},
+	{
+		path: "/adverts",
+		element: <AdvertList />,
+	},
+	{
+		path: "/adverts/:id",
+		element: <AdvertDetails />,
+	},
+	{
+		path: "/profile/:id",
+		element: <ProfileDetails />,
+	},
+	{
+		path: "/about",
+		element: <About />,
+	},
+	{
+		path: "/faq",
+		element: <Faq />,
+	},
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+	return <RouterProvider router={router} />;
 }
 
 export default App;
