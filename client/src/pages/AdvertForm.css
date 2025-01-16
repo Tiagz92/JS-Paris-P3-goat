@@ -1,0 +1,44 @@
+.advert-form {
+	border: 0.1rem solid var(--darkblue);
+	padding: 2rem;
+	margin: 2rem;
+	border-radius: 1rem;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	display: flex;
+	flex-direction: column;
+}
+
+.form-group {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 1rem 12rem 1rem 5rem;
+}
+
+.form-group-description {
+	display: flex;
+	flex-direction: column;
+	margin: 1rem 5rem 0 5rem;
+}
+
+.description {
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	width: 100%;
+	padding: 1.5rem;
+	font-size: 1.5rem;
+	resize: none;
+}
+
+.advertising-text {
+	font-size: 0.8rem;
+	font-style: italic;
+	color: var(--light-blue);
+	text-align: center;
+	margin-bottom: 3rem;
+}
+
+.submit-button {
+	text-align: center;
+	margin: 0 5rem 0 5rem;
+}
