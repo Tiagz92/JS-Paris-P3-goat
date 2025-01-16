@@ -11,8 +11,7 @@ interface Advert {
 
 class advertRepository {
 	async readAll() {
-		const [rows] = await DatabaseClient.query<Rows>("select * from advert");
-
+		const [rows] = await DatabaseClient.query<Rows>("SELECT * FROM advert");
 		return rows as Advert[];
 	}
 }
