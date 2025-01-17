@@ -5,13 +5,6 @@ import mainTagRepository from "../mainTag/mainTagRepository";
 import subTagRepository from "../subTag/subTagRepository";
 import advertRepository from "./advertRepository";
 
-interface Advert {
-	id: number;
-	goat_id: number;
-	goat_firstname: string;
-	goat_picture: string;
-}
-
 const browse: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -26,16 +19,17 @@ const browse: RequestHandler = async (
 			if (!goat) {
 				res.sendStatus(404);
 			}
-			// advert.goat_firstname = goat.firstname;
-			// advert.goat_picture = goat.picture;
-		}
 
-		for (const advert of adverts) {
-			const mainTags = await mainTagRepository.read(advert.main_tag_id);
-			if (!mainTags) {
+			advert.goat_firstname = goat.firstname;
+			advert.goat_picture = goat.picture;
+
+			const mainTag = await mainTagRepository.read(advert.main_tag_id);
+
+			if (!mainTag) {
 				res.sendStatus(404);
 			}
-			// advert.main_tag_name = main_tag.name;
+
+			advert.main_tag_name = mainTag.name;
 		}
 
 		res.json(adverts);
