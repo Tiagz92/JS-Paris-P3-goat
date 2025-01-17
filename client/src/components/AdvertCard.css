@@ -3,3 +3,7 @@
 	border-radius: 10%;
 	border-color: var(--orange);
 }
+
+.main-tag-name {
+	color: var(--darkblue);
+}
