@@ -4,13 +4,11 @@ import "./AdvertForm.css";
 function AdvertForm() {
 	// const [mainTag, setMainTag] = useState([]);
 
-	// useEffect(() => {
 	// 	fetch("http://localhost:3310/api/main-tag")
 	// 		.then((response) => response.json())
 	// 		.then((data) => {
 	// 			setMainTag(data);
 	// 		});
-	// }, []);
 
 	return (
 		<div className="advert-form">
