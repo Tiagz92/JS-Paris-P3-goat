@@ -24,9 +24,9 @@ body {
 	width: auto;
 }
 
-title {
-	font-size: 2.5rem;
-	font-weight: bolder;
+.title {
+	font-size: 3rem;
+	font-weight: 400;
 	color: var(--text-black);
 	text-align: center;
 }
@@ -41,7 +41,7 @@ p {
 	font-size: 1rem;
 	font-weight: bolder;
 	text-align: center;
-	border-radius: 10%;
+	border-radius: 1rem;
 	cursor: pointer;
 	color: var(--text-white);
 	background-color: var(--orange);
@@ -53,11 +53,13 @@ p {
 	text-align: center;
 	background-color: var(--darkblue);
 	color: var(--text-white);
-	border-radius: 10%;
+	border-radius: 1rem;
+	padding: 0.5rem;
+	width: 40%;
 	cursor: pointer;
 }
 
-.light-blue button {
+.light-blue-button {
 	font-size: 1rem;
 	font-weight: bolder;
 	text-align: center;
