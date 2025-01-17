@@ -1,7 +1,7 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import About from "./pages/About";
-import AdvertList from "./pages/AdevertList";
 import AdvertDetails from "./pages/AdvertDetails";
+import AdvertList from "./pages/AdvertList";
 import Faq from "./pages/Faq";
 import Home from "./pages/Home";
 import ProfileDetails from "./pages/ProfileDetails";

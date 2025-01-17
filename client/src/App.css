@@ -37,7 +37,7 @@ p {
 	text-align: center;
 }
 
-.yellow button {
+.yellow-button {
 	font-size: 1rem;
 	font-weight: bolder;
 	text-align: center;
@@ -47,7 +47,7 @@ p {
 	background-color: var(--orange);
 }
 
-.darkblue button {
+.darkblue-button {
 	font-size: 1rem;
 	font-weight: bolder;
 	text-align: center;
