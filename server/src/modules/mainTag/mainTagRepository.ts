@@ -8,12 +8,12 @@ interface MainTag {
 
 class mainTagRepository {
 	async read(id: number) {
-		const [rows] = await DatabaseClient.query<Rows>(
+		const [[rows]] = await DatabaseClient.query<Rows>(
 			"SELECT * FROM main_tag WHERE id = ?",
 			[id],
 		);
 
-		return rows as MainTag[];
+		return rows as MainTag;
 	}
 }
 

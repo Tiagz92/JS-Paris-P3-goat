@@ -7,10 +7,10 @@ interface SubTag {
 }
 
 class subTagRepository {
-	async readAll() {
+	async readAll(id: number) {
 		const [rows] = await DatabaseClient.query<Rows>("select * from sub_tag");
 
-		return rows as SubTag[];
+		return rows;
 	}
 }
 
