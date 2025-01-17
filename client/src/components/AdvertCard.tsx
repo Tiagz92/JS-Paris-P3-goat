@@ -4,7 +4,7 @@ interface CardsProps {
 	advert: Advert;
 }
 
-const advertCard = ({ advert }: CardsProps) => {
+const AdvertCard = ({ advert }: CardsProps) => {
 	return (
 		<div className="cards">
 			<img className="goat-picture" src={advert.goat_picture} alt="" />
@@ -18,5 +18,4 @@ const advertCard = ({ advert }: CardsProps) => {
 	);
 };
 
-export default advertCard;
-// main & sub tags + bouton reserver
+export default AdvertCard;

@@ -30,6 +30,14 @@ const browse: RequestHandler = async (
 			}
 
 			advert.main_tag_name = mainTag.name;
+
+			const subTag = await subTagRepository.read(advert.sub_tag_id);
+
+			if (!subTag) {
+				res.sendStatus(404);
+			}
+
+			advert.sub_tag_name = subTag.name;
 		}
 
 		res.json(adverts);
