@@ -1,0 +1,5 @@
+.adverts {
+	display: grid;
+	grid-template-rows: repeat(3, 35rem);
+	grid-template-columns: repeat(3, 30rem);
+}
