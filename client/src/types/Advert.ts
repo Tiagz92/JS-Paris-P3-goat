@@ -1,4 +1,4 @@
-interface Goat {
+interface Advert {
 	id: number;
 	description: string;
 	goat_picture: string;
@@ -7,4 +7,4 @@ interface Goat {
 	sub_tag_name: string;
 }
 
-export default Goat;
+export default Advert;
