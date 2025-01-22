@@ -49,7 +49,7 @@ function AdvertForm() {
 						id="main-tag-select"
 						onChange={(e) => setSelectedMainTag(Number(e.target.value))}
 					>
-						<option value="">--Choisis un savoir--</option>
+						<option value="">Choisis un savoir</option>
 						{mainTag.map((tag) => (
 							<option key={tag.id} value={tag.id}>
 								{tag.name}
@@ -67,7 +67,7 @@ function AdvertForm() {
 						className="darkblue-button"
 						id="sub-tag-select"
 					>
-						<option value="">--Choisis une sous-catégorie--</option>
+						<option value="">Choisis une sous-catégorie</option>
 						{subTag.map((tag) => (
 							<option key={tag.id} value={tag.id}>
 								{tag.name}
