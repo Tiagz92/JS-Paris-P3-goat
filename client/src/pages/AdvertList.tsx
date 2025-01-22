@@ -12,7 +12,7 @@ function AdvertList() {
 				setAdverts(data);
 			})
 			.catch((error) => {
-				console.error("Erreur de récupération des annonces:", error);
+				console.error("Erreur de la récupération des annonces:", error);
 			});
 	}, []);
 
