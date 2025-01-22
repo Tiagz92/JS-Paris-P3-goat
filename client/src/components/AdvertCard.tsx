@@ -1,10 +1,10 @@
 import type Advert from "../types/Advert";
 
-interface CardsProps {
+interface AdvertCardProps {
 	advert: Advert;
 }
 
-const AdvertCard = ({ advert }: CardsProps) => {
+const AdvertCard = ({ advert }: AdvertCardProps) => {
 	return (
 		<div className="cards">
 			<img className="goat-picture" src={advert.goat_picture} alt="" />
