@@ -9,11 +9,11 @@ function AdvertList() {
 	useEffect(() => {
 		fetch("http://localhost:3310/api/adverts")
 			.then((res) => res.json())
-			.then((data) => {
+			.then((data: Advert[]) => {
 				setAdverts(data);
 			})
 			.catch((error) => {
-				console.error("Error:", error);
+				console.error("Erreur de la récupération des annonces:", error);
 			});
 	}, []);
 
