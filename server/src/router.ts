@@ -1,5 +1,5 @@
 import express from "express";
-//import goatActions from "./modules/goat/goatActions";
+import advertActions from "./modules/advert/advertActions";
 import itemActions from "./modules/item/itemActions";
 
 //import tagsActions from "./modules/tags/tagsActions";
