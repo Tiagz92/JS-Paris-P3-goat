@@ -9,7 +9,6 @@ function AdvertList() {
 		fetch("http://localhost:3310/api/adverts")
 			.then((res) => res.json())
 			.then((data: Advert[]) => {
-				console.log("data", data);
 				setAdverts(data);
 			})
 			.catch((error) => {
@@ -22,7 +21,6 @@ function AdvertList() {
 			{adverts.map((advert: Advert) => (
 				<AdvertCard key={advert.id} advert={advert} />
 			))}
-			<p>salut</p>
 		</div>
 	);
 }
