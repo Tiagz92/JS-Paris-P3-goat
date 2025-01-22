@@ -1,21 +1,28 @@
 import type Advert from "../types/Advert";
+import "../components/AdvertCard.css";
 
 interface CardsProps {
 	advert: Advert;
 }
 
-const AdvertCard = ({ advert }: CardsProps) => {
+function AdvertCard({ advert }: CardsProps) {
 	return (
 		<div className="cards">
-			<img className="goat-picture" src={advert.goat_picture} alt="" />
-			<h4 className="goat-firstname">{advert.goat_firstname}Jean</h4>
-			<h5 className="main-tag-name">{advert.main_tag_name}math</h5>
-			<h5 className="sub-tag-name">{advert.sub_tag_name}géométrie</h5>
+			<img
+				className="goat-picture"
+				src={advert.goat_picture}
+				alt={advert.goat_firstname}
+			/>
+			<h2 className="goat-firstname">{advert.goat_firstname}</h2>
+			<div className="tags">
+				<h3 className="main-tag-name">{advert.main_tag_name}</h3>
+				<h3 className="sub-tag-name">{advert.sub_tag_name}</h3>
+			</div>
 			<button type="button" className="yellow-button">
-				Réserver
+				En savoir plus
 			</button>
 		</div>
 	);
-};
+}
 
 export default AdvertCard;
