@@ -1,14 +1,38 @@
-// import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./AdvertForm.css";
 
-function AdvertForm() {
-	// const [mainTag, setMainTag] = useState([]);
+type MainTag = {
+	id: number;
+	name: string;
+};
 
-	// 	fetch("http://localhost:3310/api/main-tag")
-	// 		.then((response) => response.json())
-	// 		.then((data) => {
-	// 			setMainTag(data);
-	// 		});
+type SubTag = {
+	id: number;
+	name: string;
+};
+
+function AdvertForm() {
+	const [mainTag, setMainTag] = useState<MainTag[]>([]);
+	const [subTag, setSubTag] = useState<SubTag[]>([]);
+	const [selectedMainTag, setSelectedMainTag] = useState<number | null>(null);
+
+	useEffect(() => {
+		fetch("http://localhost:3310/api/main-tag")
+			.then((response) => response.json())
+			.then((data) => {
+				setMainTag(data);
+			});
+	}, []);
+
+	useEffect(() => {
+		if (selectedMainTag !== null) {
+			fetch(`http://localhost:3310/api/sub-tag/${selectedMainTag}`)
+				.then((response) => response.json())
+				.then((data) => {
+					setSubTag(data);
+				});
+		}
+	}, [selectedMainTag]);
 
 	return (
 		<div className="advert-form">
@@ -19,59 +43,43 @@ function AdvertForm() {
 					<label htmlFor="main-tag-select">
 						Quel savoir veux-tu transmettre ?
 					</label>
-
 					<select
 						name="main-tag"
 						className="darkblue-button"
 						id="main-tag-select"
+						onChange={(e) => setSelectedMainTag(Number(e.target.value))}
 					>
 						<option value="">--Choisis un savoir--</option>
-						{/* <option value="1">{main_tag.name}</option> */}
-						<option value="1">Français</option>
-						<option value="2">Histoire-Géographie</option>
-						<option value="3">Sciences</option>
-						<option value="4">Langues</option>
-						<option value="5">Culture</option>
-						<option value="6">Musique</option>
-						<option value="7">Art & design</option>
-						<option value="8">Numérique</option>
-						<option value="9">Développement personnel</option>
-						<option value="10">Finance / Administratif</option>
-						<option value="11">Sport</option>
-						<option value="12">Santé / Bien-être</option>
-						<option value="13">Voyage</option>
-						<option value="14">Autres</option>
-						<option value="15">Maths</option>
+						{mainTag.map((tag) => (
+							<option key={tag.id} value={tag.id}>
+								{tag.name}
+							</option>
+						))}
 					</select>
 				</div>
 
 				<div className="form-group">
-					<label htmlFor="main-tag-select">
+					<label htmlFor="sub-tag-select">
 						Quelle sous-catégorie veux-tu proposer ?
 					</label>
-
 					<select
 						name="sub-tag"
 						className="darkblue-button"
 						id="sub-tag-select"
 					>
-						<option value="">--Choisis un savoir--</option>
-						{/* <option value="1">{sub_tag.name}</option> */}
-						<option value="1">Français</option>
-						<option value="2">Histoire-Géographie</option>
-						<option value="3">Sciences</option>
-						<option value="4">Langues</option>
-						<option value="5">Culture</option>
-						<option value="6">Musique</option>
-						<option value="7">Art & design</option>
-						<option value="8">Numérique</option>
+						<option value="">--Choisis une sous-catégorie--</option>
+						{subTag.map((tag) => (
+							<option key={tag.id} value={tag.id}>
+								{tag.name}
+							</option>
+						))}
 					</select>
 				</div>
+
 				<div className="form-group-description">
-					<label htmlFor="main-tag-select">
+					<label htmlFor="description">
 						Ajoute un texte descriptif à ton annonce
 					</label>
-
 					<input
 						type="text"
 						className="description"
@@ -93,4 +101,5 @@ function AdvertForm() {
 		</div>
 	);
 }
+
 export default AdvertForm;
