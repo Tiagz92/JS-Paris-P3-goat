@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import AdvertCard from "../components/AdvertCard";
 import type Advert from "../types/Advert";
+import "./AdvertList.css";
 
 function AdvertList() {
 	const [adverts, setAdverts] = useState<Advert[]>([]);
@@ -18,9 +19,11 @@ function AdvertList() {
 
 	return (
 		<div>
-			{adverts.map((advert: Advert) => (
-				<AdvertCard key={advert.id} advert={advert} />
-			))}
+			<div className="adverts">
+				{adverts.map((advert: Advert) => (
+					<AdvertCard key={advert.id} advert={advert} />
+				))}
+			</div>
 		</div>
 	);
 }
