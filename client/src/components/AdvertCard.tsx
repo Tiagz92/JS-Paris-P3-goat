@@ -1,4 +1,4 @@
-import type Advert from "../types/Advert";
+import type { Advert } from "../types/Advert";
 import "../components/AdvertCard.css";
 
 interface AdvertCardProps {
