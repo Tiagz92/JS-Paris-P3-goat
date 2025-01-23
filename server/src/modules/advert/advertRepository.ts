@@ -7,6 +7,10 @@ type Advert = {
 	goat_id: number;
 	main_tag_id: number;
 	sub_tag_id: number;
+	sub_tag_name: string;
+	goat_firstname: string;
+  goat_picture: string;
+  main_tag_name: string;
 };
 
 class AdvertRepository {
