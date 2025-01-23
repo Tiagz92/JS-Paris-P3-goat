@@ -32,16 +32,14 @@ const router = createBrowserRouter([
 			{
 				path: "adverts",
 				element: <AdvertList />,
-				children: [
-					{
-						path: "add-advert",
-						element: <AdvertForm />,
-					},
-					{
-						path: ":id",
-						element: <AdvertDetails />,
-					},
-				],
+			},
+			{
+				path: "adverts/add",
+				element: <AdvertForm />,
+			},
+			{
+				path: "adverts/:id",
+				element: <AdvertDetails />,
 			},
 			{
 				path: "profile/:id",
