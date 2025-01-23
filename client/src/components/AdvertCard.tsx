@@ -5,7 +5,7 @@ interface AdvertCardProps {
 	advert: Advert;
 }
 
-function AdvertCard({ advert }: AdvertCardsProps) {
+function AdvertCard({ advert }: AdvertCardProps) {
 	return (
 		<div className="cards">
 			<img
