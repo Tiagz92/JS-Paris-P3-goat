@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import "./AdvertForm.css";
+import { useNavigate } from "react-router-dom";
 import type { MainTag, SubTag } from "../types/Advert";
+import "./AdvertForm.css";
 
 function AdvertForm() {
 	const [mainTags, setMainTags] = useState<MainTag[]>([]);
 	const [subTags, setSubTags] = useState<SubTag[]>([]);
 	const [selectedMainTag, setSelectedMainTag] = useState<number | null>(null);
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState<{
 		main_tag_id: number | null;
 		sub_tag_id: number | null;
@@ -74,7 +76,7 @@ function AdvertForm() {
 				goat_id: 1,
 			});
 			setSelectedMainTag(null);
-			alert("Annonce créée avec succès !");
+			navigate("/adverts");
 		} catch (error) {
 			console.error("Erreur lors de la soumission :", error);
 			alert("Une erreur est survenue. Veuillez réessayer.");
