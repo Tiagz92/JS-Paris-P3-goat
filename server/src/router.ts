@@ -11,10 +11,10 @@ const router = express.Router();
 
 // Define item-related routes
 
-// router.get("/api/items", itemActions.browse);
-// router.get("/api/items/:id", itemActions.read);
-// router.post("/api/items", itemActions.add);
 router.get("/api/main-tag", mainTagActions.browse);
+
+router.get("/api/adverts", advertActions.browse);
+
 router.post("/api/advert", advertServices.validateAdvert, advertActions.add);
 
 /* ************************************************************************* */

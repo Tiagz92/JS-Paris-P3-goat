@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./AdvertForm.css";
-import type { MainTag, SubTag } from "../types/advert";
+import type { MainTag, SubTag } from "../types/Advert";
 
 function AdvertForm() {
 	const [mainTags, setMainTags] = useState<MainTag[]>([]);
