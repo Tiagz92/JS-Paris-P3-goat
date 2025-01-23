@@ -1,58 +1,115 @@
 import { useEffect, useState } from "react";
 import "./AdvertForm.css";
-
-type MainTag = {
-	id: number;
-	name: string;
-};
-
-type SubTag = {
-	id: number;
-	name: string;
-};
+import type { MainTag, SubTag } from "../types/advert";
 
 function AdvertForm() {
-	const [mainTag, setMainTag] = useState<MainTag[]>([]);
-	const [subTag, setSubTag] = useState<SubTag[]>([]);
+	const [mainTags, setMainTags] = useState<MainTag[]>([]);
+	const [subTags, setSubTags] = useState<SubTag[]>([]);
 	const [selectedMainTag, setSelectedMainTag] = useState<number | null>(null);
+	const [formData, setFormData] = useState<{
+		main_tag_id: number | null;
+		sub_tag_id: number | null;
+		description: string;
+		goat_id: number;
+	}>({
+		main_tag_id: null,
+		sub_tag_id: null,
+		description: "",
+		goat_id: 1,
+	});
 
 	useEffect(() => {
 		fetch("http://localhost:3310/api/main-tag")
 			.then((response) => response.json())
-			.then((data) => {
-				setMainTag(data);
-			});
+			.then((mainTags) => {
+				setMainTags(mainTags);
+			})
+			.catch((error) => console.error("Erreur :", error));
 	}, []);
 
 	useEffect(() => {
 		if (selectedMainTag !== null) {
-			fetch(`http://localhost:3310/api/sub-tag/${selectedMainTag}`)
-				.then((response) => response.json())
-				.then((data) => {
-					setSubTag(data);
-				});
+			const mainTag = mainTags.find(
+				(mainTag) => mainTag.id === selectedMainTag,
+			);
+
+			if (mainTag) {
+				setSubTags(mainTag.subTags);
+			}
+		} else {
+			setSubTags([]);
 		}
-	}, [selectedMainTag]);
+	}, [mainTags, selectedMainTag]);
+
+	const handleSubmit = async () => {
+		if (
+			formData.main_tag_id === null ||
+			formData.sub_tag_id === null ||
+			formData.description.trim() === ""
+		) {
+			alert("Tous les champs sont obligatoires !");
+			return;
+		}
+
+		try {
+			const response = await fetch("http://localhost:3310/api/advert", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(formData),
+			});
+
+			if (!response.ok) {
+				throw new Error("Erreur lors de la création de l'annonce");
+			}
+
+			const result = await response.json();
+			console.info("Annonce créée avec succès :", result);
+
+			setFormData({
+				main_tag_id: null,
+				sub_tag_id: null,
+				description: "",
+				goat_id: 1,
+			});
+			setSelectedMainTag(null);
+			alert("Annonce créée avec succès !");
+		} catch (error) {
+			console.error("Erreur lors de la soumission :", error);
+			alert("Une erreur est survenue. Veuillez réessayer.");
+		}
+	};
 
 	return (
 		<div className="advert-form">
 			<h1 className="title">Crée ton annonce !</h1>
 
-			<form action="" method="get" className="form">
+			<form
+				className="form"
+				onSubmit={(e) => {
+					e.preventDefault();
+					handleSubmit();
+				}}
+			>
 				<div className="form-group">
 					<label htmlFor="main-tag-select">
 						Quel savoir veux-tu transmettre ?
 					</label>
 					<select
-						name="main-tag"
-						className="darkblue-button"
 						id="main-tag-select"
-						onChange={(e) => setSelectedMainTag(Number(e.target.value))}
+						className="darkblue-button"
+						value={formData.main_tag_id ?? ""}
+						onChange={(e) => {
+							const mainTagId = e.target.value ? Number(e.target.value) : null;
+							setFormData((prev) => ({ ...prev, main_tag_id: mainTagId }));
+							setSelectedMainTag(mainTagId);
+						}}
 					>
 						<option value="">Choisis un savoir</option>
-						{mainTag.map((tag) => (
-							<option key={tag.id} value={tag.id}>
-								{tag.name}
+						{mainTags.map((mainTag) => (
+							<option key={mainTag.id} value={mainTag.id}>
+								{mainTag.name}
 							</option>
 						))}
 					</select>
@@ -63,14 +120,21 @@ function AdvertForm() {
 						Quelle sous-catégorie veux-tu proposer ?
 					</label>
 					<select
-						name="sub-tag"
-						className="darkblue-button"
 						id="sub-tag-select"
+						className="darkblue-button"
+						value={formData.sub_tag_id ? formData.sub_tag_id : ""}
+						disabled={selectedMainTag === null}
+						onChange={(e) => {
+							const subTagId = e.target.value ? Number(e.target.value) : null;
+							setFormData((prev) => ({ ...prev, sub_tag_id: subTagId }));
+						}}
 					>
-						<option value="">Choisis une sous-catégorie</option>
-						{subTag.map((tag) => (
-							<option key={tag.id} value={tag.id}>
-								{tag.name}
+						<option value="">
+							{selectedMainTag === null ? "" : "Choisis une sous-catégorie"}
+						</option>
+						{subTags.map((subTag) => (
+							<option key={subTag.id} value={subTag.id}>
+								{subTag.name}
 							</option>
 						))}
 					</select>
@@ -81,23 +145,31 @@ function AdvertForm() {
 						Ajoute un texte descriptif à ton annonce
 					</label>
 					<input
+						id="description"
 						type="text"
 						className="description"
-						name="description"
+						value={formData.description}
+						onChange={(e) =>
+							setFormData((prev) => ({
+								...prev,
+								description: e.target.value,
+							}))
+						}
 						required
 					/>
+				</div>
+
+				<div className="submit-button">
+					<button className="darkblue-button" type="submit">
+						Valide ton annonce
+					</button>
 				</div>
 			</form>
 
 			<h3 className="advertising-text">
 				Après cette étape, ton annonce sera disponible sur les créneaux de
-				réservation que tu as défini sur ton profil !
+				réservation que tu as définis sur ton profil !
 			</h3>
-			<div className="submit-button">
-				<button className="darkblue-button" type="submit">
-					Valide ton annonce
-				</button>
-			</div>
 		</div>
 	);
 }

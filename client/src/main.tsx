@@ -28,32 +28,35 @@ const router = createBrowserRouter([
 	{
 		path: "/", // The root path
 		element: <App />, // Renders the App component for the home page
+		children: [
+			{
+				path: "adverts",
+				element: <AdvertList />,
+				children: [
+					{
+						path: "add-advert",
+						element: <AdvertForm />,
+					},
+					{
+						path: ":id",
+						element: <AdvertDetails />,
+					},
+				],
+			},
+			{
+				path: "profile/:id",
+				element: <ProfileDetails />,
+			},
+			{
+				path: "about",
+				element: <About />,
+			},
+			{
+				path: "faq",
+				element: <Faq />,
+			},
+		],
 	},
-	{
-		path: "/advert-form",
-		element: <AdvertForm />,
-	},
-	{
-		path: "/adverts",
-		element: <AdvertList />,
-	},
-	{
-		path: "/adverts/:id",
-		element: <AdvertDetails />,
-	},
-	{
-		path: "/profile/:id",
-		element: <ProfileDetails />,
-	},
-	{
-		path: "/about",
-		element: <About />,
-	},
-	{
-		path: "/faq",
-		element: <Faq />,
-	},
-	// Try adding a new route! For example, "/about" with an About component
 ]);
 
 /* ************************************************************************* */

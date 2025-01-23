@@ -8,6 +8,14 @@ class MainTagRepository {
 		);
 		return mainTags;
 	}
+
+	async read(id: number) {
+		const [[mainTag]] = await databaseClient.query<Rows>(
+			"SELECT * FROM main_tag WHERE id = ?",
+			[id],
+		);
+		return mainTag;
+	}
 }
 
 export default new MainTagRepository();
