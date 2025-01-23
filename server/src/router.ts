@@ -15,6 +15,9 @@ const router = express.Router();
 // router.get("/api/items/:id", itemActions.read);
 // router.post("/api/items", itemActions.add);
 router.get("/api/main-tag", mainTagActions.browse);
+
+router.get("/api/adverts", advertActions.browse);
+
 router.post("/api/advert", advertServices.validateAdvert, advertActions.add);
 
 /* ************************************************************************* */

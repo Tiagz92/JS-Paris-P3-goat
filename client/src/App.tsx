@@ -5,7 +5,6 @@ function App() {
 	return (
 		<>
 			<Outlet />
-			<h1>coucou</h1>
 		</>
 	);
 }

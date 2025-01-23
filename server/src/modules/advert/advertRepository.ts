@@ -1,5 +1,5 @@
 import DatabaseClient from "../../../database/client";
-import type { Result } from "../../../database/client";
+import type { Result, Rows } from "../../../database/client";
 
 interface Advert {
 	id: number;
@@ -21,7 +21,12 @@ class AdvertRepository {
 			],
 		);
 		return result.insertId;
+	};
+
+	async readAll() {
+		const [rows] = await DatabaseClient.query<Rows>("SELECT * FROM advert");
+		return rows;
 	}
 }
 
-export default new AdvertRepository();
+export default new advertRepository();
