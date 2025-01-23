@@ -1,0 +1,38 @@
+.week-scheduler {
+	padding: 16px;
+	background-color: #f3f4f6;
+}
+
+.week-scheduler h2 {
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 16px;
+}
+
+.table-container {
+	overflow-x: auto;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+table th,
+table td {
+	border: 1px solid #d1d5db;
+	padding: 8px;
+	text-align: center;
+}
+
+table td {
+	cursor: pointer;
+}
+
+table td:hover {
+	background-color: #e5e7eb;
+}
+
+table td.selected {
+	background-color: #93c5fd;
+}
