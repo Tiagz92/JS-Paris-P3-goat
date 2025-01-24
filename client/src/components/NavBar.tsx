@@ -5,9 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 function NavBar() {
 	const navigate = useNavigate();
-	function handleKeyPress(): void {
-		throw new Error("Function not implemented.");
-	}
 
 	return (
 		<div className="navbar">
@@ -16,7 +13,7 @@ function NavBar() {
 				alt="logo"
 				className="logo"
 				onClick={() => navigate("/")}
-				onKeyPress={handleKeyPress}
+				onKeyPress={() => navigate("/")}
 			/>
 			<section className="title-container">
 				<h1 className="title">
