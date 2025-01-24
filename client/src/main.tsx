@@ -8,6 +8,7 @@ import AdvertForm from "./pages/AdvertForm";
 import AdvertList from "./pages/AdvertList";
 import Faq from "./pages/Faq";
 import ProfileDetails from "./pages/ProfileDetails";
+import Register from "./pages/Register";
 
 /* ************************************************************************* */
 
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
 			{
 				path: "profile/:id",
 				element: <ProfileDetails />,
+			},
+			{
+				path: "register",
+				element: <Register />,
 			},
 			{
 				path: "about",
