@@ -35,7 +35,6 @@ function NavBar() {
 					Crée ton annonce !
 				</button>
 				<img src={connexionIcon} alt="connexion" className="connexion-icon" />
-				{/* @todo à mettre en place une fois le login fonctionnel : onClick={() => navigate('/login')} */}
 			</div>
 		</div>
 	);
