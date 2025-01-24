@@ -15,11 +15,13 @@
 .logo {
 	height: 8rem;
 	width: auto;
+	cursor: pointer;
 }
 
 .connexion-icon {
 	height: 6rem;
 	width: auto;
+	cursor: pointer;
 }
 
 .title-container,
@@ -43,4 +45,5 @@
 	font-weight: bold;
 	font-size: 1rem;
 	border: none;
+	cursor: pointer;
 }
