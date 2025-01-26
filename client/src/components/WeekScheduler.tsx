@@ -1,10 +1,18 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import "./WeekScheduler.css";
 
-const WeekScheduler: React.FC = () => {
+const WeekScheduler = () => {
+	const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
 	const [selectedSlots, setSelectedSlots] = useState<{
 		[key: string]: boolean;
 	}>({});
-	const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
+
+	const generateDays = (weekOffset: number) => {
+		const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
+		return days.map((day) => `${day} S${weekOffset}`);
+	};
+
+	const days = generateDays(currentWeekOffset);
 	const hours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
 
 	const toggleSlot = (day: string, hour: number) => {
@@ -15,40 +23,56 @@ const WeekScheduler: React.FC = () => {
 		}));
 	};
 
+	const changeWeek = (offset: number) => {
+		setCurrentWeekOffset((prev) => prev + offset);
+	};
+
 	return (
-		<table>
-			<thead>
-				<tr>
-					<th>Heure</th>
-					{days.map((day) => (
-						<th key={day}>{day}</th>
-					))}
-				</tr>
-			</thead>
-			<tbody>
+		<div className="week-scheduler">
+			<div className="scheduler-header">
+				<button type="button" onClick={() => changeWeek(-1)}>
+					Semaine Précédente
+				</button>
+				<h2>Planification Hebdomadaire (Semaine {currentWeekOffset})</h2>
+				<button type="button" onClick={() => changeWeek(1)}>
+					Semaine Suivante
+				</button>
+			</div>
+			<div className="scheduler-grid">
+				{/* En-têtes des Jours */}
+				<div className="grid-header empty-cell" />
+				{days.map((day) => (
+					<div key={day} className="grid-header">
+						{day}
+					</div>
+				))}
+
+				{/* Grille des Heures et Slots */}
 				{hours.map((hour) => (
-					<tr key={hour}>
-						<td>{`${hour.toString().padStart(2, "0")}:00`}</td>
+					<React.Fragment key={hour}>
+						{/* Heure */}
+						<div className="grid-time">{`${hour.toString().padStart(2, "0")}:00`}</div>
+						{/* Slots */}
 						{days.map((day) => {
 							const slotKey = `${day}-${hour}`;
 							return (
-								<td key={slotKey}>
-									{/* Placez un bouton interactif dans la cellule au lieu d’ajouter role="button" directement sur <td>. */}
-									<button
-										type="button"
-										onClick={() => toggleSlot(day, hour)}
-										// Optionnel : style pour que le bouton occupe toute la cellule
-										style={{ width: "100%", height: "100%", cursor: "pointer" }}
-									>
-										{selectedSlots[slotKey] ? "✓" : ""}
-									</button>
-								</td>
+								<div
+									key={slotKey}
+									className={`grid-slot ${selectedSlots[slotKey] ? "selected" : ""}`}
+									onClick={() => toggleSlot(day, hour)}
+									onKeyDown={() => toggleSlot(day, hour)}
+									// biome-ignore lint/a11y/useSemanticElements: <explanation>
+									role="button"
+									tabIndex={0}
+								>
+									{selectedSlots[slotKey] ? "✓" : ""}
+								</div>
 							);
 						})}
-					</tr>
+					</React.Fragment>
 				))}
-			</tbody>
-		</table>
+			</div>
+		</div>
 	);
 };
 
