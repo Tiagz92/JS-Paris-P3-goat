@@ -54,9 +54,7 @@ function AdvertDetails() {
 			<div className="calendar">
 				<h1>Sélectionnez une date</h1>
 			</div>
-			{/* Profil utilisateur */}
 			<div className="advert-profile">
-				{/* Photo et prénom */}
 				<div className="profile-header">
 					<img
 						className="img-goat"
@@ -65,7 +63,6 @@ function AdvertDetails() {
 					/>
 					<h1 className="profile-name">{advert.goat_firstname}</h1>
 				</div>
-				{/* Tags */}
 				<div className="profile-tags">
 					<button type="button" className="tag-button-main">
 						{advert.main_tag_name}
@@ -74,7 +71,6 @@ function AdvertDetails() {
 						{advert.sub_tag_name}
 					</button>
 				</div>
-				{/* Description */}
 				<p className="profile-description">{advert.description}</p>
 			</div>
 			<div className="advert-reservation">
