@@ -1,11 +1,13 @@
 import type Advert from "../types/Advert";
 import "../components/AdvertCard.css";
+import { useNavigate } from "react-router-dom";
 
 interface AdvertCardProps {
 	advert: Advert;
 }
-
 function AdvertCard({ advert }: AdvertCardProps) {
+	const navigate = useNavigate();
+
 	return (
 		<div className="cards">
 			<img
@@ -18,7 +20,11 @@ function AdvertCard({ advert }: AdvertCardProps) {
 				<h3 className="main-tag-name">{advert.main_tag_name}</h3>
 				<h3 className="sub-tag-name">{advert.sub_tag_name}</h3>
 			</div>
-			<button type="button" className="yellow-button">
+			<button
+				type="button"
+				className="yellow-button"
+				onClick={() => navigate(`/adverts/${advert.id}`)}
+			>
 				En savoir plus
 			</button>
 		</div>
