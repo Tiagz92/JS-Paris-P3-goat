@@ -1,11 +1,11 @@
-import type Advert from "../types/Advert";
+import type { Advert } from "../types/Advert";
 import "../components/AdvertCard.css";
 
-interface CardsProps {
+interface AdvertCardProps {
 	advert: Advert;
 }
 
-function AdvertCard({ advert }: CardsProps) {
+function AdvertCard({ advert }: AdvertCardProps) {
 	return (
 		<div className="cards">
 			<img

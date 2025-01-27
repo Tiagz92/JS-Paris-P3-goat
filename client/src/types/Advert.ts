@@ -1,4 +1,4 @@
-interface Goat {
+interface Advert {
 	id: number;
 	description: string;
 	goat_picture: string;
@@ -7,4 +7,13 @@ interface Goat {
 	sub_tag_name: string;
 }
 
-export default Goat;
+type MainTag = {
+	id: number;
+	name: string;
+	subTags: SubTag[];
+};
+type SubTag = {
+	id: number;
+	name: string;
+};
+export type { Advert, MainTag, SubTag };
