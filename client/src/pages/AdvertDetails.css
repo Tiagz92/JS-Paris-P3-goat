@@ -1,0 +1,156 @@
+/* Corps de la page */
+body {
+	background-color: var(--white);
+	font-family: var(--font);
+	height: 100vh;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	justify-content: center; /* Centrage horizontal */
+	align-items: center; /* Centrage vertical */
+}
+
+/* Conteneur principal */
+.advert-container {
+	display: flex;
+	flex-direction: column;
+	justify-content:space-between;
+	align-items: flex-start;
+	padding: 20px;
+	background: var(--white);
+	border: 3px solid var(--orange);
+	border-radius: 10px;
+	box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.3);
+	width: 85vw; /* Prend 80% de la largeur */
+  height: 75vh; /* Prend 80% de la hauteur */
+	
+}
+
+/* Section profil */
+.advert-profile {
+	display: flex;
+	flex-direction: column;
+  justify-content: left;
+	align-items: left;
+	gap: 15px;
+  margin-bottom: 80px;
+  margin-left: 30px;
+}
+
+/* Conteneur pour la photo et le prénom */
+.profile-header {
+  justify-content: center;
+	display: flex;
+	align-items: center;
+	gap: 60px; /* Espace entre la photo et le prénom */
+  margin-bottom: 20px;
+}
+
+.img-goat {
+	width: 160px;
+	height: 160px;
+	border-radius: 50%;
+	object-fit: cover;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.profile-name {
+  justify-content: center;
+	font-size: 3rem;
+	font-weight:initial;
+  text-align: center;
+	color: var(--text-black);
+	margin: 0;
+}
+.calendar {
+  display: flex;
+  justify-content: right;
+  text-align: right;
+  align-items: center;
+  width: 100%;
+  height:10%;
+}
+.calendar h1 {
+  font-size: 2rem;
+  font-weight:initial;
+  text-align: center;
+  color: var(--text-black);
+  margin: 0;
+  margin-right: 150px;
+}
+
+/* Tags */
+.profile-tags {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 45px;
+  margin-left: 20px;
+}
+
+.tag-button-main,
+.tag-button-sub {
+	font-family: var(--font);
+	background-color: transparent;
+	font-weight:normal;
+	text-transform: uppercase;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border:2px solid;
+	border-radius: 10px;
+	padding: 5px 10px;
+	font-size: 1rem;
+}
+
+.tag-button-main {
+	color: var(--darkblue);
+	border-color: var(--darkblue);
+}
+
+.tag-button-sub {
+	color: var(--light-blue);
+	border-color: var(--light-blue);
+}
+
+/* Description */
+.profile-description {
+  justify-content:left;
+  text-align: center;
+  width: 50ch;
+	font-size: 1rem;
+	line-height: 1.6;
+	color: var(--text-black);
+	margin-top: 10px;
+}
+.advert-reservation {
+  display: flex;
+  flex-direction: row;
+  justify-content:right;
+  width: 100%;
+  gap: 20px;
+  margin-top: 20px;
+}
+.reservation-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--orange);
+  color: var(--text-white);
+  border: 2px solid var(--orange);
+  font-size: 1rem;
+  margin-right: 250px;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+/* Messages d'état */
+.status {
+	font-size: 18px;
+	text-align: center;
+	color: #333;
+	margin: 20px 0;
+}
