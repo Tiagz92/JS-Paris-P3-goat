@@ -1,6 +1,5 @@
 import type { RequestHandler } from "express";
 import advertRepository from "./advertRepository";
-
 const browse: RequestHandler = async (req, res, next) => {
 	try {
 		const adverts = await advertRepository.readAll();
@@ -9,12 +8,10 @@ const browse: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
-
 const read: RequestHandler = async (req, res, next) => {
 	try {
 		const advertId = Number(req.params.id);
 		const advert = await advertRepository.read(advertId);
-
 		if (advert == null) {
 			res.sendStatus(404);
 		} else {
@@ -24,7 +21,6 @@ const read: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
-
 const add: RequestHandler = async (req, res, next) => {
 	try {
 		const newAdvert = {
@@ -40,5 +36,25 @@ const add: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
-
-export default { browse, read, add };
+const search: RequestHandler = async (req, res, next) => {
+	try {
+		const query = req.query.q as string;
+		if (!query || query.trim() === "") {
+			res.status(400).json({ message: "Query parameter 'q' is required." });
+			return;
+		}
+		const results = await advertRepository.search(query);
+		res.json(results);
+	} catch (err) {
+		next(err);
+	}
+};
+const getMainTags: RequestHandler = async (req, res, next) => {
+	try {
+		const mainTags = await advertRepository.getMainTags();
+		res.json(mainTags);
+	} catch (err) {
+		next(err);
+	}
+};
+export default { browse, read, add, search, getMainTags };

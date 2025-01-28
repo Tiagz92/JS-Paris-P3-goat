@@ -36,7 +36,45 @@ class AdvertRepository {
 		return rows as Advert[];
 	}
 
-	// methode uptade et delete a faire plus tard
+	async search(query: string): Promise<string[]> {
+		try {
+			const [rows] = await databaseClient.query<Rows>(
+				"SELECT description FROM advert WHERE description LIKE ?",
+				[`%${query}%`],
+			);
+
+			const regex = new RegExp(`\\b${query}\\w*\\b`, "gi");
+			const matchedWords: string[] = [];
+
+			for (const row of rows) {
+				const description = row.description;
+				const matches = description.match(regex);
+				if (matches) {
+					matchedWords.push(...matches);
+				}
+			}
+
+			return matchedWords;
+		} catch (error) {
+			console.error("Erreur SQL :", error);
+			throw error;
+		}
+	}
+
+	async getMainTags(): Promise<{ id: number; name: string }[]> {
+		try {
+			const [rows] = await databaseClient.query<Rows>(
+				"SELECT id, name FROM main_tag",
+			);
+			return rows as { id: number; name: string }[];
+		} catch (error) {
+			console.error(
+				"Erreur SQL lors de la récupération des main tags :",
+				error,
+			);
+			throw error;
+		}
+	}
 }
 
 export default new AdvertRepository();

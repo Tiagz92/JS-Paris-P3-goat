@@ -1,0 +1,61 @@
+.filter-container {
+	width: 80vw;
+	margin: 0 auto;
+	padding: 20px;
+}
+
+.filter-container label {
+	display: block;
+	margin-bottom: 15px;
+	font-weight: bold;
+}
+
+.show-more-btn {
+	display: block;
+	margin: 0 auto;
+	padding: 10px 20px;
+	background-color: #2930d3;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.show-more-btn:hover {
+	background-color: #2930d3;
+}
+
+.tags-grid {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	gap: 25px;
+	margin-bottom: 25px;
+	width: 100%;
+}
+
+.tag-item {
+	background-color: #2930d3;
+	color: white;
+	padding: 7px;
+	border-radius: 8px;
+	text-align: center;
+	transition: background-color 0.3s ease;
+	cursor: pointer;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 2px solid transparent;
+}
+
+.tag-item:hover,
+.tag-item:active {
+	background-color: #9ac4f8;
+	border: 2px solid #2930d3;
+	color: #2930d3;
+	transform: none;
+}
