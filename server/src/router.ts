@@ -1,8 +1,7 @@
 import express from "express";
 import advertActions from "./modules/advert/advertActions";
-import itemActions from "./modules/item/itemActions";
-
-//import tagsActions from "./modules/tags/tagsActions";
+import advertServices from "./modules/advert/advertServices";
+import mainTagActions from "./modules/tag/mainTagActions";
 
 const router = express.Router();
 
@@ -12,9 +11,11 @@ const router = express.Router();
 
 // Define item-related routes
 
-router.get("/api/items", itemActions.browse);
-router.get("/api/items/:id", itemActions.read);
-router.post("/api/items", itemActions.add);
+router.get("/api/main-tag", mainTagActions.browse);
+
+router.get("/api/adverts", advertActions.browse);
+
+router.post("/api/advert", advertServices.validateAdvert, advertActions.add);
 
 router.get("/api/advert", advertActions.browse);
 router.get("/api/advert/:id", advertActions.read);
