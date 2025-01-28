@@ -100,7 +100,7 @@ function AdvertForm() {
 					</label>
 					<select
 						id="main-tag-select"
-						className="darkblue-button"
+						className="darkblue-button tag-button"
 						value={formData.main_tag_id ?? ""}
 						onChange={(e) => {
 							const mainTagId = e.target.value ? Number(e.target.value) : null;
@@ -123,7 +123,7 @@ function AdvertForm() {
 					</label>
 					<select
 						id="sub-tag-select"
-						className="darkblue-button"
+						className="darkblue-button tag-button"
 						value={formData.sub_tag_id ? formData.sub_tag_id : ""}
 						disabled={selectedMainTag === null}
 						onChange={(e) => {

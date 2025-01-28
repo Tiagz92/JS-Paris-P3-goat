@@ -1,0 +1,36 @@
+.navbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1rem;
+}
+
+.navbar-links {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 3rem;
+}
+
+.logo {
+	height: 8rem;
+	width: auto;
+}
+
+.connexion-icon {
+	height: 6rem;
+	width: auto;
+}
+
+.title-container,
+.title,
+.subtitle {
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	font-weight: normal;
+}
+
+.uppercase {
+	font-weight: bold;
+}

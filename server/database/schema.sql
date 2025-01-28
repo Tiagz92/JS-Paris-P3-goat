@@ -287,7 +287,7 @@ VALUES
 ('Guides de voyage'),
 ('Voyager pas cher'),
 ('Voyager durablement'),
-('Cultures et traditions locales'),
+('Cultures et traditions'),
 ('Organisation et logistique'),
 ('Conseils pour expatriés'),
 ('Exploration insolite'),
