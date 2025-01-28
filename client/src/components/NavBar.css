@@ -34,13 +34,3 @@
 .uppercase {
 	font-weight: bold;
 }
-
-.add-advert-button {
-	padding: .8rem 1rem;
-	border-radius: 1rem;
-	background-color: var(--orange);
-	color: var(--white);
-	font-weight: bold;
-	font-size: 1rem;
-	border: none;
-}
