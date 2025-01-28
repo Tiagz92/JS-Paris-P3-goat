@@ -41,19 +41,27 @@ p {
 
 .yellow-button {
 	font-size: 1rem;
-	font-weight: 400;
+	font-weight: bold;
 	text-align: center;
 	border-radius: 1rem;
+	padding: .8rem 1rem;
 	cursor: pointer;
 	color: var(--text-white);
 	background-color: var(--orange);
-	border-color: var(--orange);
-	padding: 0.5rem;
+	border: none;
+}
+
+.yellow-button:hover {
+	transform: scale(1.02);
+	color: var(--orange);
+	background-color: #fafafa;
+	border: 3px solid var(--orange);
+	box-shadow: 10px 10px 12px 1px rgba(0, 0, 0, 0.45);
 }
 
 .darkblue-button {
 	font-size: 1rem;
-	font-weight: bolder;
+	font-weight: bold;
 	text-align: center;
 	background-color: var(--darkblue);
 	color: var(--text-white);
@@ -63,14 +71,34 @@ p {
 	cursor: pointer;
 }
 
-.light-blue-button {
-	font-size: 1rem;
-	font-weight: bolder;
-	text-align: center;
+.darkblue-button:hover {
+	transform: scale(1.02);
+	color: var(--darkblue);
 	background-color: var(--light-blue);
-	color: var(--text-black);
-	border-radius: 10%;
+	border: 3px solid var(--darkblue);
+	box-shadow: 10px 10px 12px 1px rgba(0, 0, 0, 0.45);
+}
+
+.lightblue-button {
+	font-size: 1rem;
+	font-weight: bold;
+	text-align: center;
+	background-color: var(--darkblue);
+	color: var(--text-white);
+	border-radius: 1rem;
+	border: none;
+	padding: 0.5rem;
 	cursor: pointer;
+	background-color: var(--light-blue);
+	color: var(--text-white);
+}
+
+.lightblue-button:hover {
+	transform: scale(1.02);
+	color: var(--darkblue);
+	background-color: var(--light-blue);
+	border: 3px solid var(--darkblue);
+	box-shadow: 10px 10px 12px 1px rgba(0, 0, 0, 0.45);
 }
 
 .card {
