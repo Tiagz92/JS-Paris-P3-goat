@@ -75,6 +75,13 @@ class AdvertRepository {
 			throw error;
 		}
 	}
+	async readByMainTagId(mainTagId: number): Promise<Advert[]> {
+		const [rows] = await databaseClient.query<Rows>(
+			"SELECT * FROM advert WHERE main_tag_id = ?",
+			[mainTagId],
+		);
+		return rows as Advert[];
+	}
 }
 
 export default new AdvertRepository();

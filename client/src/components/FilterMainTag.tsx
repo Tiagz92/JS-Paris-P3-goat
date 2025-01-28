@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { Advert } from "../pages/Home";
 import "./FilterMainTag.css";
 
@@ -14,6 +14,7 @@ interface PropsFilterMainTag {
 
 const FilterMainTag: React.FC<PropsFilterMainTag> = () => {
 	const [displayedTags, setDisplayedTags] = useState<Tag[]>([]);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const fetchMainTags = async () => {
@@ -25,7 +26,7 @@ const FilterMainTag: React.FC<PropsFilterMainTag> = () => {
 					);
 				}
 				const tags = await response.json();
-				setDisplayedTags(tags.slice(0, 10)); // Mise à jour directe de displayedTags
+				setDisplayedTags(tags.slice(0, 10));
 			} catch (error) {
 				console.error("Erreur lors de la récupération des mainTags :", error);
 			}
@@ -34,14 +35,23 @@ const FilterMainTag: React.FC<PropsFilterMainTag> = () => {
 		fetchMainTags();
 	}, []);
 
+	const handleTagClick = (tag: Tag) => {
+		navigate(`/adverts?tag=${tag.id}`);
+	};
+
 	return (
 		<div className="filter-container">
 			<label htmlFor="mainTagSelect">Filtrer par main tag :</label>
 			<div className="tags-grid">
 				{displayedTags.map((tag) => (
-					<div key={tag.id} className="tag-item">
+					<button
+						key={tag.id}
+						type="button"
+						className="tag-item"
+						onClick={() => handleTagClick(tag)}
+					>
 						{tag.name}
-					</div>
+					</button>
 				))}
 			</div>
 

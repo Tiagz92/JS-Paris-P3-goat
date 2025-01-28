@@ -21,6 +21,7 @@ router.get("/api/advert/:id", advertActions.read);
 router.post("/api/advert", advertActions.add);
 router.get("/search", advertActions.search);
 router.get("/advert/maintags", advertActions.getMainTags);
+router.get("/advert/maintags/:id", advertActions.readByMainTagId);
 
 /* ************************************************************************* */
 

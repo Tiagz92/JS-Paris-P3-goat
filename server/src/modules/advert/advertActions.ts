@@ -57,4 +57,18 @@ const getMainTags: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
-export default { browse, read, add, search, getMainTags };
+const readByMainTagId: RequestHandler = async (req, res, next) => {
+	try {
+		const mainTagId = Number(req.params.id);
+		if (Number.isNaN(mainTagId)) {
+			res.status(400).json({ message: "Invalid mainTagId parameter." });
+			return;
+		}
+		const adverts = await advertRepository.readByMainTagId(mainTagId);
+		res.json(adverts);
+	} catch (err) {
+		next(err);
+	}
+};
+
+export default { browse, read, add, search, getMainTags, readByMainTagId };
