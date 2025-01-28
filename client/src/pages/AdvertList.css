@@ -3,12 +3,12 @@
 	grid-template-rows: repeat(3, 35rem);
 	grid-template-columns: repeat(3, 30rem);
 	justify-content: center;
-	justify-items: center
+	justify-items: center;
 }
 
 @media (max-width: 768px) {
 	.adverts {
-		grid-template-rows: auto; 
-		grid-template-columns: 1fr; 
+		grid-template-rows: auto;
+		grid-template-columns: 1fr;
 	}
 }

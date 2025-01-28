@@ -19,8 +19,8 @@
 .online {
 	height: 8vh;
 	position: absolute;
-	top: 15px; 
-	right: 15px; 
+	top: 15px;
+	right: 15px;
 }
 
 .goat-picture {
@@ -71,10 +71,10 @@
 
 .description {
 	padding: 0;
-	width: 350px; 
+	width: 350px;
 	white-space: nowrap;
 	overflow: hidden;
-	text-overflow: ellipsis; 
+	text-overflow: ellipsis;
 }
 
 .cards:hover {

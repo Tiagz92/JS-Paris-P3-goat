@@ -9,7 +9,11 @@ interface AdvertCardProps {
 function AdvertCard({ advert }: AdvertCardProps) {
 	return (
 		<div className="cards">
-			<img className="online" src={onlineCourse} alt="online-course picto by HAJICON" />
+			<img
+				className="online"
+				src={onlineCourse}
+				alt="online-course picto by HAJICON"
+			/>
 			<img
 				className="goat-picture"
 				src={advert.goat_picture}
