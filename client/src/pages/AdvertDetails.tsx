@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./AdvertDetails.css";
+import AdvertBooking from "../components/AdvertBooking";
 
 type Advert = {
 	description: string;
@@ -51,9 +52,6 @@ function AdvertDetails() {
 
 	return (
 		<div className="advert-container">
-			<div className="calendar">
-				<h1>Sélectionnez une date</h1>
-			</div>
 			<div className="advert-profile">
 				<div className="profile-header">
 					<img
@@ -72,6 +70,10 @@ function AdvertDetails() {
 					</button>
 				</div>
 				<p className="profile-description">{advert.description}</p>
+			</div>
+			<div className="profile-calendar">
+				<h1>Sélectionnez une date</h1>
+				<AdvertBooking />
 			</div>
 			<div className="advert-reservation">
 				<button type="button" className="reservation-button">

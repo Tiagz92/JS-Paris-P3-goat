@@ -7,20 +7,23 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	min-height: 100vh;
 }
 .advert-container {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	justify-content: space-between;
-	align-items: flex-start;
+	align-items: center;
+	flex-wrap: wrap;
 	padding: 20px;
 	background: var(--white);
 	border: 3px solid var(--orange);
 	border-radius: 10px;
 	box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.3);
 	width: 85vw;
-	height: 75vh;
+	height: 80vh;
 	overflow: hidden;
+	padding-top: 10px;
 }
 
 .advert-profile {
@@ -28,9 +31,8 @@ body {
 	flex-direction: column;
 	justify-content: left;
 	align-items: left;
-	gap: 15px;
-	margin-bottom: 120px;
-	margin-left: 10px;
+	gap: 10px;
+	max-width: 40%;
 }
 .profile-header {
 	justify-content: center;
@@ -57,23 +59,31 @@ body {
 	color: var(--text-black);
 	margin: 0;
 }
-.calendar {
+.profile-calendar {
 	display: flex;
-	justify-content: right;
+	justify-content: center;
 	text-align: right;
 	align-items: center;
-	width: 100%;
-	height: 10%;
+	max-width: 60%;
+	min-height: 80%;
+	overflow: auto;
+	flex-wrap: wrap;
 }
-.calendar h1 {
+.profile-calendar h1 {
 	font-size: 2rem;
-	font-weight: initial;
+	font-weight: bolder;
+	justify-content: center;
 	text-align: center;
 	color: var(--text-black);
 	margin: 0;
-	margin-right: 150px;
 }
-
+.profile-booking {
+	display: flex;
+	flex-direction: flex-end;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+}
 .profile-tags {
 	display: flex;
 	flex-direction: row;
@@ -108,18 +118,19 @@ body {
 	border-color: var(--light-blue);
 }
 .profile-description {
-	justify-content: left;
+	justify-content: center;
 	text-align: center;
-	width: 50ch;
+	width: 60ch;
 	font-size: 1rem;
 	line-height: 1.6;
 	color: var(--text-black);
 	margin-top: 10px;
+	max-width: 100%;
 }
 .advert-reservation {
 	display: flex;
 	flex-direction: row;
-	justify-content: right;
+	justify-content: center;
 	width: 100%;
 	gap: 20px;
 	margin-top: 20px;
@@ -128,11 +139,11 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	text-align: center;
 	background-color: var(--orange);
 	color: var(--text-white);
 	border: 2px solid var(--orange);
 	font-size: 1rem;
-	margin-right: 250px;
 	border-radius: 10px;
 	padding: 10px 20px;
 	font-weight: bold;
@@ -141,13 +152,14 @@ body {
 }
 
 .reservation-button:hover {
-	background-color: var(--darkblue);
-	border-color: var(--darkblue);
+	background-color: var(--white);
+	border-color: var(--orange);
+	color: var(--orange);
 }
 .status {
 	font-size: 18px;
 	text-align: center;
-	color: #333;
+	color: var(--text-black);
 	margin: 20px 0;
 }
 @media (max-width: 768px) {
