@@ -1,0 +1,70 @@
+.register {
+	margin: 3rem 3rem 3rem 3rem;
+}
+
+h1,
+h2 {
+	text-transform: uppercase;
+}
+
+h1 {
+	font-size: 3rem;
+	font-weight: 400;
+	margin: 0;
+}
+
+h3 {
+	color: var(--darkblue);
+}
+
+.user {
+	display: flex;
+	justify-content: center;
+	gap: 10rem;
+}
+
+.submit-button {
+	display: flex;
+	justify-content: center;
+}
+
+.form_inputs {
+	width: 16rem;
+	width: var(--form-width);
+	color: black;
+	margin: 1rem 0;
+	position: relative;
+}
+
+.form_inputs label {
+	font-size: 16px;
+	position: absolute;
+	top: 10px;
+	left: 0;
+	pointer-events: none;
+	transition: all 0.15s ease;
+}
+
+.form_inputs input {
+	width: 100%;
+	height: 36px;
+	background: inherit;
+	border: none;
+	border-bottom: 1px solid;
+	color: inherit;
+}
+
+.form_inputs input:focus,
+.form_inputs input:valid {
+	outline: none;
+	border-width: 1px;
+	margin-bottom: -1px;
+	border-color: black;
+}
+
+.form_inputs input:focus + label,
+.form_inputs input:valid + label {
+	transform: translateY(-20px);
+	font-size: 70%;
+	color: var(--darkblue);
+}
