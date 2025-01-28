@@ -1,104 +1,127 @@
 .week-scheduler {
-	padding: 16px;
-	background-color: #f3f4f6; /* Correspond à votre couleur de fond */
 	font-family: Arial, sans-serif;
-}
-
-.week-scheduler h2 {
-	font-size: 1.5rem;
-	font-weight: bold;
-	margin-bottom: 16px;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 20px;
+	background-color: #ffffff;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .scheduler-header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 16px;
+	margin-bottom: 20px;
+	padding: 10px;
+	background-color: #f8f9fa;
+	border-radius: 8px;
 }
 
 .scheduler-header button {
-	padding: 8px 16px;
-	font-size: 14px;
+	padding: 10px 20px;
+	font-size: 16px;
 	cursor: pointer;
-	background-color: #ffffff;
-	border: 1px solid #d1d5db;
+	background-color: #007bff;
+	color: white;
+	border: none;
 	border-radius: 4px;
-	transition: background-color 0.3s;
+	transition: background-color 0.3s ease;
 }
 
 .scheduler-header button:hover {
-	background-color: #e5e7eb;
+	background-color: #0056b3;
 }
 
 .scheduler-header h2 {
 	margin: 0;
-	font-size: 1.5rem;
-	font-weight: bold;
+	font-size: 24px;
+	color: #333;
 }
 
 .scheduler-grid {
 	display: grid;
-	grid-template-columns: 100px repeat(5, 1fr); /* 1 colonne pour les heures, 5 pour les jours */
-	border: 1px solid #d1d5db;
-	background-color: #ffffff;
-	overflow: hidden;
-}
-
-.grid-header,
-.grid-time,
-.grid-slot {
-	border: 1px solid #d1d5db;
-	padding: 12px;
-	text-align: center;
+	grid-template-columns: 100px repeat(5, 1fr);
+	gap: 5px;
+	margin-top: 20px;
 }
 
 .grid-header {
-	background-color: #f3f4f6; /* Couleur d'arrière-plan des en-têtes des jours */
+	text-align: center;
 	font-weight: bold;
-}
-
-.empty-cell {
-	background-color: #f3f4f6;
-	border: none;
+	padding: 10px;
+	background-color: #f0f0f0;
+	border-radius: 4px;
 }
 
 .grid-time {
-	background-color: #f9f9f9; /* Couleur d'arrière-plan des cellules heure */
-	font-weight: bold;
+	text-align: right;
+	padding: 10px;
+	background-color: #f0f0f0;
+	border-radius: 4px;
 }
 
 .grid-slot {
-	height: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
+	background-color: #e0e0e0;
 	cursor: pointer;
-	transition: background-color 0.3s;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	transition: background-color 0.3s ease;
 }
 
-.grid-slot:hover {
-	background-color: #e5e7eb; /* Couleur de survol */
+.grid-slot:hover:not(.reserved):not(.unavailable) {
+	background-color: #d0d0d0;
 }
 
 .grid-slot.selected {
-	background-color: #93c5fd; /* Couleur pour les slots sélectionnés */
-	color: white;
+	background-color: #a0e0a0;
+	border-color: #80c080;
 }
 
-@media (max-width: 600px) {
-	.scheduler-grid {
-		grid-template-columns: 80px repeat(5, 1fr); /* Ajustement pour les petits écrans */
-	}
+.grid-slot.reserved {
+	background-color: #ffcccc;
+	cursor: not-allowed;
+	border-color: #ff9999;
+}
 
-	.scheduler-header h2 {
-		font-size: 1.2rem;
-	}
+.grid-slot.unavailable {
+	background-color: #f0f0f0;
+	cursor: not-allowed;
+	border-color: #ccc;
+}
 
-	.scheduler-header button {
-		padding: 6px 12px;
-		font-size: 12px;
-	}
+.booking-section {
+	margin-top: 20px;
+	text-align: center;
+}
 
-	.grid-slot {
-		height: 40px;
-		font-size: 12px;
-	}
+.booking-button {
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+	background-color: #28a745;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	transition: background-color 0.3s ease;
+}
+
+.booking-button:disabled {
+	background-color: #cccccc;
+	cursor: not-allowed;
+}
+
+.booking-button:hover:not(:disabled) {
+	background-color: #218838;
+}
+
+.booking-confirmation {
+	margin-top: 10px;
+	color: green;
+	font-weight: bold;
+	font-size: 14px;
 }
