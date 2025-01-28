@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { MainTag, SubTag } from "../types/Advert";
 import "./AdvertForm.css";
+import { toast } from "react-toastify";
 
 function AdvertForm() {
 	const [mainTags, setMainTags] = useState<MainTag[]>([]);
@@ -28,7 +29,12 @@ function AdvertForm() {
 			.then((mainTags) => {
 				setMainTags(mainTags);
 			})
-			.catch((error) => console.error("Erreur :", error));
+			.catch((error) =>
+				toast.error(
+					"Erreur de chargement des catégories principales 🐐",
+					error,
+				),
+			);
 	}, []);
 
 	useEffect(() => {
@@ -59,7 +65,7 @@ function AdvertForm() {
 			formData.sub_tag_id === null ||
 			formData.description.trim() === ""
 		) {
-			alert("Tous les champs sont obligatoires !");
+			toast.error("Tous les champs sont obligatoires ! 🐐");
 			return;
 		}
 
@@ -73,11 +79,11 @@ function AdvertForm() {
 			});
 
 			if (!response.ok) {
-				throw new Error("Erreur lors de la création de l'annonce");
+				throw new Error("Erreur lors de la création de l'annonce 🐐");
 			}
 
 			const result = await response.json();
-			console.info("Annonce créée avec succès :", result);
+			toast.info("Annonce créée avec succès !", result);
 
 			setFormData({
 				main_tag_id: null,
@@ -88,8 +94,7 @@ function AdvertForm() {
 			setSelectedMainTag(null);
 			navigate("/adverts");
 		} catch (error) {
-			console.error("Erreur lors de la soumission :", error);
-			alert("Une erreur est survenue. Veuillez réessayer.");
+			toast.error("Oups...il semble que ton annonce n'est pas complète 🐐");
 		}
 	};
 
