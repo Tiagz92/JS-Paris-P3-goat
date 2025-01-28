@@ -1,5 +1,6 @@
 import express from "express";
 import advertActions from "./modules/advert/advertActions";
+import { ReservationActions } from "./modules/reservation/ReservationActions";
 
 const router = express.Router();
 

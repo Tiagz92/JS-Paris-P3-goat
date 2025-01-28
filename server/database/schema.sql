@@ -6,17 +6,10 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
--- -----------------------------------------------------
 -- Schema goat_db
 -- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Schema goat_db
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `goat_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
-USE `goat_db` ;
+CREATE SCHEMA IF NOT EXISTS `goat_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE `goat_db`;
 
 -- -----------------------------------------------------
 -- Table `goat_db`.`main_tag`
@@ -24,23 +17,27 @@ USE `goat_db` ;
 CREATE TABLE IF NOT EXISTS `goat_db`.`main_tag` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`))
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
-
 
 -- -----------------------------------------------------
 -- Table `goat_db`.`sub_tag`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `goat_db`.`sub_tag` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
+  `name` VARCHAR(45) NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
-
 
 -- -----------------------------------------------------
 -- Table `goat_db`.`goat`
@@ -51,16 +48,19 @@ CREATE TABLE IF NOT EXISTS `goat_db`.`goat` (
   `firstname` VARCHAR(255) NOT NULL,
   `born_at` DATE NOT NULL,
   `email` VARCHAR(255) NOT NULL,
-  `password` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL COMMENT 'Stores hashed password',
   `picture` VARCHAR(255) NOT NULL,
   `presentation` TEXT NOT NULL,
   `video` VARCHAR(255) NULL DEFAULT NULL,
+  `status` ENUM('active', 'inactive', 'suspended') DEFAULT 'active',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE
+)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
-
 
 -- -----------------------------------------------------
 -- Table `goat_db`.`advert`
@@ -71,6 +71,9 @@ CREATE TABLE IF NOT EXISTS `goat_db`.`advert` (
   `goat_id` INT NULL DEFAULT NULL,
   `main_tag_id` INT NOT NULL,
   `sub_tag_id` INT NOT NULL,
+  `status` ENUM('active', 'inactive', 'archived') DEFAULT 'active',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `advert_id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_goat_id_idx` (`goat_id` ASC) VISIBLE,
@@ -84,30 +87,34 @@ CREATE TABLE IF NOT EXISTS `goat_db`.`advert` (
     REFERENCES `goat_db`.`sub_tag` (`id`),
   CONSTRAINT `fk_goat_id`
     FOREIGN KEY (`goat_id`)
-    REFERENCES `goat_db`.`goat` (`id`))
+    REFERENCES `goat_db`.`goat` (`id`)
+)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
-
 
 -- -----------------------------------------------------
 -- Table `goat_db`.`main_sub_tag`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `goat_db`.`main_sub_tag` (
-  `main_tag_id` INT NULL DEFAULT NULL,
-  `sub_tag_id` INT NULL DEFAULT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `main_tag_id` INT NOT NULL,
+  `sub_tag_id` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
   INDEX `fk_main_tag_id_idx` (`main_tag_id` ASC) VISIBLE,
   INDEX `fk_sub_tag_id_idx` (`sub_tag_id` ASC) VISIBLE,
+  UNIQUE KEY `unique_main_sub_tag` (`main_tag_id`, `sub_tag_id`),
   CONSTRAINT `fk_main_tag_id`
     FOREIGN KEY (`main_tag_id`)
     REFERENCES `goat_db`.`main_tag` (`id`),
   CONSTRAINT `fk_sub_tag_id`
     FOREIGN KEY (`sub_tag_id`)
-    REFERENCES `goat_db`.`sub_tag` (`id`))
+    REFERENCES `goat_db`.`sub_tag` (`id`)
+)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
-
 
 -- -----------------------------------------------------
 -- Table `goat_db`.`slot`
@@ -116,10 +123,13 @@ CREATE TABLE IF NOT EXISTS `goat_db`.`slot` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `start_at` DATETIME NOT NULL,
   `duration` INT NOT NULL,
-  `meet_link` VARCHAR(255) NOT NULL,
+  `meet_link` VARCHAR(255) NULL DEFAULT NULL,
   `comment` TEXT NULL DEFAULT NULL,
+  `status` ENUM('available', 'reserved', 'cancelled', 'completed') DEFAULT 'available',
   `advert_id` INT NOT NULL,
   `goat_id` INT NULL DEFAULT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_advert_id_idx` (`advert_id` ASC) VISIBLE,
   INDEX `fk_goat_id_idx` (`goat_id` ASC) VISIBLE,
@@ -129,21 +139,52 @@ CREATE TABLE IF NOT EXISTS `goat_db`.`slot` (
     ON DELETE CASCADE,
   CONSTRAINT `fk_slot_goat_id`
     FOREIGN KEY (`goat_id`)
-    REFERENCES `goat_db`.`goat` (`id`))
+    REFERENCES `goat_db`.`goat` (`id`),
+  CONSTRAINT `check_duration_positive` 
+    CHECK (duration > 0)
+)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
+-- -----------------------------------------------------
+-- Table `goat_db`.`reservations`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `goat_db`.`reservations` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `slot_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `google_meet_link` VARCHAR(255) NOT NULL,
+  `status` ENUM('pending', 'confirmed', 'cancelled', 'completed') DEFAULT 'pending',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_reservation_slot_idx` (`slot_id` ASC) VISIBLE,
+  INDEX `fk_reservation_user_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_reservation_slot`
+    FOREIGN KEY (`slot_id`)
+    REFERENCES `goat_db`.`slot` (`id`)
+    ON DELETE CASCADE,
+  CONSTRAINT `fk_reservation_user`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `goat_db`.`goat` (`id`)
+    ON DELETE CASCADE
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
-insert into goat(id, lastname, firstname, born_at, email, password, picture, presentation, video)
-values
- (1, "Valjean", "Jean", "1984-01-01", "jean.valjean@mail.com", "123456", "https://www.zoologiste.com/images/xl/chevre.jpg", "Salut, moi c’est Jean, j’ai 24 ans et je suis étudiant en 2ème année en Histoire classique à Paris Sorbonne.", "https://www.youtube.com/watch?v=3wvatkyji1w"),
- (2, "Martin", "Julie", "1999-12-24", "julie.martin@mail.com", "abcd", "https://media.istockphoto.com/id/177369626/fr/photo/dr%C3%B4le-de-ch%C3%A8vre-envoie-sa-languette.jpg?s=612x612&w=0&k=20&c=qi4mhhIVM80vPLFztpO9ki0mO-6YwQXOifq72TyW7Tw=", "Hello, je suis Julie, j'aime la vie et manger.", NULL);
+-- Insertion des données de test
+INSERT INTO `goat_db`.`goat` (lastname, firstname, born_at, email, password, picture, presentation, video)
+VALUES
+ ('Valjean', 'Jean', '1984-01-01', 'jean.valjean@mail.com', SHA2('123456', 256), 'https://www.zoologiste.com/images/xl/chevre.jpg', 'Salut, moi c''est Jean, j''ai 24 ans et je suis étudiant en 2ème année en Histoire classique à Paris Sorbonne.', 'https://www.youtube.com/watch?v=3wvatkyji1w'),
+ ('Martin', 'Julie', '1999-12-24', 'julie.martin@mail.com', SHA2('abcd', 256), 'https://media.istockphoto.com/id/177369626/fr/photo/dr%C3%B4le-de-ch%C3%A8vre-envoie-sa-languette.jpg?s=612x612&w=0&k=20&c=qi4mhhIVM80vPLFztpO9ki0mO-6YwQXOifq72TyW7Tw=', 'Hello, je suis Julie, j''aime la vie et manger.', NULL);
 
+-- Insertion des main_tags
 INSERT INTO main_tag (name)
 VALUES
   ('Maths'),
@@ -162,7 +203,7 @@ VALUES
   ('Voyage'),
   ('Autres');
 
--- Insérer les sub_tags avec leurs main_tags correspondants
+-- Insertion des sub_tags
 INSERT INTO sub_tag (name)
 VALUES
   -- Maths
@@ -214,7 +255,7 @@ VALUES
 ('Coréen'),
 
 -- Culture
-('Histoire de l’art'),
+('Histoire de l'art'),
 ('Cinéma et audiovisuel'),
 ('Traditions et folklore'),
 ('Mythologie et légendes'),
@@ -259,7 +300,7 @@ VALUES
 ('Comptabilité'),
 ('Épargne et investissement'),
 ('Fiscalité et impôts'),
-('Gestion d’entreprise'),
+('Gestion d'entreprise'),
 ('Documents administratifs'),
 ('Gestion des dettes et crédits'),
 ('Création de budgets'),
@@ -295,6 +336,7 @@ VALUES
 -- Autres
 ('Autres');
 
+-- Insertion des relations main_tag/sub_tag
 INSERT INTO main_sub_tag (main_tag_id, sub_tag_id)
 VALUES
   -- Maths

@@ -22,4 +22,4 @@ type DatabaseClient = Pool;
 type Result = ResultSetHeader;
 type Rows = RowDataPacket[];
 
-export type { DatabaseClient, Result, Rows };
+export type { DatabaseClient, Result, Rows, client };

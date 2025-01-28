@@ -1,16 +1,12 @@
-// Import Faker library for generating fake data
 import { faker } from "@faker-js/faker";
-
 import type { Faker } from "@faker-js/faker";
 
 // Import database client
 import database from "../client";
-
 import type { Result } from "../client";
 
 // Declare an object to store created objects from their names
 type Ref = object & { insertId: number };
-
 const refs: { [key: string]: Ref } = {};
 
 type SeederOptions = {
@@ -33,13 +29,9 @@ abstract class AbstractSeeder implements SeederOptions {
 		dependencies = [] as (typeof AbstractSeeder)[],
 	}: SeederOptions) {
 		this.table = table;
-
 		this.truncate = truncate;
-
 		this.dependencies = dependencies;
-
 		this.promises = [];
-
 		this.faker = faker;
 	}
 
@@ -60,7 +52,6 @@ abstract class AbstractSeeder implements SeederOptions {
 
 		if (refName != null) {
 			const { insertId } = result;
-
 			refs[refName] = { ...values, insertId };
 		}
 	}
@@ -78,7 +69,5 @@ abstract class AbstractSeeder implements SeederOptions {
 	}
 }
 
-// Ready to export
-export default AbstractSeeder;
-
-export type { AbstractSeeder };
+// Changer l'export de type à classe
+export { AbstractSeeder };

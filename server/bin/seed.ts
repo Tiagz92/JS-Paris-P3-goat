@@ -1,8 +1,8 @@
 // Load environment variables from .env file
 import "dotenv/config";
-
 import fs from "node:fs";
 import path from "node:path";
+import { ReservationSeeder } from "../database/fixtures/ReservationSeeder";
 
 // Import database client
 import database from "../database/client";
@@ -26,7 +26,6 @@ const seed = async () => {
 			);
 
 			const seeder = new SeederClass() as AbstractSeeder;
-
 			dependencyMap[SeederClass.toString()] = seeder;
 		}
 
@@ -54,15 +53,12 @@ const seed = async () => {
 		}
 
 		// Truncate tables (starting from the depending ones)
-
 		for (const seeder of sortedSeeders.toReversed()) {
 			// Use delete instead of truncate to bypass foreign key constraint
-			// Wait for the delete promise to complete
 			await database.query(`delete from ${seeder.table}`);
 		}
 
 		// Run each seeder
-
 		for (const seeder of sortedSeeders) {
 			await seeder.run();
 
@@ -71,6 +67,11 @@ const seed = async () => {
 			await Promise.all(seeder.promises);
 		}
 
+		await new ReservationSeeder({
+			table: "reservations",
+			truncate: true,
+			dependencies: [],
+		}).run();
 		// Close the database connection
 		database.end();
 
