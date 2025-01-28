@@ -1,0 +1,104 @@
+.week-scheduler {
+	padding: 16px;
+	background-color: #f3f4f6; /* Correspond à votre couleur de fond */
+	font-family: Arial, sans-serif;
+}
+
+.week-scheduler h2 {
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 16px;
+}
+
+.scheduler-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 16px;
+}
+
+.scheduler-header button {
+	padding: 8px 16px;
+	font-size: 14px;
+	cursor: pointer;
+	background-color: #ffffff;
+	border: 1px solid #d1d5db;
+	border-radius: 4px;
+	transition: background-color 0.3s;
+}
+
+.scheduler-header button:hover {
+	background-color: #e5e7eb;
+}
+
+.scheduler-header h2 {
+	margin: 0;
+	font-size: 1.5rem;
+	font-weight: bold;
+}
+
+.scheduler-grid {
+	display: grid;
+	grid-template-columns: 100px repeat(5, 1fr); /* 1 colonne pour les heures, 5 pour les jours */
+	border: 1px solid #d1d5db;
+	background-color: #ffffff;
+	overflow: hidden;
+}
+
+.grid-header,
+.grid-time,
+.grid-slot {
+	border: 1px solid #d1d5db;
+	padding: 12px;
+	text-align: center;
+}
+
+.grid-header {
+	background-color: #f3f4f6; /* Couleur d'arrière-plan des en-têtes des jours */
+	font-weight: bold;
+}
+
+.empty-cell {
+	background-color: #f3f4f6;
+	border: none;
+}
+
+.grid-time {
+	background-color: #f9f9f9; /* Couleur d'arrière-plan des cellules heure */
+	font-weight: bold;
+}
+
+.grid-slot {
+	height: 50px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+}
+
+.grid-slot:hover {
+	background-color: #e5e7eb; /* Couleur de survol */
+}
+
+.grid-slot.selected {
+	background-color: #93c5fd; /* Couleur pour les slots sélectionnés */
+	color: white;
+}
+
+@media (max-width: 600px) {
+	.scheduler-grid {
+		grid-template-columns: 80px repeat(5, 1fr); /* Ajustement pour les petits écrans */
+	}
+
+	.scheduler-header h2 {
+		font-size: 1.2rem;
+	}
+
+	.scheduler-header button {
+		padding: 6px 12px;
+		font-size: 12px;
+	}
+
+	.grid-slot {
+		height: 40px;
+		font-size: 12px;
+	}
+}
