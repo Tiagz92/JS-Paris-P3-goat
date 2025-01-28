@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import WeekScheduler from "./components/WeekScheduler";
+import WeekScheduler from "./components/advertBooking";
 import "./App.css";
 
 function App() {

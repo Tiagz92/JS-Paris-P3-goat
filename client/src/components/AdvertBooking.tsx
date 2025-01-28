@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import "./WeekScheduler.css";
+import "./AdvertBooking.css";
 
 const WeekScheduler = () => {
 	const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
 	const [selectedSlots, setSelectedSlots] = useState<{
 		[key: string]: boolean;
 	}>({});
+	const [showBookingConfirmation, setShowBookingConfirmation] = useState(false);
 
 	const generateDays = (weekOffset: number) => {
 		const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
@@ -13,7 +14,7 @@ const WeekScheduler = () => {
 	};
 
 	const days = generateDays(currentWeekOffset);
-	const hours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
+	const hours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
 
 	const toggleSlot = (day: string, hour: number) => {
 		const slotKey = `${day}-${hour}`;
@@ -21,10 +22,17 @@ const WeekScheduler = () => {
 			...prev,
 			[slotKey]: !prev[slotKey],
 		}));
+		setShowBookingConfirmation(false);
 	};
 
 	const changeWeek = (offset: number) => {
 		setCurrentWeekOffset((prev) => prev + offset);
+		setShowBookingConfirmation(false);
+	};
+
+	const handleBooking = () => {
+		// Ici vous pourriez ajouter la logique de réservation
+		setShowBookingConfirmation(true);
 	};
 
 	return (
@@ -33,7 +41,7 @@ const WeekScheduler = () => {
 				<button type="button" onClick={() => changeWeek(-1)}>
 					Semaine Précédente
 				</button>
-				<h2>Planification Hebdomadaire (Semaine {currentWeekOffset})</h2>
+				<h2>Sélectionne ton créneau ! (Semaine {currentWeekOffset})</h2>
 				<button type="button" onClick={() => changeWeek(1)}>
 					Semaine Suivante
 				</button>
@@ -50,9 +58,7 @@ const WeekScheduler = () => {
 				{/* Grille des Heures et Slots */}
 				{hours.map((hour) => (
 					<React.Fragment key={hour}>
-						{/* Heure */}
 						<div className="grid-time">{`${hour.toString().padStart(2, "0")}:00`}</div>
-						{/* Slots */}
 						{days.map((day) => {
 							const slotKey = `${day}-${hour}`;
 							return (
@@ -71,6 +77,21 @@ const WeekScheduler = () => {
 						})}
 					</React.Fragment>
 				))}
+			</div>
+
+			<div className="booking-section">
+				<button
+					type="button"
+					onClick={handleBooking}
+					className="booking-button"
+				>
+					Réserver
+				</button>
+				{showBookingConfirmation && (
+					<div className="booking-confirmation">
+						Votre réservation a été enregistrée.
+					</div>
+				)}
 			</div>
 		</div>
 	);
