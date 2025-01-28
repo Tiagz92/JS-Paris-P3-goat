@@ -20,6 +20,8 @@ function AdvertForm() {
 		goat_id: 1,
 	});
 
+	const [isFormValid, setIsFormValid] = useState(false);
+
 	useEffect(() => {
 		fetch("http://localhost:3310/api/main-tag")
 			.then((response) => response.json())
@@ -42,6 +44,14 @@ function AdvertForm() {
 			setSubTags([]);
 		}
 	}, [mainTags, selectedMainTag]);
+
+	useEffect(() => {
+		const isValid =
+			formData.main_tag_id !== null &&
+			formData.sub_tag_id !== null &&
+			formData.description.trim() !== "";
+		setIsFormValid(isValid);
+	}, [formData]);
 
 	const handleSubmit = async () => {
 		if (
@@ -100,7 +110,7 @@ function AdvertForm() {
 					</label>
 					<select
 						id="main-tag-select"
-						className="darkblue-button tag-button"
+						className="tag-list"
 						value={formData.main_tag_id ?? ""}
 						onChange={(e) => {
 							const mainTagId = e.target.value ? Number(e.target.value) : null;
@@ -123,7 +133,7 @@ function AdvertForm() {
 					</label>
 					<select
 						id="sub-tag-select"
-						className="darkblue-button tag-button"
+						className="tag-list"
 						value={formData.sub_tag_id ? formData.sub_tag_id : ""}
 						disabled={selectedMainTag === null}
 						onChange={(e) => {
@@ -149,6 +159,7 @@ function AdvertForm() {
 					<input
 						id="description"
 						type="text"
+						placeholder="Je suis un expert en... / Je peux t'aider à... / Je suis passionné par..."
 						className="description"
 						value={formData.description}
 						onChange={(e) =>
@@ -162,7 +173,11 @@ function AdvertForm() {
 				</div>
 
 				<div className="submit-button">
-					<button className="darkblue-button" type="submit">
+					<button
+						className={`darkblue-button ${!isFormValid ? "disabled-button" : ""}`}
+						type="submit"
+						disabled={!isFormValid}
+					>
 						Valide ton annonce
 					</button>
 				</div>

@@ -15,8 +15,15 @@
 	margin: 1rem 12rem 1rem 5rem;
 }
 
-.tag-button {
-	width: 42%;
+.tag-list {
+	background-color: var(--darkblue);
+	color: var(--text-white);
+	border-radius: 1rem;
+	border: none;
+	padding: 0.5rem;
+	cursor: pointer;
+	width: 20%;
+	padding-right: 1rem;
 }
 
 .form-group-description {
@@ -47,4 +54,8 @@
 	margin: 0;
 	padding: 0;
 	cursor: pointer;
+}
+
+.disabled-button {
+	opacity: 0.5;
 }
