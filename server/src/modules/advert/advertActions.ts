@@ -1,5 +1,4 @@
-import type { RequestHandler } from "express";
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, RequestHandler, Response } from "express";
 import goatRepository from "../goat/goatRepository";
 import mainTagRepository from "../mainTag/mainTagRepository";
 import subTagRepository from "../subTag/subTagRepository";
@@ -88,14 +87,15 @@ const read: RequestHandler = async (req, res, next) => {
 const add: RequestHandler = async (req, res, next) => {
 	try {
 		const newAdvert = {
-			description: req.body.description,
 			goat_id: req.body.goat_id,
 			main_tag_id: req.body.main_tag_id,
 			sub_tag_id: req.body.sub_tag_id,
-			sub_tag_name: req.body.sub_tag_name,
-			goat_firstname: req.body.goat_firstname,
 			goat_picture: req.body.goat_picture,
+			goat_firstname: req.body.goat_firstname,
 			main_tag_name: req.body.main_tag_name,
+			sub_tag_name: req.body.sub_tag_name,
+			goat_name: req.body.goat_name,
+			description: req.body.description,
 		};
 		const insertId = await advertRepository.create(newAdvert);
 		res.status(201).json({ insertId });

@@ -11,9 +11,9 @@ const router = express.Router();
 
 router.get("/api/adverts", advertActions.browse);
 
-router.get("/api/advert", advertActions.browse);
-router.get("/api/advert/:id", advertActions.read);
-router.post("/api/advert", advertActions.add);
+router.get("/api/adverts", advertActions.browse);
+router.get("/api/adverts/:id", advertActions.read);
+router.post("/api/adverts", advertActions.add);
 
 /* ************************************************************************* */
 

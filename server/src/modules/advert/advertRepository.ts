@@ -2,26 +2,29 @@ import databaseClient from "../../../database/client";
 import type { Result, Rows } from "../../../database/client";
 
 type Advert = {
-	id: number;
+	id?: number;
 	description: string;
 	goat_id: number;
 	main_tag_id: number;
 	sub_tag_id: number;
-	sub_tag_name: string;
+	goat_picture: string;
 	goat_firstname: string;
-  goat_picture: string;
-  main_tag_name: string;
+	main_tag_name: string;
+	sub_tag_name: string;
+	goat_name: string;
 };
 
 class AdvertRepository {
 	async create(advert: Omit<Advert, "id">): Promise<number> {
 		const [result] = await databaseClient.query<Result>(
-			"INSERT INTO advert (description, goat_id, main_tag_id, sub_tag_id) VALUES (?, ?, ?, ?)",
+			"INSERT INTO advert ( goat_picture, goat_firstname, goat_name, main_tag_name, sub_tag_name, description) VALUES (?, ?, ?, ?, ?, ?)",
 			[
+				advert.goat_picture,
+				advert.goat_firstname,
+				advert.goat_name,
+				advert.main_tag_name,
+				advert.sub_tag_name,
 				advert.description,
-				advert.goat_id,
-				advert.main_tag_id,
-				advert.sub_tag_id,
 			],
 		);
 		return result.insertId;
