@@ -14,7 +14,7 @@
 
 .search-container input[type="text"] {
 	width: 100%;
-	padding: 15px 10px 15px 45px; /* Augmenter l'espace à gauche pour plus d'écart entre l'icône et le texte */
+	padding: 15px 10px 15px 45px;
 	font-size: 16px;
 	border: 1px solid #ccc;
 	border-radius: 15px;
@@ -30,14 +30,14 @@
 
 .search-icon {
 	position: absolute;
-	left: 10px; /* Toujours proche du bord gauche */
+	left: 10px;
 	top: 50%;
 	transform: translateY(-50%);
 	width: 25px;
 	height: auto;
 }
 
-.search-container ul {
+.suggestions-list {
 	position: absolute;
 	top: 100%;
 	left: 0;

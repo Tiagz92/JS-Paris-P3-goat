@@ -10,20 +10,22 @@ const router = express.Router();
 /* ************************************************************************* */
 
 // Define item-related routes
-
 router.get("/api/main-tag", mainTagActions.browse);
 
 router.get("/api/adverts", advertActions.browse);
 
 router.post("/api/advert", advertServices.validateAdvert, advertActions.add);
 
-router.get("/api/advert", advertActions.browse);
 router.get("/api/advert/:id", advertActions.read);
-router.post("/api/advert", advertActions.add);
-router.get("/search", advertActions.search);
-router.get("/advert/maintags", advertActions.getMainTags);
-router.get("/advert/maintags/:id", advertActions.readByMainTagId);
+router.get("/search/description", advertActions.searchDescription);
+router.get("/search/maintags", advertActions.searchMainTagsByName);
+router.get("/search/subtags", advertActions.searchSubTagsByName);
+router.get("/filter/advert", advertActions.filterAdverts);
+router.get(
+	"/advert/search/subtag/:mainTagId",
+	advertActions.getSubTagsByMainTag,
+);
 
-/* ************************************************************************* */
+router.get("/advert/maintags", advertActions.getMainTags);
 
 export default router;

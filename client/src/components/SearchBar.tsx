@@ -6,7 +6,7 @@ interface SearchBarProps {
 	onSearch: (query: string) => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = () => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 	const [query, setQuery] = useState("");
 	const [suggestions, setSuggestions] = useState<string[]>([]);
 	const suggestionsRef = useRef<HTMLUListElement | null>(null);
@@ -15,26 +15,50 @@ const SearchBar: React.FC<SearchBarProps> = () => {
 		const fetchSuggestions = async () => {
 			if (query.trim() === "") {
 				setSuggestions([]);
+				onSearch("");
 				return;
 			}
 
 			try {
-				const response = await fetch(
-					`http://localhost:3310/search?q=${encodeURIComponent(query)}`,
-				);
-				if (!response.ok) {
+				const descriptionUrl = `http://localhost:3310/search/description?q=${encodeURIComponent(query)}`;
+				const mainTagUrl = `http://localhost:3310/search/maintags?q=${encodeURIComponent(query)}`;
+				const subTagUrl = `http://localhost:3310/search/subtags?q=${encodeURIComponent(query)}`;
+
+				const descriptionResponse = await fetch(descriptionUrl);
+				if (!descriptionResponse.ok) {
 					throw new Error(
-						`Erreur HTTP : ${response.status} - ${response.statusText}`,
+						`Erreur HTTP : ${descriptionResponse.status} - ${descriptionResponse.statusText}`,
 					);
 				}
+				const descriptionData = await descriptionResponse.json();
 
-				const data = await response.json();
-				setSuggestions(data.slice(0, 5));
+				const mainTagResponse = await fetch(mainTagUrl);
+				if (!mainTagResponse.ok) {
+					throw new Error(
+						`Erreur HTTP : ${mainTagResponse.status} - ${mainTagResponse.statusText}`,
+					);
+				}
+				const mainTagData = await mainTagResponse.json();
+
+				const subTagResponse = await fetch(subTagUrl);
+				if (!subTagResponse.ok) {
+					throw new Error(
+						`Erreur HTTP : ${subTagResponse.status} - ${subTagResponse.statusText}`,
+					);
+				}
+				const subTagData = await subTagResponse.json();
+
+				const combinedSuggestions = [
+					...new Set([
+						...mainTagData.slice(0, 5).map((tag: { name: string }) => tag.name),
+						...subTagData.slice(0, 5).map((tag: { name: string }) => tag.name),
+						...descriptionData.slice(0, 5),
+					]),
+				];
+
+				setSuggestions(combinedSuggestions);
 			} catch (error) {
-				console.error(
-					"Erreur lors de la récupération des suggestions :",
-					error,
-				);
+				setSuggestions([]);
 			}
 		};
 
@@ -43,10 +67,11 @@ const SearchBar: React.FC<SearchBarProps> = () => {
 		}, 300);
 
 		return () => clearTimeout(delayDebounce);
-	}, [query]);
+	}, [query, onSearch]);
 
 	const removeSuggestion = (word: string) => {
 		setSuggestions((prev) => prev.filter((suggestion) => suggestion !== word));
+		onSearch(word);
 	};
 
 	const handleClickOutside = useCallback((event: MouseEvent) => {
@@ -72,11 +97,14 @@ const SearchBar: React.FC<SearchBarProps> = () => {
 				type="text"
 				placeholder="Rechercher..."
 				value={query}
-				onChange={(e) => setQuery(e.target.value)}
+				onChange={(e) => {
+					setQuery(e.target.value);
+					onSearch(e.target.value);
+				}}
 			/>
 			{suggestions.length > 0 && (
 				<ul ref={suggestionsRef} className="suggestions-list">
-					{suggestions.map((word) => (
+					{suggestions.slice(0, 5).map((word) => (
 						<li
 							key={word}
 							onClick={() => removeSuggestion(word)}

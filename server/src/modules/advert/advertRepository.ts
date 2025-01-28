@@ -22,10 +22,6 @@ class AdvertRepository {
 				advert.goat_id,
 				advert.main_tag_id,
 				advert.sub_tag_id,
-				advert.goat_firstname,
-				advert.goat_picture,
-				advert.main_tag_name,
-				advert.sub_tag_name,
 			],
 		);
 		return result.insertId;
@@ -44,7 +40,7 @@ class AdvertRepository {
 		return rows as Advert[];
 	}
 
-	async search(query: string): Promise<string[]> {
+	async searchDescription(query: string): Promise<string[]> {
 		try {
 			const [rows] = await databaseClient.query<Rows>(
 				"SELECT description FROM advert WHERE description LIKE ?",
@@ -83,12 +79,69 @@ class AdvertRepository {
 			throw error;
 		}
 	}
-	async readByMainTagId(mainTagId: number): Promise<Advert[]> {
-		const [rows] = await databaseClient.query<Rows>(
-			"SELECT * FROM advert WHERE main_tag_id = ?",
-			[mainTagId],
-		);
-		return rows as Advert[];
+
+	async searchMainTagsByName(
+		query: string,
+	): Promise<{ id: number; name: string }[]> {
+		try {
+			const [rows] = await databaseClient.query<Rows>(
+				"SELECT id, name FROM main_tag WHERE name LIKE ?",
+				[`%${query}%`],
+			);
+			return rows as { id: number; name: string }[];
+		} catch (error) {
+			console.error(
+				"Erreur SQL lors de la recherche de main tags par nom :",
+				error,
+			);
+			throw error;
+		}
+	}
+
+	async searchSubTagsByName(
+		query: string,
+	): Promise<{ id: number; name: string }[]> {
+		try {
+			const [rows] = await databaseClient.query<Rows>(
+				"SELECT id, name FROM sub_tag WHERE name LIKE ?",
+				[`%${query}%`],
+			);
+			return rows as { id: number; name: string }[];
+		} catch (error) {
+			console.error(
+				"Erreur SQL lors de la recherche de sub tags par nom :",
+				error,
+			);
+			throw error;
+		}
+	}
+
+	async filterByTags(mainTagId: number, subTagId: number): Promise<Advert[]> {
+		try {
+			const [rows] = await databaseClient.query<Rows>(
+				"SELECT * FROM advert WHERE main_tag_id = ? AND sub_tag_id = ?",
+				[mainTagId, subTagId],
+			);
+			return rows as Advert[];
+		} catch (error) {
+			console.error("Erreur SQL lors de la filtration des annonces :", error);
+			throw error;
+		}
+	}
+	async getSubTagsByMainTag(mainTagId: number): Promise<string[]> {
+		try {
+			const [rows] = await databaseClient.query<Rows>(
+				"SELECT name FROM sub_tag WHERE main_tag_id = ?",
+				[mainTagId],
+			);
+			return rows.map((row) => row.name); // Retourner les sous-tags
+		} catch (error) {
+			console.error(
+				"Erreur SQL lors de la récupération des sous-tags :",
+				error,
+			); // Log SQL
+			throw error;
+		}
 	}
 }
 

@@ -8,6 +8,7 @@ import AdvertDetails from "./pages/AdvertDetails";
 import AdvertForm from "./pages/AdvertForm";
 import AdvertList from "./pages/AdvertList";
 import Faq from "./pages/Faq";
+import Home from "./pages/Home";
 import ProfileDetails from "./pages/ProfileDetails";
 
 /* ************************************************************************* */
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
 		path: "/", // The root path
 		element: <App />, // Renders the App component for the home page
 		children: [
+			{
+				path: "home",
+				element: <Home />,
+			},
 			{
 				path: "adverts",
 				element: <AdvertList />,

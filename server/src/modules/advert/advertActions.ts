@@ -94,14 +94,14 @@ const add: RequestHandler = async (req: Request, res: Response, next) => {
 		next(err);
 	}
 };
-const search: RequestHandler = async (req, res, next) => {
+const searchDescription: RequestHandler = async (req, res, next) => {
 	try {
 		const query = req.query.q as string;
 		if (!query || query.trim() === "") {
 			res.status(400).json({ message: "Query parameter 'q' is required." });
 			return;
 		}
-		const results = await advertRepository.search(query);
+		const results = await advertRepository.searchDescription(query);
 		res.json(results);
 	} catch (err) {
 		next(err);
@@ -115,18 +115,80 @@ const getMainTags: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
-const readByMainTagId: RequestHandler = async (req, res, next) => {
+const searchMainTagsByName: RequestHandler = async (req, res, next) => {
 	try {
-		const mainTagId = Number(req.params.id);
-		if (Number.isNaN(mainTagId)) {
-			res.status(400).json({ message: "Invalid mainTagId parameter." });
+		const query = req.query.q as string;
+		if (!query || query.trim() === "") {
+			res.status(400).json({ message: "Query parameter 'q' is required." });
 			return;
 		}
-		const adverts = await advertRepository.readByMainTagId(mainTagId);
-		res.json(adverts);
+		const mainTags = await advertRepository.searchMainTagsByName(query);
+		res.json(mainTags);
+	} catch (err) {
+		next(err);
+	}
+};
+const searchSubTagsByName: RequestHandler = async (req, res, next) => {
+	try {
+		const query = req.query.q as string;
+		if (!query || query.trim() === "") {
+			res.status(400).json({ message: "Query parameter 'q' is required." });
+			return;
+		}
+		const mainTags = await advertRepository.searchSubTagsByName(query);
+		res.json(mainTags);
 	} catch (err) {
 		next(err);
 	}
 };
 
-export default { browse, read, add, search, getMainTags, readByMainTagId };
+const filterAdverts: RequestHandler = async (req, res, next) => {
+	try {
+		const mainTagId = Number(req.query.mainTagId);
+		const subTagId = Number(req.query.subTagId);
+		if (Number.isNaN(mainTagId) || Number.isNaN(subTagId)) {
+			res.status(400).json({ message: "Paramètres invalides" });
+			return;
+		}
+		const adverts = await advertRepository.filterByTags(mainTagId, subTagId);
+		res.json(adverts);
+	} catch (err) {
+		next(err);
+	}
+};
+// Exemple de gestion des sous-tags
+const getSubTagsByMainTag: RequestHandler = async (req, res, next) => {
+	try {
+		const mainTagId = Number(req.params.mainTagId); // Récupération de l'ID du mainTag
+		if (Number.isNaN(mainTagId)) {
+			res.status(400).json({ message: "Paramètre invalide" });
+			return;
+		}
+
+		// Appel à la méthode du repository pour obtenir les sous-tags
+		const subTags = await advertRepository.getSubTagsByMainTag(mainTagId);
+
+		if (!subTags || subTags.length === 0) {
+			res.status(404).json({ message: "Aucun sous-tag trouvé" });
+			return;
+		}
+
+		// Réponse avec les sous-tags trouvés
+		res.json(subTags);
+	} catch (err) {
+		console.error("Erreur lors de la récupération des sous-tags :", err); // Log d'erreur pour diagnostiquer
+		next(err); // Transmet l'erreur pour gestion
+	}
+};
+
+export default {
+	browse,
+	read,
+	add,
+	searchDescription,
+	getMainTags,
+	searchMainTagsByName,
+	searchSubTagsByName,
+	filterAdverts,
+	getSubTagsByMainTag,
+};

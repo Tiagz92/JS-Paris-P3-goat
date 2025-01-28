@@ -7,7 +7,7 @@ export interface Advert {
 	title: string;
 	description: string;
 }
-const App: React.FC = () => {
+const Home: React.FC = () => {
 	const [searchResults, setSearchResults] = useState<Advert[]>([]);
 
 	const handleSearch = async (query: string) => {
@@ -30,4 +30,4 @@ const App: React.FC = () => {
 	);
 };
 
-export default App;
+export default Home;
