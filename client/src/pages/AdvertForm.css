@@ -59,3 +59,38 @@
 .disabled-button {
 	opacity: 0.5;
 }
+
+@media (max-width: 768px) {
+	.advert-form {
+		width: 80%;
+		margin: 2rem auto 2rem auto;
+		text-align: center;
+	}
+
+	.form {
+		width: 100%;
+		margin: 0;
+		padding: 0;
+	}
+
+	.form-group {
+		width: 80%;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.tag-list {
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+		width: 60%;
+	}
+
+	.form-group-description {
+		margin: 0 2rem 0 2rem;
+		align-items: center;
+	}
+	.submit-button .disabled-button {
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+	}
+}

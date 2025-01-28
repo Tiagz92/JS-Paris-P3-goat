@@ -147,7 +147,7 @@ function AdvertForm() {
 						}}
 					>
 						<option value="">
-							{selectedMainTag === null ? "" : "Choisis une sous-catégorie"}
+							{selectedMainTag === null ? "" : "Choisis une sous-catégorie "}
 						</option>
 						{subTags.map((subTag) => (
 							<option key={subTag.id} value={subTag.id}>
