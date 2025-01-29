@@ -3,7 +3,7 @@ import "./AdvertBooking.css";
 
 const WeekScheduler = () => {
 	const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
-	const [selectedSlot, setSelectedSlot] = useState<string | null>(null); // Un seul créneau sélectionné
+	const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
 	const [showBookingConfirmation, setShowBookingConfirmation] = useState(false);
 	const [availabilities, setAvailabilities] = useState<{
 		[key: string]: boolean;
@@ -48,7 +48,6 @@ const WeekScheduler = () => {
 		setShowBookingConfirmation(false);
 	};
 
-	// Gérer la réservation
 	const handleBooking = () => {
 		if (selectedSlot) {
 			const newReservations = { ...reservations };
@@ -61,16 +60,14 @@ const WeekScheduler = () => {
 			for (const hour of hours) {
 				const otherSlotKey = `${day}-${hour}`;
 				if (otherSlotKey !== selectedSlot && newAvailabilities[otherSlotKey]) {
-					newAvailabilities[otherSlotKey] = false; // Marquer comme indisponible
+					newAvailabilities[otherSlotKey] = false;
 				}
 			}
 
 			setReservations(newReservations);
 			setAvailabilities(newAvailabilities);
-			setSelectedSlot(null); // Réinitialiser la sélection
+			setSelectedSlot(null);
 			setShowBookingConfirmation(true);
-		} else {
-			alert("Veuillez sélectionner un créneau.");
 		}
 	};
 
@@ -102,19 +99,16 @@ const WeekScheduler = () => {
 							const isReserved = reservations[slotKey];
 							const isSelected = selectedSlot === slotKey;
 							return (
-								<div
+								<button
+									type="button"
 									key={slotKey}
 									className={`grid-slot ${
 										isSelected ? "selected" : isReserved ? "reserved" : ""
 									} ${!isAvailable ? "unavailable" : ""}`}
 									onClick={() => toggleSlot(day, hour)}
-									onKeyDown={() => toggleSlot(day, hour)}
-									// biome-ignore lint/a11y/useSemanticElements: <explanation>
-									role="button"
-									tabIndex={0}
 								>
 									{isSelected ? "✓" : isReserved ? "✗" : ""}
-								</div>
+								</button>
 							);
 						})}
 					</React.Fragment>
