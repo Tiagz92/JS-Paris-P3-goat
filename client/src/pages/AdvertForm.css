@@ -39,6 +39,10 @@
 	width: 100%;
 }
 
+.description-label {
+	margin-top: 1rem;
+}
+
 .textDescription {
 	margin-top: 1rem;
 	margin-bottom: 2rem;

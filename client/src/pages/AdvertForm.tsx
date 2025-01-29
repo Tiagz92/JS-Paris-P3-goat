@@ -160,7 +160,7 @@ function AdvertForm() {
 					</div>
 
 					<div className="form-group-description">
-						<label htmlFor="description">
+						<label htmlFor="description" className="description-label">
 							Ajoute un texte descriptif à ton annonce
 						</label>
 						<input
