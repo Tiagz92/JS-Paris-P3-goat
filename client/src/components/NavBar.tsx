@@ -26,7 +26,7 @@ function NavBar() {
 			<div className="navbar-links">
 				<button
 					type="button"
-					className="add-advert-button"
+					className="yellow-button"
 					onClick={() => navigate("/adverts/add")}
 				>
 					Crée ton annonce !

@@ -99,99 +99,101 @@ function AdvertForm() {
 	};
 
 	return (
-		<div className="advert-form">
-			<h1 className="title">Crée ton annonce !</h1>
+		<div className="form-page">
+			<div className="advert-form">
+				<h1 className="form-title">Crée ton annonce !</h1>
 
-			<form
-				className="form"
-				onSubmit={(e) => {
-					e.preventDefault();
-					handleSubmit();
-				}}
-			>
-				<div className="form-group">
-					<label htmlFor="main-tag-select">
-						Quel savoir veux-tu transmettre ?
-					</label>
-					<select
-						id="main-tag-select"
-						className="tag-list"
-						value={formData.main_tag_id ?? ""}
-						onChange={(e) => {
-							const mainTagId = e.target.value ? Number(e.target.value) : null;
-							setFormData((prev) => ({ ...prev, main_tag_id: mainTagId }));
-							setSelectedMainTag(mainTagId);
-						}}
-					>
-						<option value="">Choisis un savoir</option>
-						{mainTags.map((mainTag) => (
-							<option key={mainTag.id} value={mainTag.id}>
-								{mainTag.name}
+				<form
+					className="form"
+					onSubmit={(e) => {
+						e.preventDefault();
+						handleSubmit();
+					}}
+				>
+					<div className="form-group">
+						<label htmlFor="main-tag-select">
+							Quel savoir veux-tu transmettre ?
+						</label>
+						<select
+							id="main-tag-select"
+							className="tag-list"
+							value={formData.main_tag_id ?? ""}
+							onChange={(e) => {
+								const mainTagId = e.target.value
+									? Number(e.target.value)
+									: null;
+								setFormData((prev) => ({ ...prev, main_tag_id: mainTagId }));
+								setSelectedMainTag(mainTagId);
+							}}
+						>
+							<option value="">Choisis un savoir</option>
+							{mainTags.map((mainTag) => (
+								<option key={mainTag.id} value={mainTag.id}>
+									{mainTag.name}
+								</option>
+							))}
+						</select>
+					</div>
+
+					<div className="form-group">
+						<label htmlFor="sub-tag-select">
+							Quelle sous-catégorie veux-tu proposer ?
+						</label>
+						<select
+							className="tag-list"
+							value={formData.sub_tag_id ? formData.sub_tag_id : ""}
+							disabled={selectedMainTag === null}
+							onChange={(e) => {
+								const subTagId = e.target.value ? Number(e.target.value) : null;
+								setFormData((prev) => ({ ...prev, sub_tag_id: subTagId }));
+							}}
+						>
+							<option value="">
+								{selectedMainTag === null ? "" : "Choisis une sous-catégorie "}
 							</option>
-						))}
-					</select>
-				</div>
+							{subTags.map((subTag) => (
+								<option key={subTag.id} value={subTag.id}>
+									{subTag.name}
+								</option>
+							))}
+						</select>
+					</div>
 
-				<div className="form-group">
-					<label htmlFor="sub-tag-select">
-						Quelle sous-catégorie veux-tu proposer ?
-					</label>
-					<select
-						id="sub-tag-select"
-						className="tag-list"
-						value={formData.sub_tag_id ? formData.sub_tag_id : ""}
-						disabled={selectedMainTag === null}
-						onChange={(e) => {
-							const subTagId = e.target.value ? Number(e.target.value) : null;
-							setFormData((prev) => ({ ...prev, sub_tag_id: subTagId }));
-						}}
-					>
-						<option value="">
-							{selectedMainTag === null ? "" : "Choisis une sous-catégorie "}
-						</option>
-						{subTags.map((subTag) => (
-							<option key={subTag.id} value={subTag.id}>
-								{subTag.name}
-							</option>
-						))}
-					</select>
-				</div>
+					<div className="form-group-description">
+						<label htmlFor="description">
+							Ajoute un texte descriptif à ton annonce
+						</label>
+						<input
+							type="text"
+							placeholder="Je suis un expert en... / Je peux t'aider à... / Je suis passionné par..."
+							className="textDescription"
+							value={formData.description}
+							onChange={(e) =>
+								setFormData((prev) => ({
+									...prev,
+									description: e.target.value,
+								}))
+							}
+							required
+						/>
+					</div>
 
-				<div className="form-group-description">
-					<label htmlFor="description">
-						Ajoute un texte descriptif à ton annonce
-					</label>
-					<input
-						id="description"
-						type="text"
-						placeholder="Je suis un expert en... / Je peux t'aider à... / Je suis passionné par..."
-						className="description"
-						value={formData.description}
-						onChange={(e) =>
-							setFormData((prev) => ({
-								...prev,
-								description: e.target.value,
-							}))
-						}
-						required
-					/>
-				</div>
+					<div className="submit-button">
+						<button
+							className={`darkblue-button ${!isFormValid ? "disabled-button" : ""}`}
+							type="submit"
+							disabled={!isFormValid}
+						>
+							Valide ton annonce
+						</button>
+					</div>
+				</form>
 
-				<div className="submit-button">
-					<button
-						className={`darkblue-button ${!isFormValid ? "disabled-button" : ""}`}
-						type="submit"
-						disabled={!isFormValid}
-					>
-						Valide ton annonce
-					</button>
-				</div>
-			</form>
-
-			<h3 className="advertising-text">
-				Après cette étape, ton annonce sera disponible sur les créneaux de
-				réservation que tu as définis sur ton profil !
-			</h3>
+				<h3 className="advertising-text">
+					Après cette étape, ton annonce sera disponible sur les créneaux de
+					réservation que tu as définis sur ton profil !
+				</h3>
+			</div>
 		</div>
 	);
 }

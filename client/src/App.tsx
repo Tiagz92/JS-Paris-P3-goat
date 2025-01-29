@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import "./App.css";
+import "./Reset.css";
 import { Bounce, ToastContainer } from "react-toastify";
 import NavBar from "./components/NavBar";
 
@@ -9,7 +10,7 @@ function App() {
 			<NavBar />
 			<Outlet />
 			<ToastContainer
-				position="top-right"
+				position="top-center"
 				autoClose={5000}
 				hideProgressBar={false}
 				newestOnTop={false}
@@ -18,7 +19,7 @@ function App() {
 				pauseOnFocusLoss
 				draggable
 				pauseOnHover
-				theme="light"
+				theme="colored"
 				transition={Bounce}
 			/>
 		</>
