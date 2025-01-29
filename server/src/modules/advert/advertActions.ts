@@ -156,28 +156,28 @@ const filterAdverts: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
-// Exemple de gestion des sous-tags
-const getSubTagsByMainTag: RequestHandler = async (req, res, next) => {
+const getSubTagsByMainTag: RequestHandler = async (
+	req,
+	res,
+	next,
+): Promise<void> => {
 	try {
-		const mainTagId = Number(req.params.mainTagId); // Récupération de l'ID du mainTag
+		const mainTagId = Number(req.params.mainTagId);
 		if (Number.isNaN(mainTagId)) {
 			res.status(400).json({ message: "Paramètre invalide" });
 			return;
 		}
 
-		// Appel à la méthode du repository pour obtenir les sous-tags
-		const subTags = await advertRepository.getSubTagsByMainTag(mainTagId);
+		const subTags = await advertRepository.takeSubTagsByMainTag(mainTagId);
 
 		if (!subTags || subTags.length === 0) {
 			res.status(404).json({ message: "Aucun sous-tag trouvé" });
 			return;
 		}
-
-		// Réponse avec les sous-tags trouvés
 		res.json(subTags);
 	} catch (err) {
-		console.error("Erreur lors de la récupération des sous-tags :", err); // Log d'erreur pour diagnostiquer
-		next(err); // Transmet l'erreur pour gestion
+		console.error("❌ Erreur lors de la récupération des sous-tags :", err);
+		next(err);
 	}
 };
 

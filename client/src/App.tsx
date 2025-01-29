@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import "./Reset.css";
 import "./App.css";
 import NavBar from "./components/NavBar";
 

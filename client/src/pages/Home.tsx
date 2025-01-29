@@ -6,6 +6,8 @@ export interface Advert {
 	id: number;
 	title: string;
 	description: string;
+	main_tag_id: number;
+	sub_tag_id: number;
 }
 const Home: React.FC = () => {
 	const [searchResults, setSearchResults] = useState<Advert[]>([]);
@@ -24,7 +26,7 @@ const Home: React.FC = () => {
 
 	return (
 		<div className="search">
-			<SearchBar onSearch={handleSearch} />
+			<SearchBar onSearch={handleSearch} onSearchFocus={() => {}} />
 			<FilterMainTag data={searchResults} />
 		</div>
 	);

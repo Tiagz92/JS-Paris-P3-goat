@@ -128,18 +128,17 @@ class AdvertRepository {
 			throw error;
 		}
 	}
-	async getSubTagsByMainTag(mainTagId: number): Promise<string[]> {
+	async takeSubTagsByMainTag(
+		mainTagId: number,
+	): Promise<{ id: number; name: string }[]> {
 		try {
 			const [rows] = await databaseClient.query<Rows>(
-				"SELECT name FROM sub_tag WHERE main_tag_id = ?",
+				"SELECT sub_tag.id, sub_tag.name FROM sub_tag JOIN main_sub_tag ON sub_tag.id = main_sub_tag.sub_tag_id WHERE main_sub_tag.main_tag_id = ?",
 				[mainTagId],
 			);
-			return rows.map((row) => row.name); // Retourner les sous-tags
+			return rows as { id: number; name: string }[];
 		} catch (error) {
-			console.error(
-				"Erreur SQL lors de la récupération des sous-tags :",
-				error,
-			); // Log SQL
+			console.error("❌ Erreur SQL récupération des sous-tags:", error);
 			throw error;
 		}
 	}
