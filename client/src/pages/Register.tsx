@@ -12,9 +12,9 @@ function Register() {
 	const handleFileChange = () => {
 		const file = avatar.current?.files?.[0];
 		if (file) {
-		  setProfilePic(URL.createObjectURL(file));
+			setProfilePic(URL.createObjectURL(file));
 		}
-	  };
+	};
 
 	const [lastname, setLastname] = useState("");
 	const [firstname, setFirstname] = useState("");
@@ -52,153 +52,223 @@ function Register() {
 		);
 	};
 
+	const [video, setVideo] = useState<string | null>(null);
+	const videoInput = useRef<HTMLInputElement | null>(null);
+
+	const handleVideoChange = () => {
+		const file = videoInput.current?.files?.[0];
+		if (file) {
+			setVideo(URL.createObjectURL(file));
+		}
+	};
+
+	const [currentStep, setCurrentStep] = useState(1);
+
+	const nextStep = () => {
+		setCurrentStep((prev) => Math.min(prev + 1, 3));
+	};
+
+	const prevStep = () => {
+		setCurrentStep((prev) => Math.max(prev - 1, 1)); // Revient à l'étape précédente
+	};
+
 	return (
 		<>
 			<section className="register">
-				<section className="profil">
-					<h1>crée ton compte !</h1>
-					<h2>étape 1/3 - Ton profil :</h2>
-					<section className="user">
-						<section className="informations">
-							<h3>Qui es-tu ?</h3>
-							<section className="profilPicture">
-							<button
-  type="button"
-  onClick={() => {
-    if (avatar.current) {
-      avatar.current.click();
-      setEdit(true);
-    }
-  }}
->
-      <Avatar alt="Profil Picture" src={profilePic ?? undefined} />
-      <input type="file" hidden ref={avatar} onChange={handleFileChange} />
-    </button>
-    {edit && (
-      <Button type="button" variant="contained">
-        Ajoute ta photo !
-      </Button>
-    )}
+				{currentStep === 1 && (
+					<section className="profil">
+						<h1>crée ton compte !</h1>
+						<h2>étape 1/3 - Ton profil :</h2>
+						<section className="user">
+							<section className="informations">
+								<h3>Qui es-tu ?</h3>
+								<section className="profilPicture">
+									<button
+										type="button"
+										className="avatar"
+										onClick={() => {
+											if (avatar.current) {
+												avatar.current.click();
+												setEdit(true);
+											}
+										}}
+									>
+										<Avatar
+											alt="Profil Picture"
+											src={profilePic ?? undefined}
+										/>
+										<input
+											type="file"
+											hidden
+											ref={avatar}
+											onChange={handleFileChange}
+										/>
+									</button>
+									{edit && (
+										<Button type="button" variant="contained">
+											OK !
+										</Button>
+									)}
 								</section>
-							<form className="form_items">
-								<div className="form_inputs">
-									<input
-										name="lastname"
-										type="text"
-										value={lastname}
-										onChange={(e) => setLastname(e.target.value)}
-										required
-									/>
-									<label htmlFor="lastname">Nom</label>
-								</div>
-								<div className="form_inputs">
-									<input
-										type="text"
-										value={firstname}
-										onChange={(e) => setFirstname(e.target.value)}
-										required
-										name="firstname"
-									/>
-									<label htmlFor="firstname">Prénom</label>
-								</div>
-								<div className="form_birthday">
-								<label htmlFor="birthday">Date d'anniversaire</label>
-									<input
-										type="date"
-										value={birthday}
-										onChange={(e) => setBirthday(e.target.value)}
-										required
-										name="birthday"
-									/>
-								</div>
-							</form>
-						</section>
-						<section>
-							<section className="connexion">
-								<h3>Comment te connecter ?</h3>
-								<div className="form_inputs">
-									<input
-										name="email"
-										type="email"
-										value={email}
-										onChange={(e) => setEmail(e.target.value)}
-										required
-									/>
-									<label htmlFor="email">Adresse email</label>
-								</div>
-								<div className="form_inputs">
-									<input
-										name="password"
-										type="password"
-										value={password}
-										onChange={(e) => setPassword(e.target.value)}
-										required
-									/>
-									<label htmlFor="password">Mot de passe</label>
-								</div>
+								<form className="form_items">
+									<div className="form_inputs">
+										<input
+											name="lastname"
+											type="text"
+											value={lastname}
+											onChange={(e) => setLastname(e.target.value)}
+											required
+										/>
+										<label htmlFor="lastname">Nom</label>
+									</div>
+									<div className="form_inputs">
+										<input
+											type="text"
+											value={firstname}
+											onChange={(e) => setFirstname(e.target.value)}
+											required
+											name="firstname"
+										/>
+										<label htmlFor="firstname">Prénom</label>
+									</div>
+									<div className="form_birthday">
+										<label htmlFor="birthday">Date d'anniversaire</label>
+										<input
+											type="date"
+											value={birthday}
+											onChange={(e) => setBirthday(e.target.value)}
+											required
+											name="birthday"
+										/>
+									</div>
+								</form>
 							</section>
-							<section className="presentation">
-								<h3>Parle nous un peu de toi : </h3>
-								<div className="form_inputs">
-									<input
-										name="presentation"
-										type="text"
-										value={presentation}
-										onChange={(e) => setPresentation(e.target.value)}
-										required
-									/>
-									<label htmlFor="password">Je suis...</label>
-								</div>
-								<p>AJOUTE UNE VIDEO</p>
-							</section>
-						</section>
-					</section>
-					<div className="submit-button">
-						<button className="lightblue-button " type="submit">
-							Passer à l'étape 2/3
-						</button>
-					</div>
-				</section>
-				<section className="knowledge">
-					<h2>étape 2/3 - Tes savoirs :</h2>
-					<h3>
-						Sélectionne les 3 catégories pour lesquelles tu as des connaissances
-						et que tu souhaites partager
-					</h3>
-					<div className="form-group">
-						{selectedTags.map((selectedTag, index) => (
-							<select
-								className="darkblue-button"
-								key={`select-${index}-${selectedTag || "empty"}`}
-								value={selectedTags[index] || ""}
-								onChange={(e) => handleTagChange(index, e.target.value)}
-							>
-								<option value="">Choisis ton savoir {index + 1}</option>
-								{getAvailableTags(index).map((mainTag) => (
-									<option key={mainTag.id} value={mainTag.id}>
-										{mainTag.name}
-									</option>
-								))}
-							</select>
-						))}
-					</div>
-					<div className="submit-button">
-						<button className="lightblue-button" type="submit">
-							Passer à l'étape 3/3
-						</button>
-					</div>
-				</section>
 
-				<section className="slot">
-					<h2>étape 3/3 - Tes dispos :</h2>
-					<h3>Choisis au moins un créneau</h3>
-					<p>CALENDRIER</p>
-					<div className="submit-button">
-						<button className="lightblue-button" type="submit">
-							Valider ton profil
-						</button>
-					</div>
-				</section>
+							<section>
+								<section className="connexion">
+									<h3>Comment te connecter ?</h3>
+									<div className="form_inputs">
+										<input
+											name="email"
+											type="email"
+											value={email}
+											onChange={(e) => setEmail(e.target.value)}
+											required
+										/>
+										<label htmlFor="email">Adresse email</label>
+									</div>
+									<div className="form_inputs">
+										<input
+											name="password"
+											type="password"
+											value={password}
+											onChange={(e) => setPassword(e.target.value)}
+											required
+										/>
+										<label htmlFor="password">Mot de passe</label>
+									</div>
+								</section>
+
+								<section className="presentation">
+									<h3>Parle nous un peu de toi : </h3>
+									<div className="form_inputs">
+										<input
+											name="presentation"
+											type="text"
+											value={presentation}
+											onChange={(e) => setPresentation(e.target.value)}
+											required
+										/>
+										<label htmlFor="password">Je suis...</label>
+									</div>
+									<button
+										type="button"
+										onClick={() => videoInput.current?.click()}
+										className="darkblue-button"
+									>
+										Ajouter une vidéo
+									</button>
+
+									<input
+										type="file"
+										accept="video/*"
+										hidden
+										ref={videoInput}
+										onChange={handleVideoChange}
+									/>
+
+									{video && (
+										// biome-ignore lint/a11y/useMediaCaption: <explanation>
+										<video controls width="250">
+											<source src={video} type="video/mp4" />
+											Votre navigateur ne supporte pas la vidéo.
+										</video>
+									)}
+								</section>
+							</section>
+						</section>
+						<div className="submit-button">
+							<button
+								className="lightblue-button "
+								type="submit"
+								onClick={nextStep}
+							>
+								Passer à l'étape 2/3
+							</button>
+						</div>
+					</section>
+				)}
+
+				{currentStep === 2 && (
+					<section className="knowledge">
+						<h2>étape 2/3 - Tes savoirs :</h2>
+						<h3>
+							Sélectionne les 3 catégories pour lesquelles tu as des
+							connaissances et que tu souhaites partager
+						</h3>
+						<div className="form-group">
+							{selectedTags.map((selectedTag, index) => (
+								<select
+									className="darkblue-button"
+									key={`select-${index}-${selectedTag || "empty"}`}
+									value={selectedTags[index] || ""}
+									onChange={(e) => handleTagChange(index, e.target.value)}
+								>
+									<option value="">Choisis ton savoir {index + 1}</option>
+									{getAvailableTags(index).map((mainTag) => (
+										<option key={mainTag.id} value={mainTag.id}>
+											{mainTag.name}
+										</option>
+									))}
+								</select>
+							))}
+						</div>
+						<div className="submit-button">
+							<button type="button" className="lightblue-button" onClick={prevStep}>
+							Revenir à l'étape précédente
+							</button>
+							<button type="button" className="lightblue-button" onClick={nextStep}>
+								Passer à l'étape 3/3
+							</button>
+						</div>
+					</section>
+				)}
+
+				{currentStep === 3 && (
+					<section className="slot">
+						<h2>étape 3/3 - Tes dispos :</h2>
+						<h3>Choisis au moins un créneau</h3>
+						<p>CALENDRIER</p>
+						<div className="submit-button">
+							<button type="button" className="lightblue-button" onClick={prevStep}>
+								Revenir à l'étape précédente
+							</button>
+							<button className="lightblue-button" type="submit">
+								Valider
+							</button>
+						</div>
+					</section>
+				)}
 			</section>
 		</>
 	);
