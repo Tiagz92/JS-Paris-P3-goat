@@ -120,7 +120,7 @@ body {
 .profile-description {
 	justify-content: center;
 	text-align: center;
-	width: 60ch;
+	width: 50ch;
 	font-size: 1rem;
 	line-height: 1.6;
 	color: var(--text-black);
