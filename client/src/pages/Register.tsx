@@ -1,8 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { MainTag } from "../types/Advert";
 import "./Register.css";
+import { Avatar } from "@mui/material";
+import Button from "@mui/material/Button";
 
 function Register() {
+	const [profilePic, setProfilePic] = useState<string | null>(null);
+	const avatar = useRef<HTMLInputElement | null>(null);
+	const [edit, setEdit] = useState(false);
+
+	const handleFileChange = () => {
+		const file = avatar.current?.files?.[0];
+		if (file) {
+		  setProfilePic(URL.createObjectURL(file));
+		}
+	  };
+
 	const [lastname, setLastname] = useState("");
 	const [firstname, setFirstname] = useState("");
 	const [birthday, setBirthday] = useState("");
@@ -48,7 +61,25 @@ function Register() {
 					<section className="user">
 						<section className="informations">
 							<h3>Qui es-tu ?</h3>
-							<p>PHOTO</p>
+							<section className="profilPicture">
+							<button
+  type="button"
+  onClick={() => {
+    if (avatar.current) {
+      avatar.current.click();
+      setEdit(true);
+    }
+  }}
+>
+      <Avatar alt="Profil Picture" src={profilePic ?? undefined} />
+      <input type="file" hidden ref={avatar} onChange={handleFileChange} />
+    </button>
+    {edit && (
+      <Button type="button" variant="contained">
+        Ajoute ta photo !
+      </Button>
+    )}
+								</section>
 							<form className="form_items">
 								<div className="form_inputs">
 									<input
@@ -70,15 +101,15 @@ function Register() {
 									/>
 									<label htmlFor="firstname">Prénom</label>
 								</div>
-								<div className="form_inputs">
+								<div className="form_birthday">
+								<label htmlFor="birthday">Date d'anniversaire</label>
 									<input
-										type="text"
+										type="date"
 										value={birthday}
 										onChange={(e) => setBirthday(e.target.value)}
 										required
 										name="birthday"
 									/>
-									<label htmlFor="birthday">Date d'anniversaire</label>
 								</div>
 							</form>
 						</section>
@@ -138,7 +169,7 @@ function Register() {
 						{selectedTags.map((selectedTag, index) => (
 							<select
 								className="darkblue-button"
-								key={selectedTag}
+								key={`select-${index}-${selectedTag || "empty"}`}
 								value={selectedTags[index] || ""}
 								onChange={(e) => handleTagChange(index, e.target.value)}
 							>
