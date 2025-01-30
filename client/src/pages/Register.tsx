@@ -72,6 +72,49 @@ function Register() {
 		setCurrentStep((prev) => Math.max(prev - 1, 1)); // Revient à l'étape précédente
 	};
 
+	const handleSubmit = async (event: React.FormEvent) => {
+		event.preventDefault();
+		const form = new FormData();
+  form.append("lastname", lastname);
+  form.append("firstname", firstname);
+  form.append("birthday", birthday);
+  form.append("email", email);
+  form.append("password", password);
+  form.append("presentation", presentation);
+
+  selectedTags.forEach((tag, index) => {
+    if (tag) form.append(`tag${index + 1}`, tag);
+  });
+
+  if (avatar.current?.files?.[0]) {
+    form.append("profilePic", avatar.current.files[0]);
+  }
+
+  if (videoInput.current?.files?.[0]) {
+    form.append("video", videoInput.current.files[0]);
+  }
+
+  try {
+	const response = await fetch("http://localhost:3310/api/goat", {
+	  method: "POST",
+	  body: form,
+	  headers: {
+		"Content-Type": "application/json",
+	},
+	});
+	if (!response.ok) {
+		throw new Error("Erreur lors de l'inscription !");
+	  }
+  
+	//   const result = await response.json();
+	//   console.log("Profil créé avec succès :", result);
+	//   alert("Inscription réussie !");
+	} catch (error) {
+	  console.error("Erreur :", error);
+	  alert("Une erreur est survenue !");
+	}
+  };
+
 	return (
 		<>
 			<section className="register">
@@ -244,10 +287,18 @@ function Register() {
 							))}
 						</div>
 						<div className="submit-button">
-							<button type="button" className="lightblue-button" onClick={prevStep}>
-							Revenir à l'étape précédente
+							<button
+								type="button"
+								className="lightblue-button"
+								onClick={prevStep}
+							>
+								Revenir à l'étape précédente
 							</button>
-							<button type="button" className="lightblue-button" onClick={nextStep}>
+							<button
+								type="button"
+								className="lightblue-button"
+								onClick={nextStep}
+							>
 								Passer à l'étape 3/3
 							</button>
 						</div>
@@ -260,10 +311,14 @@ function Register() {
 						<h3>Choisis au moins un créneau</h3>
 						<p>CALENDRIER</p>
 						<div className="submit-button">
-							<button type="button" className="lightblue-button" onClick={prevStep}>
+							<button
+								type="button"
+								className="lightblue-button"
+								onClick={prevStep}
+							>
 								Revenir à l'étape précédente
 							</button>
-							<button className="lightblue-button" type="submit">
+							<button className="lightblue-button" type="button" onClick={handleSubmit}>
 								Valider
 							</button>
 						</div>
