@@ -75,45 +75,45 @@ function Register() {
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
 		const form = new FormData();
-  form.append("lastname", lastname);
-  form.append("firstname", firstname);
-  form.append("birthday", birthday);
-  form.append("email", email);
-  form.append("password", password);
-  form.append("presentation", presentation);
+		form.append("lastname", lastname);
+		form.append("firstname", firstname);
+		form.append("birthday", birthday);
+		form.append("email", email);
+		form.append("password", password);
+		form.append("presentation", presentation);
 
-  selectedTags.forEach((tag, index) => {
-    if (tag) form.append(`tag${index + 1}`, tag);
-  });
+		selectedTags.forEach((tag, index) => {
+			if (tag) form.append(`tag${index + 1}`, tag);
+		});
 
-  if (avatar.current?.files?.[0]) {
-    form.append("profilePic", avatar.current.files[0]);
-  }
+		if (avatar.current?.files?.[0]) {
+			form.append("profilePic", avatar.current.files[0]);
+		}
 
-  if (videoInput.current?.files?.[0]) {
-    form.append("video", videoInput.current.files[0]);
-  }
+		if (videoInput.current?.files?.[0]) {
+			form.append("video", videoInput.current.files[0]);
+		}
 
-  try {
-	const response = await fetch("http://localhost:3310/api/goat", {
-	  method: "POST",
-	  body: form,
-	  headers: {
-		"Content-Type": "application/json",
-	},
-	});
-	if (!response.ok) {
-		throw new Error("Erreur lors de l'inscription !");
-	  }
-  
-	//   const result = await response.json();
-	//   console.log("Profil créé avec succès :", result);
-	//   alert("Inscription réussie !");
-	} catch (error) {
-	  console.error("Erreur :", error);
-	  alert("Une erreur est survenue !");
-	}
-  };
+		try {
+			const response = await fetch("http://localhost:3310/api/goat", {
+				method: "POST",
+				body: form,
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+			if (!response.ok) {
+				throw new Error("Erreur lors de l'inscription !");
+			}
+
+			//   const result = await response.json();
+			//   console.log("Profil créé avec succès :", result);
+			//   alert("Inscription réussie !");
+		} catch (error) {
+			console.error("Erreur :", error);
+			alert("Une erreur est survenue !");
+		}
+	};
 
 	return (
 		<>
@@ -318,7 +318,11 @@ function Register() {
 							>
 								Revenir à l'étape précédente
 							</button>
-							<button className="lightblue-button" type="button" onClick={handleSubmit}>
+							<button
+								className="lightblue-button"
+								type="button"
+								onClick={handleSubmit}
+							>
 								Valider
 							</button>
 						</div>
