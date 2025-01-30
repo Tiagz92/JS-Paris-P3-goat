@@ -4,7 +4,6 @@ import AdvertCard from "../components/AdvertCard";
 import Filter from "../components/Filter";
 import SearchBar from "../components/SearchBar";
 import type { Advert } from "../types/Advert";
-import "./AdvertList.css";
 
 function AdvertList() {
 	const [adverts, setAdverts] = useState<Advert[]>([]);
@@ -103,6 +102,8 @@ function AdvertList() {
 	};
 
 	const handleFilters = (_: string, mainTagId?: number, subTagId?: number) => {
+		setSearchQuery("");
+
 		if (mainTagId !== undefined) {
 			setSelectedMainTag(mainTagId);
 			setSelectedSubTag(null);
@@ -137,8 +138,9 @@ function AdvertList() {
 							Aucune annonce ne correspond aux critères de recherche
 							sélectionnés.
 						</p>
+						<br />
 						<p>
-							Essayez de modifier vos filtres ou votre recherche pour voir plus
+							Essaie de modifier tes filtres ou ta recherche pour obtenir plus
 							de résultats.
 						</p>
 					</div>
