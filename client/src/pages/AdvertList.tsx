@@ -1,10 +1,10 @@
-// AdvertList.tsx
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import AdvertCard from "../components/AdvertCard";
-import type { Advert } from "../types/Advert";
-import "./AdvertList.css";
 import Filter from "../components/Filter";
 import SearchBar from "../components/SearchBar";
+import type { Advert } from "../types/Advert";
+import "./AdvertList.css";
 
 function AdvertList() {
 	const [adverts, setAdverts] = useState<Advert[]>([]);
@@ -13,52 +13,11 @@ function AdvertList() {
 	const [selectedMainTag, setSelectedMainTag] = useState<number | null>(null);
 	const [selectedSubTag, setSelectedSubTag] = useState<number | null>(null);
 
-	useEffect(() => {
-		fetch("http://localhost:3310/api/adverts")
-			.then((res) => res.json())
-			.then((data: Advert[]) => {
-				setAdverts(data);
-				setFilteredAdverts(data);
-			})
-			.catch((error) => console.error("Erreur récupération annonces:", error));
-	}, []);
+	const location = useLocation();
 
-	const resetFilters = () => {
-		setSelectedMainTag(null);
-		setSelectedSubTag(null);
-		setFilteredAdverts(adverts);
-	};
+	const applyAllFilters = useCallback(() => {
+		let results = [...adverts];
 
-	const applyFilters = (advertsToFilter: Advert[]): Advert[] => {
-		let result = [...advertsToFilter];
-		if (selectedMainTag)
-			result = result.filter(
-				(advert) => advert.main_tag_id === selectedMainTag,
-			);
-		if (selectedSubTag)
-			result = result.filter((advert) => advert.sub_tag_id === selectedSubTag);
-		return result;
-	};
-
-	const handleSearch = (query: string) => {
-		setSearchQuery(query);
-		const results = adverts.filter(
-			(advert) =>
-				advert.description.toLowerCase().includes(query.toLowerCase()) ||
-				advert.main_tag_name.toLowerCase().includes(query.toLowerCase()) ||
-				advert.sub_tag_name.toLowerCase().includes(query.toLowerCase()),
-		);
-		setFilteredAdverts(applyFilters(results));
-	};
-
-	const handleFilters = (_: string, mainTagId?: number, subTagId?: number) => {
-		if (mainTagId !== undefined) {
-			setSelectedMainTag(mainTagId);
-			setSelectedSubTag(null);
-		}
-		if (subTagId !== undefined) setSelectedSubTag(subTagId);
-
-		let results = adverts;
 		if (searchQuery.trim() !== "") {
 			results = results.filter(
 				(advert) =>
@@ -71,14 +30,96 @@ function AdvertList() {
 					advert.sub_tag_name.toLowerCase().includes(searchQuery.toLowerCase()),
 			);
 		}
-		setFilteredAdverts(applyFilters(results));
+
+		if (selectedMainTag !== null) {
+			results = results.filter(
+				(advert) => advert.main_tag_id === selectedMainTag,
+			);
+		}
+		if (selectedSubTag !== null) {
+			results = results.filter(
+				(advert) => advert.sub_tag_id === selectedSubTag,
+			);
+		}
+
+		setFilteredAdverts(results);
+	}, [adverts, searchQuery, selectedMainTag, selectedSubTag]);
+
+	useEffect(() => {
+		fetch("http://localhost:3310/api/adverts")
+			.then((res) => res.json())
+			.then((data: Advert[]) => {
+				setAdverts(data);
+				setFilteredAdverts(data);
+			})
+			.catch((error) => console.error("Erreur récupération annonces:", error));
+	}, []);
+
+	useEffect(() => {
+		const params = new URLSearchParams(location.search);
+		const tagId = params.get("tag");
+		const subTagId = params.get("subtag");
+
+		if (tagId) {
+			setSelectedMainTag(Number(tagId));
+		}
+		if (subTagId) {
+			setSelectedSubTag(Number(subTagId));
+		}
+	}, [location.search]);
+
+	useEffect(() => {
+		if (adverts.length > 0) {
+			applyAllFilters();
+		}
+	}, [applyAllFilters, adverts.length]);
+
+	useEffect(() => {
+		const params = new URLSearchParams(location.search);
+		const searchParam = params.get("search");
+		const tagParam = params.get("tag");
+		const subTagParam = params.get("subtag");
+
+		if (searchParam) {
+			setSearchQuery(decodeURIComponent(searchParam));
+		}
+		if (tagParam) {
+			setSelectedMainTag(Number(tagParam));
+		}
+		if (subTagParam) {
+			setSelectedSubTag(Number(subTagParam));
+		}
+	}, [location.search]);
+
+	const resetFilters = () => {
+		setSelectedMainTag(null);
+		setSelectedSubTag(null);
+		setSearchQuery("");
+		setFilteredAdverts(adverts);
+	};
+
+	const handleSearch = (query: string) => {
+		setSearchQuery(query);
+	};
+
+	const handleFilters = (_: string, mainTagId?: number, subTagId?: number) => {
+		if (mainTagId !== undefined) {
+			setSelectedMainTag(mainTagId);
+			setSelectedSubTag(null);
+		}
+		if (subTagId !== undefined) {
+			setSelectedSubTag(subTagId);
+		}
 	};
 
 	return (
 		<div>
 			<SearchBar
 				onSearch={handleSearch}
-				onSearchFocus={resetFilters} // Nouveau prop pour gérer le focus
+				onSearchFocus={() => {
+					resetFilters();
+				}}
+				initialQuery={searchQuery}
 			/>
 			<Filter
 				onSearch={handleFilters}

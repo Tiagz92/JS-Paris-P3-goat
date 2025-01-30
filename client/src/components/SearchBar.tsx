@@ -1,14 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./SearchBar.css";
 import searchIcon from "../assets/search_icon_white.png";
 
 interface SearchBarProps {
 	onSearch: (query: string) => void;
 	onSearchFocus: () => void;
+	initialQuery?: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onSearchFocus }) => {
-	const [query, setQuery] = useState("");
+const SearchBar: React.FC<SearchBarProps> = ({
+	onSearch,
+	onSearchFocus,
+	initialQuery = "",
+}) => {
+	const navigate = useNavigate();
+	const [query, setQuery] = useState(initialQuery);
 	const [isOnSearch, setIsOnSearch] = useState(false);
 	const [suggestions, setSuggestions] = useState<string[]>([]);
 	const [categories, setCategories] = useState<string[]>([]);
@@ -86,20 +93,30 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onSearchFocus }) => {
 		setQuery(e.target.value);
 	};
 
+	const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === "Enter" && query.trim()) {
+			navigate(`/adverts?search=${encodeURIComponent(query)}`);
+			setIsOnSearch(false);
+			setSuggestions([]);
+		}
+	};
+
 	const handleSuggestionClick = (suggestion: string) => {
 		setQuery(suggestion);
-		onSearch(suggestion);
+		navigate(`/adverts?search=${encodeURIComponent(suggestion)}`);
 		setIsOnSearch(false);
 		setSuggestions([]);
+		setCategories([]);
+		setIsCategoriesVisible(false);
 		fetchCategories(suggestion);
 	};
 
 	const handleFocus = () => {
-		setIsOnSearch(false); // Réinitialise les filtres lors du focus sur la barre de recherche
+		setIsOnSearch(false);
 		setSuggestions([]);
 		setCategories([]);
-		setIsCategoriesVisible(false); // Cache les catégories
-		onSearchFocus(); // Optionnel, selon ton besoin
+		setIsCategoriesVisible(false);
+		onSearchFocus();
 	};
 
 	const handleClickOutside = useCallback((event: MouseEvent) => {
@@ -109,7 +126,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onSearchFocus }) => {
 		const isClickInsideSuggestions = suggestionsRef.current?.contains(target);
 		const isClickInsideCategories = categoriesRef.current?.contains(target);
 
-		// Si le clic est en dehors de tous les éléments de recherche
 		if (
 			!isClickInsideSearchContainer &&
 			!isClickInsideSuggestions &&
@@ -118,7 +134,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onSearchFocus }) => {
 			setIsOnSearch(false);
 			setSuggestions([]);
 			setCategories([]);
-			setIsCategoriesVisible(false); // Cache les catégories
+			setIsCategoriesVisible(false);
 		}
 	}, []);
 
@@ -135,7 +151,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onSearchFocus }) => {
 				placeholder="Rechercher..."
 				value={query}
 				onChange={handleInputChange}
-				onFocus={handleFocus} // Ajouté ici
+				onKeyPress={handleKeyPress}
+				onFocus={handleFocus}
 			/>
 			{suggestions.length > 0 && (
 				<ul ref={suggestionsRef} className="suggestions-list">

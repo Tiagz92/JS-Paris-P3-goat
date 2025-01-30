@@ -41,7 +41,11 @@ const FilterMainTag: React.FC<PropsFilterMainTag> = () => {
 
 	return (
 		<div className="filter-container">
-			<label htmlFor="mainTagSelect">Filtrer par main tag :</label>
+			<h1>LES CATEGORIES</h1>
+			<h2>
+				Choisi le sujet qui t’intéresse et découvrir les membres prêts à en
+				discuter avec toi
+			</h2>
 			<div className="tags-grid">
 				{displayedTags.map((tag) => (
 					<button

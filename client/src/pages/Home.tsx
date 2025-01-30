@@ -1,7 +1,8 @@
 import { useState } from "react";
+import ImageHome from "../assets/images/home_image.jpg";
 import FilterMainTag from "../components/FilterMainTag";
 import SearchBar from "../components/SearchBar";
-
+import "./Home.css";
 export interface Advert {
 	id: number;
 	title: string;
@@ -27,6 +28,10 @@ const Home: React.FC = () => {
 	return (
 		<div className="search">
 			<SearchBar onSearch={handleSearch} onSearchFocus={() => {}} />
+			<div className="image">
+				<img src={ImageHome} alt="ImageHome" className="image-home" />
+			</div>
+
 			<FilterMainTag data={searchResults} />
 		</div>
 	);

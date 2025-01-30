@@ -39,55 +39,43 @@ const Filter: React.FC<AdvertListWithFiltersProps> = ({
 	useEffect(() => {
 		if (selectedMainTag === null) {
 			setSubTags([]);
-			return;
+		} else {
+			const fetchSubTags = async () => {
+				setIsLoading(true);
+				try {
+					const response = await fetch(
+						`http://localhost:3310/advert/search/subtag/${selectedMainTag}`,
+					);
+					const data = await response.json();
+					setSubTags(data);
+				} catch (error) {
+					console.error("Erreur récupération sub tags:", error);
+				} finally {
+					setIsLoading(false);
+				}
+			};
+			fetchSubTags();
 		}
-		const fetchSubTags = async () => {
-			setIsLoading(true);
-			try {
-				const response = await fetch(
-					`http://localhost:3310/advert/search/subtag/${selectedMainTag}`,
-				);
-				const data = await response.json();
-				setSubTags(data);
-			} catch (error) {
-				console.error("Erreur récupération sub tags:", error);
-			} finally {
-				setIsLoading(false);
-			}
-		};
-		fetchSubTags();
 	}, [selectedMainTag]);
 
-	const handleMainTagChange = (id: number) => {
-		onSearch("", id, undefined);
-	};
-
-	const handleSubTagChange = (id: number) => {
-		onSearch("", selectedMainTag ?? undefined, id);
-	};
-
 	const handleNext = () => {
-		if (startIndex + visibleCount < mainTags.length) {
-			setStartIndex(startIndex + 1);
-		}
+		setStartIndex((prevIndex) => (prevIndex + 1) % mainTags.length);
 	};
 
 	const handlePrev = () => {
-		if (startIndex > 0) {
-			setStartIndex(startIndex - 1);
-		}
+		setStartIndex(
+			(prevIndex) => (prevIndex - 1 + mainTags.length) % mainTags.length,
+		);
 	};
 
 	const handleSubNext = () => {
-		if (subStartIndex + visibleSubCount < subTags.length) {
-			setSubStartIndex(subStartIndex + 1);
-		}
+		setSubStartIndex((prevIndex) => (prevIndex + 1) % subTags.length);
 	};
 
 	const handleSubPrev = () => {
-		if (subStartIndex > 0) {
-			setSubStartIndex(subStartIndex - 1);
-		}
+		setSubStartIndex(
+			(prevIndex) => (prevIndex - 1 + subTags.length) % subTags.length,
+		);
 	};
 
 	if (isLoading) {
@@ -101,16 +89,24 @@ const Filter: React.FC<AdvertListWithFiltersProps> = ({
 					&lt;
 				</button>
 				<div className="filter-list">
-					{mainTags.slice(startIndex, startIndex + visibleCount).map((tag) => (
-						<button
-							type="button"
-							key={tag.id}
-							onClick={() => handleMainTagChange(tag.id)}
-							className={`filter-btn ${selectedMainTag === tag.id ? "selected" : ""}`}
-						>
-							{tag.name}
-						</button>
-					))}
+					{mainTags
+						.slice(startIndex, startIndex + visibleCount)
+						.concat(
+							mainTags.slice(
+								0,
+								Math.max(0, startIndex + visibleCount - mainTags.length),
+							),
+						)
+						.map((tag) => (
+							<button
+								type="button"
+								key={tag.id}
+								onClick={() => onSearch("", tag.id, undefined)}
+								className={`filter-btn ${selectedMainTag === tag.id ? "selected" : ""}`}
+							>
+								{tag.name}
+							</button>
+						))}
 				</div>
 				<button type="button" className="scroll-btn" onClick={handleNext}>
 					&gt;
@@ -130,11 +126,22 @@ const Filter: React.FC<AdvertListWithFiltersProps> = ({
 						<div className="filter-list">
 							{subTags
 								.slice(subStartIndex, subStartIndex + visibleSubCount)
+								.concat(
+									subTags.slice(
+										0,
+										Math.max(
+											0,
+											subStartIndex + visibleSubCount - subTags.length,
+										),
+									),
+								)
 								.map((subTag) => (
 									<button
 										type="button"
 										key={subTag.id}
-										onClick={() => handleSubTagChange(subTag.id)}
+										onClick={() =>
+											onSearch("", selectedMainTag ?? undefined, subTag.id)
+										}
 										className={`filter-btn ${selectedSubTag === subTag.id ? "selected" : ""}`}
 									>
 										{subTag.name}
