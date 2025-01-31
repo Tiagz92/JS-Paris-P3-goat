@@ -2,6 +2,7 @@ import express from "express";
 import advertActions from "./modules/advert/advertActions";
 import advertServices from "./modules/advert/advertServices";
 import mainTagActions from "./modules/tag/mainTagActions";
+import goatActions from "./modules/goat/goatActions";
 
 const router = express.Router();
 
@@ -16,6 +17,8 @@ router.get("/api/main-tag", mainTagActions.browse);
 router.get("/api/adverts", advertActions.browse);
 
 router.post("/api/advert", advertServices.validateAdvert, advertActions.add);
+
+router.post("api/goat", goatActions.add)
 
 /* ************************************************************************* */
 
