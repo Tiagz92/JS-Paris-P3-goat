@@ -27,6 +27,19 @@ class AdvertRepository {
 		const [rows] = await DatabaseClient.query<Rows>("SELECT * FROM advert");
 		return rows;
 	}
+
+	async updateAdvert(advert: Advert) {
+		const [result] = await DatabaseClient.query<Result>(
+			"UPDATE advert SET description = ?, goat_id = ?, main_tag_id = ?, sub_tag_id = ? WHERE id = ?",
+			[
+				advert.description,
+				advert.goat_id,
+				advert.main_tag_id,
+				advert.sub_tag_id,
+				advert.id,
+			],
+		);
+	}
 }
 
 export default new AdvertRepository();

@@ -1,8 +1,9 @@
 .advert-form {
 	border: 0.1rem solid var(--darkblue);
+	border-top: none;
 	padding: 2rem;
-	margin: 2rem;
-	border-radius: 1rem;
+	margin: 0 2rem 2rem;
+	border-radius: 0 0 1rem 1rem;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	display: flex;
 	flex-direction: column;

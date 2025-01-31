@@ -4,8 +4,8 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import About from "./pages/About";
 import AdvertDetails from "./pages/AdvertDetails";
-import AdvertForm from "./pages/AdvertForm";
 import AdvertList from "./pages/AdvertList";
+import EditAdvert from "./pages/EditAdvert";
 import Faq from "./pages/Faq";
 import ProfileDetails from "./pages/ProfileDetails";
 
@@ -13,6 +13,7 @@ import ProfileDetails from "./pages/ProfileDetails";
 
 // Import the main app component
 import App from "./App";
+import AddAdvert from "./pages/AddAdvert";
 
 // Import additional components for new routes
 // Try creating these components in the "pages" folder
@@ -35,7 +36,11 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "adverts/add",
-				element: <AdvertForm />,
+				element: <AddAdvert />,
+			},
+			{
+				path: "adverts/edit/:id",
+				element: <EditAdvert />,
 			},
 			{
 				path: "adverts/:id",

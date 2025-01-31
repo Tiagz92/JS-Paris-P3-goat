@@ -62,4 +62,20 @@ const add: RequestHandler = async (req: Request, res: Response, next) => {
 	}
 };
 
-export default { browse, add };
+const edit: RequestHandler = async (req: Request, res: Response, next) => {
+	try {
+		const updatedAdvert = {
+			id: req.body.id,
+			description: req.body.description,
+			goat_id: req.body.goat_id,
+			main_tag_id: req.body.main_tag_id,
+			sub_tag_id: req.body.sub_tag_id,
+		};
+		const id = await advertRepository.updateAdvert(updatedAdvert);
+		res.status(201).json({ id });
+	} catch (err) {
+		next(err);
+	}
+};
+
+export default { browse, add, edit };

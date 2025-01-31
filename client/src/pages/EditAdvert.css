@@ -1,0 +1,9 @@
+.form-title {
+	border: 0.1rem solid var(--darkblue);
+	border-bottom: none;
+	padding: 2rem;
+	margin: 2rem 2rem 0 2rem;
+	border-radius: 1rem 1rem 0 0;
+	display: flex;
+	flex-direction: column;
+}

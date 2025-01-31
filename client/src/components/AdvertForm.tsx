@@ -101,8 +101,6 @@ function AdvertForm() {
 	return (
 		<div className="form-page">
 			<div className="advert-form">
-				<h1 className="form-title">Crée ton annonce !</h1>
-
 				<form
 					className="form"
 					onSubmit={(e) => {

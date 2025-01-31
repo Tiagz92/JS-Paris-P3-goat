@@ -17,6 +17,12 @@ router.get("/api/adverts", advertActions.browse);
 
 router.post("/api/advert", advertServices.validateAdvert, advertActions.add);
 
+router.put(
+	"/api/advert/:id",
+	advertServices.validateAdvert,
+	advertActions.edit,
+);
+
 /* ************************************************************************* */
 
 export default router;
