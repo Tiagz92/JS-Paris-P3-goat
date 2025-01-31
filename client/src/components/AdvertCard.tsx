@@ -26,7 +26,7 @@ function AdvertCard({ advert }: AdvertCardProps) {
 				<h3 className="main-tag-name">{advert.main_tag_name}</h3>
 				<h3 className="sub-tag-name">{advert.sub_tag_name}</h3>
 			</div>
-      <div className="description">{advert.description}</div>
+			<div className="description">{advert.description}</div>
 			<button
 				type="button"
 				className="yellow-button"
