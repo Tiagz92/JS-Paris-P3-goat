@@ -71,7 +71,7 @@ const edit: RequestHandler = async (req: Request, res: Response, next) => {
 			main_tag_id: req.body.main_tag_id,
 			sub_tag_id: req.body.sub_tag_id,
 		};
-		const id = await advertRepository.updateAdvert(updatedAdvert);
+		const id = await advertRepository.updateAdvert(req.body);
 		res.status(201).json({ id });
 	} catch (err) {
 		next(err);

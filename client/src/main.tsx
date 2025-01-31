@@ -2,7 +2,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import App from "./App";
 import About from "./pages/About";
+import AddAdvert from "./pages/AddAdvert";
 import AdvertDetails from "./pages/AdvertDetails";
 import AdvertList from "./pages/AdvertList";
 import EditAdvert from "./pages/EditAdvert";
@@ -12,8 +14,6 @@ import ProfileDetails from "./pages/ProfileDetails";
 /* ************************************************************************* */
 
 // Import the main app component
-import App from "./App";
-import AddAdvert from "./pages/AddAdvert";
 
 // Import additional components for new routes
 // Try creating these components in the "pages" folder
@@ -39,7 +39,7 @@ const router = createBrowserRouter([
 				element: <AddAdvert />,
 			},
 			{
-				path: "adverts/edit/:id",
+				path: "adverts/:id/edit",
 				element: <EditAdvert />,
 			},
 			{
