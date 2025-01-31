@@ -1,5 +1,7 @@
 import express from "express";
 import advertActions from "./modules/advert/advertActions";
+import advertServices from "./modules/advert/advertServices";
+import mainTagActions from "./modules/tag/mainTagActions";
 
 const router = express.Router();
 
@@ -8,6 +10,8 @@ const router = express.Router();
 /* ************************************************************************* */
 
 // Define item-related routes
+
+router.get("/api/main-tag", mainTagActions.browse);
 
 router.get("/api/adverts", advertActions.browse);
 

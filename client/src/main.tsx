@@ -4,9 +4,11 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import About from "./pages/About";
 import AdvertDetails from "./pages/AdvertDetails";
+import AdvertForm from "./pages/AdvertForm";
 import AdvertList from "./pages/AdvertList";
 import Faq from "./pages/Faq";
 import ProfileDetails from "./pages/ProfileDetails";
+
 /* ************************************************************************* */
 
 // Import the main app component
@@ -26,29 +28,34 @@ const router = createBrowserRouter([
 	{
 		path: "/", // The root path
 		element: <App />, // Renders the App component for the home page
-	},
-	{
-		path: "/adverts",
-		element: <AdvertList />,
-	},
-	{
-		path: "/adverts/:id",
-		element: <AdvertDetails />,
-	},
-	{
-		path: "/profile/:id",
-		element: <ProfileDetails />,
-	},
-	{
-		path: "/about",
-		element: <About />,
-	},
-	{
-		path: "/faq",
-		element: <Faq />,
+		children: [
+			{
+				path: "adverts",
+				element: <AdvertList />,
+			},
+			{
+				path: "adverts/add",
+				element: <AdvertForm />,
+			},
+			{
+				path: "adverts/:id",
+				element: <AdvertDetails />,
+			},
+			{
+				path: "profile/:id",
+				element: <ProfileDetails />,
+			},
+			{
+				path: "about",
+				element: <About />,
+			},
+			{
+				path: "faq",
+				element: <Faq />,
+			},
+		],
 	},
 ]);
-// Try adding a new route! For example, "/about" with an About component
 
 /* ************************************************************************* */
 

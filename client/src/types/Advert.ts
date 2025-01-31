@@ -7,4 +7,13 @@ interface Advert {
 	sub_tag_name: string;
 }
 
-export default Advert;
+type MainTag = {
+	id: number;
+	name: string;
+	subTags: SubTag[];
+};
+type SubTag = {
+	id: number;
+	name: string;
+};
+export type { Advert, MainTag, SubTag };

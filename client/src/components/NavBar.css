@@ -1,0 +1,54 @@
+.navbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1rem;
+	overflow: hidden;
+	max-width: 100%;
+}
+
+.navbar-links {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 3rem;
+}
+
+.logo {
+	height: 8rem;
+	width: auto;
+	cursor: pointer;
+}
+
+.connexion-icon {
+	height: 6rem;
+	width: auto;
+	cursor: pointer;
+}
+
+.title-container,
+.title,
+.subtitle {
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	font-weight: 400;
+}
+
+.subtitle {
+	font-size: 1.5rem;
+}
+
+.uppercase {
+	font-weight: bold;
+}
+
+@media screen and (min-width: 480px) and (max-width: 720px) {
+	.navbar-links {
+		gap: 1rem;
+	}
+
+	.subtitle {
+		font-size: 1rem;
+	}
+}

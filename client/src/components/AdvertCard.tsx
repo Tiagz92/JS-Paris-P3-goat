@@ -1,15 +1,21 @@
-import type Advert from "../types/Advert";
+import type { Advert } from "../types/Advert";
 import "../components/AdvertCard.css";
 import { useNavigate } from "react-router-dom";
+import onlineCourse from "../assets/images/onlineCourse.png";
 
 interface AdvertCardProps {
-	advert: Advert;
+	readonly advert: Advert;
 }
 function AdvertCard({ advert }: AdvertCardProps) {
 	const navigate = useNavigate();
 
 	return (
 		<div className="cards">
+			<img
+				className="online"
+				src={onlineCourse}
+				alt="online-course picto by HAJICON"
+			/>
 			<img
 				className="goat-picture"
 				src={advert.goat_picture}
@@ -20,6 +26,7 @@ function AdvertCard({ advert }: AdvertCardProps) {
 				<h3 className="main-tag-name">{advert.main_tag_name}</h3>
 				<h3 className="sub-tag-name">{advert.sub_tag_name}</h3>
 			</div>
+      <div className="description">{advert.description}</div>
 			<button
 				type="button"
 				className="yellow-button"

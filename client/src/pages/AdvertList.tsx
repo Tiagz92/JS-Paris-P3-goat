@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import AdvertCard from "../components/AdvertCard";
-import type Advert from "../types/Advert";
+import type { Advert } from "../types/Advert";
 import "./AdvertList.css";
 
 function AdvertList() {
