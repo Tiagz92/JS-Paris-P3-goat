@@ -1,17 +1,13 @@
 import { useEffect, useState } from "react";
 import "./Filter.css";
 
-interface AdvertListWithFiltersProps {
+interface FilterProps {
 	onSearch: (query: string, mainTagId?: number, subTagId?: number) => void;
 	selectedMainTag: number | null;
 	selectedSubTag: number | null;
 }
 
-const Filter: React.FC<AdvertListWithFiltersProps> = ({
-	onSearch,
-	selectedMainTag,
-	selectedSubTag,
-}) => {
+function Filter({ onSearch, selectedMainTag, selectedSubTag }: FilterProps) {
 	const [mainTags, setMainTags] = useState<{ id: number; name: string }[]>([]);
 	const [subTags, setSubTags] = useState<{ id: number; name: string }[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -160,6 +156,6 @@ const Filter: React.FC<AdvertListWithFiltersProps> = ({
 			)}
 		</div>
 	);
-};
+}
 
 export default Filter;

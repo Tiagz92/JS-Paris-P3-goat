@@ -138,7 +138,7 @@ class AdvertRepository {
 			);
 			return rows as { id: number; name: string }[];
 		} catch (error) {
-			console.error("❌ Erreur SQL récupération des sous-tags:", error);
+			console.error("Erreur SQL récupération des sous-tags:", error);
 			throw error;
 		}
 	}

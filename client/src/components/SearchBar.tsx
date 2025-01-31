@@ -4,18 +4,12 @@ import "./SearchBar.css";
 import searchIcon from "../assets/search_icon_white.png";
 
 interface SearchBarProps {
-	onSearch: (query: string) => void;
 	onSearchFocus: () => void;
-	initialQuery?: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({
-	onSearch,
-	onSearchFocus,
-	initialQuery = "",
-}) => {
+function SearchBar({ onSearchFocus }: SearchBarProps) {
 	const navigate = useNavigate();
-	const [query, setQuery] = useState(initialQuery);
+	const [query, setQuery] = useState("");
 	const [isOnSearch, setIsOnSearch] = useState(false);
 	const [suggestions, setSuggestions] = useState<string[]>([]);
 	const [categories, setCategories] = useState<string[]>([]);
@@ -79,14 +73,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
 	}, []);
 
 	useEffect(() => {
-		if (isOnSearch) {
+		if (isOnSearch && query !== undefined) {
 			const delayDebounce = setTimeout(() => {
 				fetchSuggestions(query);
-				onSearch(query);
 			}, 300);
 			return () => clearTimeout(delayDebounce);
 		}
-	}, [query, onSearch, fetchSuggestions, isOnSearch]);
+	}, [query, fetchSuggestions, isOnSearch]);
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setIsOnSearch(true);
@@ -94,7 +87,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 	};
 
 	const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === "Enter" && query.trim()) {
+		if (e.key === "Enter" && query !== undefined && query.trim()) {
 			navigate(`/adverts?search=${encodeURIComponent(query)}`);
 			setIsOnSearch(false);
 			setSuggestions([]);
@@ -185,6 +178,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
 			)}
 		</div>
 	);
-};
+}
 
 export default SearchBar;

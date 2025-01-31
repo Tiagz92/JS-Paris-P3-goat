@@ -1,12 +1,8 @@
-import type React from "react";
-
 type AdvertDescriptionProps = {
 	description: string;
 };
 
-const AdvertDescription: React.FC<AdvertDescriptionProps> = ({
-	description,
-}) => {
+function AdvertDescription({ description }: AdvertDescriptionProps) {
 	return (
 		<div className="advert-description">
 			<p>
@@ -14,6 +10,6 @@ const AdvertDescription: React.FC<AdvertDescriptionProps> = ({
 			</p>
 		</div>
 	);
-};
+}
 
 export default AdvertDescription;

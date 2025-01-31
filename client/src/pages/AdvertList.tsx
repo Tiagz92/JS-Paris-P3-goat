@@ -98,11 +98,11 @@ function AdvertList() {
 		setFilteredAdverts(adverts);
 	};
 
-	const handleSearch = (query: string) => {
-		setSearchQuery(query);
-	};
-
-	const handleFilters = (_: string, mainTagId?: number, subTagId?: number) => {
+	const handleFilters: (
+		query: string,
+		mainTagId?: number,
+		subTagId?: number,
+	) => void = (_: string, mainTagId?: number, subTagId?: number) => {
 		setSearchQuery("");
 
 		if (mainTagId !== undefined) {
@@ -117,11 +117,9 @@ function AdvertList() {
 	return (
 		<div>
 			<SearchBar
-				onSearch={handleSearch}
 				onSearchFocus={() => {
 					resetFilters();
 				}}
-				initialQuery={searchQuery}
 			/>
 			<Filter
 				onSearch={handleFilters}

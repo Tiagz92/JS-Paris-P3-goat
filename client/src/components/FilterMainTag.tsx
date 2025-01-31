@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import type { Advert } from "../pages/Home";
 import "./FilterMainTag.css";
 
 interface Tag {
@@ -8,11 +7,7 @@ interface Tag {
 	name: string;
 }
 
-interface PropsFilterMainTag {
-	data: Advert[];
-}
-
-const FilterMainTag: React.FC<PropsFilterMainTag> = () => {
+function FilterMainTag() {
 	const [displayedTags, setDisplayedTags] = useState<Tag[]>([]);
 	const navigate = useNavigate();
 
@@ -64,6 +59,6 @@ const FilterMainTag: React.FC<PropsFilterMainTag> = () => {
 			</Link>
 		</div>
 	);
-};
+}
 
 export default FilterMainTag;

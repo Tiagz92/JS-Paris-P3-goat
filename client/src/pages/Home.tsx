@@ -1,4 +1,3 @@
-import { useState } from "react";
 import ImageHome from "../assets/images/home_image.jpg";
 import FilterMainTag from "../components/FilterMainTag";
 import SearchBar from "../components/SearchBar";
@@ -10,31 +9,17 @@ export interface Advert {
 	main_tag_id: number;
 	sub_tag_id: number;
 }
-const Home: React.FC = () => {
-	const [searchResults, setSearchResults] = useState<Advert[]>([]);
-
-	const handleSearch = async (query: string) => {
-		try {
-			const response = await fetch(
-				`/api/advert/search?q=${encodeURIComponent(query)}`,
-			);
-			const data = await response.json();
-			setSearchResults(data);
-		} catch (error) {
-			console.error("Erreur lors de la recherche :", error);
-		}
-	};
-
+function Home() {
 	return (
 		<div className="search">
-			<SearchBar onSearch={handleSearch} onSearchFocus={() => {}} />
+			<SearchBar onSearchFocus={() => {}} />
 			<div className="image">
 				<img src={ImageHome} alt="ImageHome" className="image-home" />
 			</div>
 
-			<FilterMainTag data={searchResults} />
+			<FilterMainTag />
 		</div>
 	);
-};
+}
 
 export default Home;
