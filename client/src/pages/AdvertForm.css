@@ -8,30 +8,46 @@
 	flex-direction: column;
 }
 
+.form-title {
+	font-size: 2rem;
+	font-weight: bold;
+	text-align: center;
+	margin: 0 0 2rem 0;
+}
+
 .form-group {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin: 1rem 12rem 1rem 5rem;
 }
 
-.tag-button {
-	width: 42%;
+.tag-list {
+	background-color: var(--darkblue);
+	color: var(--text-white);
+	border-radius: 1rem;
+	border: none;
+	padding: 0.5rem;
+	cursor: pointer;
+	width: 40%;
+	padding-right: 1rem;
+	margin: 1rem 0 1rem 0;
 }
 
 .form-group-description {
 	display: flex;
 	flex-direction: column;
-	margin: 1rem 5rem 0 5rem;
+	width: 100%;
 }
 
-.description {
+.description-label {
 	margin-top: 1rem;
-	margin-bottom: 1rem;
-	width: 100%;
+}
+
+.textDescription {
+	margin-top: 1rem;
+	margin-bottom: 2rem;
 	padding: 1.5rem;
 	font-size: 1rem;
-	resize: none;
 }
 
 .advertising-text {
@@ -39,11 +55,31 @@
 	font-style: italic;
 	color: var(--light-blue);
 	text-align: center;
-	margin-bottom: 3rem;
+	margin: 2rem 0 1rem 0;
 }
 
 .submit-button {
 	text-align: center;
 	margin: 0;
 	padding: 0;
+	cursor: pointer;
+}
+
+.disabled-button {
+	opacity: 0.5;
+}
+
+@media screen and (min-width: 480px) and (max-width: 720px) {
+	.form-group {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.form-group-description {
+		align-items: center;
+	}
+
+	.tag-list {
+		margin: 1rem 0 1rem 0;
+	}
 }
