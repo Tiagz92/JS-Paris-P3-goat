@@ -3,16 +3,17 @@ import { AbstractSeeder } from "./AbstractSeeder";
 
 export class ReservationSeeder extends AbstractSeeder {
 	async run() {
-		const reservation = [
+		const reservations = [
 			{
-				user_id: 1,
-				start_time: new Date("2023-10-25T09"),
-				end_time: new Date("2023-10-25T10:00:00"),
+				slot_id: 1,
+				user_id: 2,
+				start_at: new Date(),
+				duration: 60,
 				google_meet_link: "https://meet.google.com/example",
 			},
 		];
 
-		for (const res of reservation) {
+		for (const res of reservations) {
 			await ReservationRepository.create(res);
 		}
 	}

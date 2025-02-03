@@ -20,8 +20,8 @@ const browse: RequestHandler = async (
 				res.sendStatus(404);
 			}
 
-			advert.goat_firstname = goat.firstname;
-			advert.goat_picture = goat.picture;
+			advert.goat_firstname = goat?.firstname ?? "";
+			advert.goat_picture = goat?.picture ?? "";
 
 			const mainTag = await mainTagRepository.read(advert.main_tag_id);
 
@@ -29,7 +29,7 @@ const browse: RequestHandler = async (
 				res.sendStatus(404);
 			}
 
-			advert.main_tag_name = mainTag.name;
+			advert.main_tag_name = mainTag?.name ?? "";
 
 			const subTag = await subTagRepository.read(advert.sub_tag_id);
 

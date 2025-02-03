@@ -1,6 +1,5 @@
 import databaseClient from "../../../database/client";
-
-import type { Result, Rows } from "../../../database/client";
+import type { ResultSetHeader, RowDataPacket } from "../../../database/client";
 
 type Item = {
 	id: number;
@@ -8,12 +7,14 @@ type Item = {
 	user_id: number;
 };
 
+// Interface pour le typage fort avec RowDataPacket
+interface ItemRow extends RowDataPacket, Item {}
+
 class ItemRepository {
 	// The C of CRUD - Create operation
-
 	async create(item: Omit<Item, "id">) {
 		// Execute the SQL INSERT query to add a new item to the "item" table
-		const [result] = await databaseClient.query<Result>(
+		const [result] = await databaseClient.query<ResultSetHeader>(
 			"insert into item (title, user_id) values (?, ?)",
 			[item.title, item.user_id],
 		);
@@ -23,39 +24,44 @@ class ItemRepository {
 	}
 
 	// The Rs of CRUD - Read operations
-
-	async read(id: number) {
+	async read(id: number): Promise<Item | null> {
 		// Execute the SQL SELECT query to retrieve a specific item by its ID
-		const [rows] = await databaseClient.query<Rows>(
+		const [rows] = await databaseClient.query<ItemRow[]>(
 			"select * from item where id = ?",
 			[id],
 		);
 
 		// Return the first row of the result, which represents the item
-		return rows[0] as Item;
+		return rows.length > 0 ? rows[0] : null;
 	}
 
-	async readAll() {
+	async readAll(): Promise<Item[]> {
 		// Execute the SQL SELECT query to retrieve all items from the "item" table
-		const [rows] = await databaseClient.query<Rows>("select * from item");
+		const [rows] = await databaseClient.query<ItemRow[]>("select * from item");
 
 		// Return the array of items
-		return rows as Item[];
+		return rows;
 	}
 
 	// The U of CRUD - Update operation
-	// TODO: Implement the update operation to modify an existing item
+	async update(item: Item): Promise<boolean> {
+		const [result] = await databaseClient.query<ResultSetHeader>(
+			"UPDATE item SET title = ?, user_id = ? WHERE id = ?",
+			[item.title, item.user_id, item.id],
+		);
 
-	// async update(item: Item) {
-	//   ...
-	// }
+		return result.affectedRows > 0;
+	}
 
 	// The D of CRUD - Delete operation
-	// TODO: Implement the delete operation to remove an item by its ID
+	async delete(id: number): Promise<boolean> {
+		const [result] = await databaseClient.query<ResultSetHeader>(
+			"DELETE FROM item WHERE id = ?",
+			[id],
+		);
 
-	// async delete(id: number) {
-	//   ...
-	// }
+		return result.affectedRows > 0;
+	}
 }
 
 export default new ItemRepository();

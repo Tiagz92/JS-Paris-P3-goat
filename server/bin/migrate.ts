@@ -1,53 +1,60 @@
-// Load environment variables from .env file
-import "dotenv/config";
-
 import fs from "node:fs";
 import path from "node:path";
-
-// Build the path to the schema SQL file
-const schema = path.join(__dirname, "../../server/database/schema.sql");
-
-// Get database connection details from .env file
-const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
-
-// Update the database schema
 import mysql from "mysql2/promise";
+import "dotenv/config";
+
+const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
+const targetDbName = DB_NAME; // Adaptez si nécessaire
+
+// Construction du chemin vers le fichier SQL contenant le schéma
+const schema = path.join(__dirname, "../schema.sql");
 
 const migrate = async () => {
 	try {
-		// Read the SQL statements from the schema file
-		const sql = fs.readFileSync(schema, "utf8");
+		console.info("Starting migration...");
 
-		// Create a specific connection to the database
-		const database = await mysql.createConnection({
-			host: DB_HOST,
-			port: DB_PORT as number | undefined,
-			user: DB_USER,
-			password: DB_PASSWORD,
-			multipleStatements: true, // Allow multiple SQL statements
+		// Afficher les variables d'environnement (attention aux infos sensibles)
+		console.info({
+			DB_HOST,
+			DB_PORT,
+			DB_USER,
+			DB_PASSWORD,
+			DB_NAME,
+			targetDbName,
 		});
 
-		// Drop the existing database if it exists
-		await database.query(`drop database if exists ${DB_NAME}`);
+		console.info("Reading schema file...");
+		const sql = fs.readFileSync(schema, "utf8");
+		console.info("Schema file loaded successfully.");
 
-		// Create a new database with the specified name
-		await database.query(`create database ${DB_NAME}`);
+		console.info("Connecting to the database...");
+		const database = await mysql.createConnection({
+			host: DB_HOST,
+			port: DB_PORT ? Number(DB_PORT) : 3306,
+			user: DB_USER,
+			password: DB_PASSWORD,
+			multipleStatements: true,
+		});
+		console.info("Database connection established.");
 
-		// Switch to the newly created database
-		await database.query(`use ${DB_NAME}`);
+		console.info("Dropping existing database...");
+		await database.query(`DROP DATABASE IF EXISTS \`${targetDbName}\``);
 
-		// Execute the SQL statements to update the database schema
+		console.info("Creating new database...");
+		await database.query(`CREATE DATABASE \`${targetDbName}\``);
+
+		console.info("Switching to new database...");
+		await database.query(`USE \`${targetDbName}\``);
+
+		console.info("Executing schema SQL...");
 		await database.query(sql);
 
-		// Close the database connection
-		database.end();
-
-		console.info(`${DB_NAME} updated from '${path.normalize(schema)}' 🆙`);
-	} catch (err) {
-		const { message, stack } = err as Error;
-		console.error("Error updating the database:", message, stack);
+		console.info("Migration completed successfully.");
+		await database.end();
+	} catch (error) {
+		console.error("Migration failed:", error);
+		process.exit(1);
 	}
 };
 
-// Run the migration function
 migrate();

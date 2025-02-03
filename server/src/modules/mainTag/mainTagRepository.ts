@@ -1,20 +1,31 @@
 import DatabaseClient from "../../../database/client";
-import type { Rows } from "../../../database/client";
+import type { RowDataPacket } from "../../../database/client";
 
 interface MainTag {
 	id: number;
 	name: string;
 }
 
-class mainTagRepository {
-	async read(id: number) {
-		const [[rows]] = await DatabaseClient.query<Rows>(
+// Interface pour le typage fort avec RowDataPacket
+interface MainTagRow extends RowDataPacket, MainTag {}
+
+class MainTagRepository {
+	async read(id: number): Promise<MainTag | null> {
+		const [rows] = await DatabaseClient.query<MainTagRow[]>(
 			"SELECT * FROM main_tag WHERE id = ?",
 			[id],
 		);
 
-		return rows as MainTag;
+		return rows.length > 0 ? rows[0] : null;
+	}
+
+	async readAll(): Promise<MainTag[]> {
+		const [rows] = await DatabaseClient.query<MainTagRow[]>(
+			"SELECT * FROM main_tag",
+		);
+
+		return rows;
 	}
 }
 
-export default new mainTagRepository();
+export default new MainTagRepository();

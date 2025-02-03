@@ -3,7 +3,7 @@ import type { Faker } from "@faker-js/faker";
 
 // Import database client
 import database from "../client";
-import type { Result } from "../client";
+import type { DBResult, ResultSetHeader } from "../client";
 
 // Declare an object to store created objects from their names
 type Ref = object & { insertId: number };
@@ -48,7 +48,10 @@ abstract class AbstractSeeder implements SeederOptions {
 		const sql = `insert into ${this.table}(${fields}) values (${placeholders})`;
 
 		// Perform the query and if applicable store the insert id given the ref name
-		const [result] = await database.query<Result>(sql, Object.values(values));
+		const [result] = await database.query<ResultSetHeader>(
+			sql,
+			Object.values(values),
+		);
 
 		if (refName != null) {
 			const { insertId } = result;
@@ -69,5 +72,4 @@ abstract class AbstractSeeder implements SeederOptions {
 	}
 }
 
-// Changer l'export de type à classe
 export { AbstractSeeder };

@@ -255,7 +255,7 @@ VALUES
 ('Coréen'),
 
 -- Culture
-('Histoire de l'art'),
+("Histoire de l'art"),
 ('Cinéma et audiovisuel'),
 ('Traditions et folklore'),
 ('Mythologie et légendes'),
@@ -300,7 +300,7 @@ VALUES
 ('Comptabilité'),
 ('Épargne et investissement'),
 ('Fiscalité et impôts'),
-('Gestion d'entreprise'),
+("Gestion d'entreprise"),
 ('Documents administratifs'),
 ('Gestion des dettes et crédits'),
 ('Création de budgets'),

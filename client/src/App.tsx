@@ -7,7 +7,7 @@ function App() {
 	return (
 		<>
 			<Outlet />
-			<WeekScheduler />
+			<WeekScheduler advertId={1} />
 		</>
 	);
 }

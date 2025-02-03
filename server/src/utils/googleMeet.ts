@@ -3,25 +3,60 @@ import path from "node:path";
 import { type Credentials, OAuth2Client } from "google-auth-library";
 import { type calendar_v3, google } from "googleapis";
 
-const credentialsPath = path.join(__dirname, "../../credentials.json");
-const credentials = JSON.parse(fs.readFileSync(credentialsPath, "utf-8"));
+// Gestion des chemins de fichiers
+const CREDENTIALS_PATH =
+	process.env.GOOGLE_CREDENTIALS_PATH ||
+	path.join(__dirname, "../../credentials.json");
+const TOKEN_PATH =
+	process.env.GOOGLE_TOKEN_PATH || path.join(__dirname, "../../token.json");
 
-const { client_id, client_secret, redirect_uris } = credentials.installed;
-const oAuth2Client = new OAuth2Client(
-	client_id,
-	client_secret,
-	redirect_uris[0],
-);
+// Chargement et vérification des credentials
+function loadCredentials(): {
+	client_id: string;
+	client_secret: string;
+	redirect_uris: string[];
+} {
+	try {
+		if (!fs.existsSync(CREDENTIALS_PATH)) {
+			throw new Error("Fichier credentials.json manquant.");
+		}
+		const credentials = JSON.parse(fs.readFileSync(CREDENTIALS_PATH, "utf-8"));
+		const { client_id, client_secret, redirect_uris } = credentials.installed;
 
-const tokenPath = path.join(__dirname, "../../token.json");
-if (fs.existsSync(tokenPath)) {
-	const token = JSON.parse(fs.readFileSync(tokenPath, "utf-8")) as Credentials;
-	oAuth2Client.setCredentials(token);
-} else {
-	throw new Error("Token d'authentification manquant.");
+		if (!client_id || !client_secret || !redirect_uris?.length) {
+			throw new Error("Informations d'identification Google incomplètes.");
+		}
+
+		return { client_id, client_secret, redirect_uris };
+	} catch (error) {
+		console.error("Erreur lors du chargement des credentials:", error);
+		throw new Error("Configuration Google invalide.");
+	}
 }
 
-const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
+// Initialisation du client OAuth2
+function initializeOAuth2Client(): OAuth2Client {
+	const { client_id, client_secret, redirect_uris } = loadCredentials();
+	const oAuth2Client = new OAuth2Client(
+		client_id,
+		client_secret,
+		redirect_uris[0],
+	);
+
+	try {
+		if (!fs.existsSync(TOKEN_PATH)) {
+			throw new Error("Token d'authentification manquant.");
+		}
+		const token = JSON.parse(
+			fs.readFileSync(TOKEN_PATH, "utf-8"),
+		) as Credentials;
+		oAuth2Client.setCredentials(token);
+		return oAuth2Client;
+	} catch (error) {
+		console.error("Erreur lors de l'initialisation du client OAuth2:", error);
+		throw new Error("Impossible d'initialiser l'authentification Google.");
+	}
+}
 
 interface EntryPoint extends calendar_v3.Schema$EntryPoint {
 	entryPointType: string;
@@ -32,32 +67,70 @@ export async function generateGoogleMeetLink(
 	startTime: Date,
 	endTime: Date,
 ): Promise<string> {
-	const event: calendar_v3.Schema$Event = {
-		summary: "Réunion planifiée",
-		start: { dateTime: startTime.toISOString(), timeZone: "Europe/Paris" },
-		end: { dateTime: endTime.toISOString(), timeZone: "Europe/Paris" },
-		conferenceData: {
-			createRequest: {
-				requestId: `meet-${Date.now()}`,
-				conferenceSolutionKey: { type: "hangoutsMeet" },
+	try {
+		const startTimeLog = startTime.toISOString();
+		const endTimeLog = endTime.toISOString();
+		console.info(
+			`Generating Meet link for session: ${startTimeLog} - ${endTimeLog}`,
+		);
+
+		const calendar = google.calendar({
+			version: "v3",
+			auth: initializeOAuth2Client(),
+		});
+
+		const event: calendar_v3.Schema$Event = {
+			summary: "Session de coaching",
+			description: "Session de coaching via Google Meet",
+			start: {
+				dateTime: startTime.toISOString(),
+				timeZone: "Europe/Paris",
 			},
-		},
-	};
+			end: {
+				dateTime: endTime.toISOString(),
+				timeZone: "Europe/Paris",
+			},
+			conferenceData: {
+				createRequest: {
+					requestId: `meet-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+					conferenceSolutionKey: { type: "hangoutsMeet" },
+				},
+			},
+		};
 
-	const response = await calendar.events.insert({
-		calendarId: "primary",
-		requestBody: event,
-		conferenceDataVersion: 1,
-	});
+		const response = await calendar.events.insert({
+			calendarId: "primary",
+			requestBody: event,
+			conferenceDataVersion: 1,
+		});
 
-	if (response.data.conferenceData?.entryPoints) {
+		if (!response.data.conferenceData?.entryPoints?.length) {
+			throw new Error("Aucun lien de conférence généré.");
+		}
+
 		const meetLink = (
 			response.data.conferenceData.entryPoints as EntryPoint[]
 		).find((entryPoint) => entryPoint.entryPointType === "video")?.uri;
-		if (meetLink) {
-			return meetLink;
-		}
-	}
 
-	throw new Error("Impossible de générer le lien Google Meet.");
+		if (!meetLink) {
+			throw new Error("Lien de visioconférence non trouvé.");
+		}
+
+		console.info(`Generated Meet link successfully: ${meetLink}`);
+		return meetLink;
+	} catch (error) {
+		console.error("Detailed Meet link generation error:", error);
+		throw new Error("Impossible de générer le lien Google Meet.");
+	}
+}
+
+export function isValidMeetLink(link: string): boolean {
+	const meetLinkRegex = /^https:\/\/meet\.google\.com\/[a-z0-9-]+$/;
+	return meetLinkRegex.test(link);
+}
+
+// Fonction pour extraire l'ID du lien Meet
+export function extractMeetLinkId(link: string): string | null {
+	const match = link.match(/https:\/\/meet\.google\.com\/([a-z0-9-]+)/);
+	return match ? match[1] : null;
 }

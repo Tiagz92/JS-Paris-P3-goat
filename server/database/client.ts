@@ -1,25 +1,40 @@
-// Get variables from .env file for database connection
-const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
-
-// Create a connection pool to the database
 import mysql from "mysql2/promise";
+import type { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+
+const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
+const NODE_ENV = process.env.NODE_ENV || "development";
+
+const getDatabaseName = () => {
+	if (NODE_ENV === "test") {
+		return `${DB_NAME}`;
+	}
+	return DB_NAME;
+};
 
 const client = mysql.createPool({
 	host: DB_HOST,
-	port: Number.parseInt(DB_PORT as string),
+	port: Number.parseInt(DB_PORT as string, 10),
 	user: DB_USER,
 	password: DB_PASSWORD,
-	database: DB_NAME,
+	database: getDatabaseName(),
+	connectionLimit: 10,
 });
 
-// Ready to export
 export default client;
 
-// Types export
-import type { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+// ============ PARTIE TYPES ============
 
-type DatabaseClient = Pool;
-type Result = ResultSetHeader;
-type Rows = RowDataPacket[];
+export type DatabaseClient = Pool;
 
-export type { DatabaseClient, Result, Rows, client };
+export type DBResult<T = unknown> = T[];
+
+// Ajout des types manquants
+export type Result = DBResult;
+export type Rows = RowDataPacket[];
+
+export type DBRows = RowDataPacket[];
+
+export type ClientType = typeof client;
+
+// Types additionnels pour faciliter les imports
+export { ResultSetHeader, RowDataPacket } from "mysql2/promise";

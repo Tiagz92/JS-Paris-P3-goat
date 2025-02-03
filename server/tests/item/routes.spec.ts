@@ -7,7 +7,7 @@ import app from "../../src/app";
 // Import databaseClient
 import databaseClient from "../../database/client";
 
-import type { Result, Rows } from "../../database/client";
+import type { ResultSetHeader, RowDataPacket } from "../../database/client";
 
 // Restore all mocked functions after each test
 afterEach(() => {
@@ -18,7 +18,7 @@ afterEach(() => {
 describe("GET /api/items", () => {
 	it("should fetch items successfully", async () => {
 		// Mock empty rows returned from the database
-		const rows = [] as Rows;
+		const rows = [] as RowDataPacket[];
 
 		// Mock the implementation of the database query method
 		jest
@@ -38,7 +38,7 @@ describe("GET /api/items", () => {
 describe("GET /api/items/:id", () => {
 	it("should fetch a single item successfully", async () => {
 		// Mock rows returned from the database
-		const rows = [{}] as Rows;
+		const rows = [{ id: 1, title: "test" }] as RowDataPacket[];
 
 		// Mock the implementation of the database query method
 		jest
@@ -55,7 +55,7 @@ describe("GET /api/items/:id", () => {
 
 	it("should fail on invalid id", async () => {
 		// Mock empty rows returned from the database
-		const rows = [] as Rows;
+		const rows = [] as RowDataPacket[];
 
 		// Mock the implementation of the database query method
 		jest
@@ -72,11 +72,10 @@ describe("GET /api/items/:id", () => {
 });
 
 // Test suite for the POST /api/items route
-// Doesn't pass: maybe something to change in app config :/
 describe("POST /api/items", () => {
 	it("should add a new item successfully", async () => {
 		// Mock result of the database query
-		const result = { insertId: 1 } as Result;
+		const result: ResultSetHeader = { insertId: 1 } as ResultSetHeader;
 
 		// Mock the implementation of the database query method
 		jest
@@ -97,7 +96,7 @@ describe("POST /api/items", () => {
 
 	it("should fail on invalid request body", async () => {
 		// Mock result of the database query
-		const result = { insertId: 1 } as Result;
+		const result: ResultSetHeader = { insertId: 1 } as ResultSetHeader;
 
 		// Mock the implementation of the database query method
 		jest
@@ -117,11 +116,10 @@ describe("POST /api/items", () => {
 });
 
 // Test suite for the PUT /api/items/:id route
-// This route is not yet implemented :/
 describe("PUT /api/items/:id", () => {
 	it("should update an existing item successfully", async () => {
 		// Mock result of the database query
-		const result = { affectedRows: 1 } as Result;
+		const result: ResultSetHeader = { affectedRows: 1 } as ResultSetHeader;
 
 		// Mock the implementation of the database query method
 		jest
@@ -141,7 +139,7 @@ describe("PUT /api/items/:id", () => {
 
 	it("should fail on invalid request body", async () => {
 		// Mock result of the database query
-		const result = { affectedRows: 1 } as Result;
+		const result: ResultSetHeader = { affectedRows: 1 } as ResultSetHeader;
 
 		// Mock the implementation of the database query method
 		jest
@@ -161,14 +159,14 @@ describe("PUT /api/items/:id", () => {
 
 	it("should fail on invalid id", async () => {
 		// Mock result of the database query
-		const result = { affectedRows: 0 } as Result;
+		const result: ResultSetHeader = { affectedRows: 0 } as ResultSetHeader;
 
 		// Mock the implementation of the database query method
 		jest
 			.spyOn(databaseClient, "query")
 			.mockImplementation(async () => [result, []]);
 
-		// Fake item data with missing user_id
+		// Fake item data
 		const fakeItem = { title: "foo", user_id: 0 };
 
 		// Send a PUT request to the /api/items/:id endpoint with a test item
@@ -181,11 +179,10 @@ describe("PUT /api/items/:id", () => {
 });
 
 // Test suite for the DELETE /api/items/:id route
-// This route is not yet implemented :/
 describe("DELETE /api/items/:id", () => {
 	it("should delete an existing item successfully", async () => {
 		// Mock result of the database query
-		const result = { affectedRows: 1 } as Result;
+		const result: ResultSetHeader = { affectedRows: 1 } as ResultSetHeader;
 
 		// Mock the implementation of the database query method
 		jest
@@ -202,7 +199,7 @@ describe("DELETE /api/items/:id", () => {
 
 	it("should fail on invalid id", async () => {
 		// Mock result of the database query
-		const result = { affectedRows: 0 } as Result;
+		const result: ResultSetHeader = { affectedRows: 0 } as ResultSetHeader;
 
 		// Mock the implementation of the database query method
 		jest
