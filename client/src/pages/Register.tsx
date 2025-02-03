@@ -34,7 +34,6 @@ function Register() {
 	};
 
 	const handleSubmit = async () => {
-	
 		const form = new FormData();
 		form.append("lastname", lastname);
 		form.append("firstname", firstname);
@@ -49,8 +48,7 @@ function Register() {
 
 		if (videoInput.current?.files?.[0]) {
 			form.append("video", videoInput.current.files[0]);
-		} else
-			form.append("video", "");
+		} else form.append("video", "");
 
 		try {
 			const response = await fetch("http://localhost:3310/api/goat", {
@@ -204,7 +202,10 @@ function Register() {
 							className="lightblue-button"
 							type="button"
 							onClick={handleSubmit}
-							onSubmit={(e) => {e.preventDefault(); handleSubmit}}
+							onSubmit={(e) => {
+								e.preventDefault();
+								handleSubmit;
+							}}
 						>
 							Valider
 						</button>
