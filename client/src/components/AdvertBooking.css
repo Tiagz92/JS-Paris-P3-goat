@@ -1,12 +1,12 @@
 .week-scheduler {
 	padding: 16px;
-	background-color: #f3f4f6; /* Correspond à votre couleur de fond */
+	background-color: #f3f4f6;
 	font-family: var(--font);
 	max-height: 330px;
 	overflow: auto;
 	border: 2px solid var(--orange);
 	border-radius: 10px;
-	box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.3);
+	box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
 }
 
 .week-scheduler h2 {
@@ -44,7 +44,7 @@
 
 .scheduler-grid {
 	display: grid;
-	grid-template-columns: 100px repeat(5, 1fr); /* 1 colonne pour les heures, 5 pour les jours */
+	grid-template-columns: 100px repeat(5, 1fr);
 	border: 1px solid #d1d5db;
 	background-color: #ffffff;
 	overflow: hidden;
@@ -59,7 +59,7 @@
 }
 
 .grid-header {
-	background-color: #f3f4f6; /* Couleur d'arrière-plan des en-têtes des jours */
+	background-color: #f3f4f6;
 	font-weight: bold;
 }
 
@@ -69,7 +69,7 @@
 }
 
 .grid-time {
-	background-color: #f9f9f9; /* Couleur d'arrière-plan des cellules heure */
+	background-color: #f9f9f9;
 	font-weight: bold;
 }
 
@@ -80,17 +80,17 @@
 }
 
 .grid-slot:hover {
-	background-color: #e5e7eb; /* Couleur de survol */
+	background-color: #e5e7eb;
 }
 
 .grid-slot.selected {
-	background-color: #93c5fd; /* Couleur pour les slots sélectionnés */
+	background-color: var(--orange);
 	color: white;
 }
 
 @media (max-width: 600px) {
 	.scheduler-grid {
-		grid-template-columns: 80px repeat(5, 1fr); /* Ajustement pour les petits écrans */
+		grid-template-columns: 80px repeat(5, 1fr);
 	}
 
 	.scheduler-header h2 {

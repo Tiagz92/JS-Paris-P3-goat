@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import WeekScheduler from "./components/AdvertBooking";
 import "./App.css";
 import "./Reset.css";
 import { Bounce, ToastContainer } from "react-toastify";
@@ -10,7 +9,6 @@ function App() {
 		<>
 			<NavBar />
 			<Outlet />
-			<WeekScheduler />
 			<ToastContainer
 				position="top-center"
 				autoClose={5000}

@@ -20,8 +20,8 @@ body {
 	border: 3px solid var(--orange);
 	border-radius: 10px;
 	box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.3);
-	width: 85vw;
-	height: 80vh;
+	width: 90vw;
+	height: 70vh;
 	overflow: hidden;
 	padding-top: 10px;
 }
@@ -32,7 +32,7 @@ body {
 	justify-content: left;
 	align-items: left;
 	gap: 10px;
-	max-width: 40%;
+	max-width: 100%;
 }
 .profile-header {
 	justify-content: center;
