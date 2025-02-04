@@ -12,8 +12,8 @@ function NavBar() {
 				src={logo}
 				alt="logo"
 				className="logo"
-				onClick={() => navigate("/")}
-				onKeyPress={() => navigate("/")}
+				onClick={() => navigate("/home")}
+				onKeyPress={() => navigate("/home")}
 			/>
 			<section className="title-container">
 				<h1 className="title">
