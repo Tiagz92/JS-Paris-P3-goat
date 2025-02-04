@@ -93,8 +93,6 @@ p {
 	border: none;
 	padding: 0.5rem;
 	cursor: pointer;
-	background-color: var(--light-blue);
-	color: var(--text-white);
 }
 
 .lightblue-button:hover {

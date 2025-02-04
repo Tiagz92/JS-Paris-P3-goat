@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import "./AdvertDetails.css";
 import AdvertBooking from "../components/AdvertBooking";
 
+
 type Advert = {
 	description: string;
 	goat_id: number;
