@@ -5,10 +5,19 @@
 	justify-content: center;
 	justify-items: center;
 }
+.no-results {
+	grid-column: 2; 
+	text-align: center; 
+}
+
 
 @media (max-width: 768px) {
 	.adverts {
 		grid-template-rows: auto;
-		grid-template-columns: 1fr;
+		grid-template-columns: 1fr; 
+	}
+	.no-results {
+		grid-column: 1;
+		text-align: center; 
 	}
 }
