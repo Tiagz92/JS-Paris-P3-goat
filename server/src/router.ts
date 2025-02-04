@@ -12,13 +12,13 @@ const router = express.Router();
 
 // Define item-related routes
 
-router.get("/api/main-tag", mainTagActions.browse);
+router.get("/api/main-tags", mainTagActions.browse);
 
 router.get("/api/adverts", advertActions.browse);
 
-router.post("/api/advert", advertServices.validateAdvert, advertActions.add);
+router.post("/api/adverts", advertServices.validateAdvert, advertActions.add);
 
-router.post("api/goat", goatActions.add);
+router.post("api/goats", goatActions.add);
 
 /* ************************************************************************* */
 
