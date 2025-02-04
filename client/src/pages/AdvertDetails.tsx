@@ -74,11 +74,11 @@ function AdvertDetails() {
 			<div className="profile-calendar">
 				<h1>Sélectionnez une date</h1>
 				<AdvertBooking />
-			</div>
-			<div className="advert-reservation">
-				<button type="button" className="reservation-button">
-					Réserver
-				</button>
+				<div className="advert-reservation">
+					<button type="button" className="reservation-button">
+						Réserver
+					</button>
+				</div>
 			</div>
 		</div>
 	);
