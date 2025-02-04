@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import "./Reset.css";
 import "./App.css";
 import "./Reset.css";
 import { Bounce, ToastContainer } from "react-toastify";
