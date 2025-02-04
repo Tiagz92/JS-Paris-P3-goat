@@ -1,5 +1,5 @@
 // Load the express module to create a web application
-
+import bodyParser from "body-parser";
 import express from "express";
 
 const app = express();
