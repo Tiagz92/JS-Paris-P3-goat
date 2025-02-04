@@ -5,6 +5,8 @@ interface Advert {
 	goat_firstname: string;
 	main_tag_name: string;
 	sub_tag_name: string;
+	main_tag_id: number;
+	sub_tag_id: number;
 }
 
 type MainTag = {
