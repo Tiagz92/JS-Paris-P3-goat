@@ -7,7 +7,7 @@ const add: RequestHandler = async (req, res, next) => {
 			id: req.body.id,
 			lastname: req.body.lastname,
 			firstname: req.body.firstname,
-			birthday: req.body.birthday,
+			born_at: req.body.born_at,
 			email: req.body.email,
 			password: req.body.password,
 			picture: req.body.picture,

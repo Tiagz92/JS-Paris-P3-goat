@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import type { FC } from "react";
 import { useParams } from "react-router-dom";
-import AdvertDescription from "./AdvertDescription";
 
 type AdvertDetailsProps = Record<string, never>;
 
@@ -64,7 +63,6 @@ const AdvertDetails: FC<AdvertDetailsProps> = () => {
 			<p>
 				<strong> {advert.sub_tag_id} </strong>
 			</p>
-			<AdvertDescription description={advert.description} />
 		</div>
 	);
 };

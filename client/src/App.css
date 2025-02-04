@@ -53,11 +53,10 @@ p {
 	cursor: pointer;
 	color: var(--text-white);
 	background-color: var(--orange);
-	border: none;
+	border: 3px solid var(--orange);
 }
 
 .yellow-button:hover {
-	transform: scale(1.02);
 	color: var(--orange);
 	background-color: #fafafa;
 	border: 3px solid var(--orange);
@@ -71,13 +70,12 @@ p {
 	background-color: var(--darkblue);
 	color: var(--text-white);
 	border-radius: 1rem;
-	border: none;
+	border: 3px solid var(--darkblue);
 	padding: 0.5rem;
 	cursor: pointer;
 }
 
 .darkblue-button:hover {
-	transform: scale(1.02);
 	color: var(--darkblue);
 	background-color: var(--light-blue);
 	border: 3px solid var(--darkblue);
@@ -91,7 +89,7 @@ p {
 	background-color: var(--darkblue);
 	color: var(--text-white);
 	border-radius: 1rem;
-	border: none;
+	border: 3px solid var(--light-blue);
 	padding: 0.5rem;
 	cursor: pointer;
 	background-color: var(--light-blue);
@@ -99,7 +97,6 @@ p {
 }
 
 .lightblue-button:hover {
-	transform: scale(1.02);
 	color: var(--darkblue);
 	background-color: var(--light-blue);
 	border: 3px solid var(--darkblue);

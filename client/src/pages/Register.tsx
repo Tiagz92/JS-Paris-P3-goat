@@ -18,7 +18,7 @@ function Register() {
 
 	const [lastname, setLastname] = useState("");
 	const [firstname, setFirstname] = useState("");
-	const [birthday, setBirthday] = useState("");
+	const [bornAt, setBornAt] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [presentation, setPresentation] = useState("");
@@ -37,7 +37,7 @@ function Register() {
 		const form = new FormData();
 		form.append("lastname", lastname);
 		form.append("firstname", firstname);
-		form.append("birthday", birthday);
+		form.append("bornAt", bornAt);
 		form.append("email", email);
 		form.append("password", password);
 		form.append("presentation", presentation);
@@ -51,7 +51,7 @@ function Register() {
 		} else form.append("video", "");
 
 		try {
-			const response = await fetch("http://localhost:3310/api/goat", {
+			const response = await fetch("http://localhost:3310/api/goats", {
 				method: "POST",
 				body: form,
 			});
@@ -123,11 +123,11 @@ function Register() {
 									<label htmlFor="firstname">Prénom</label>
 								</div>
 								<div className="form_birthday">
-									<label htmlFor="birthday">Date d'anniversaire</label>
+									<label htmlFor="bornAt">Date d'anniversaire</label>
 									<input
 										type="date"
-										value={birthday}
-										onChange={(e) => setBirthday(e.target.value)}
+										value={bornAt}
+										onChange={(e) => setBornAt(e.target.value)}
 										required
 										name="birthday"
 									/>

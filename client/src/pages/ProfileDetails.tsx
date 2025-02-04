@@ -1,3 +1,5 @@
-export default function ProfilDetails() {
+function ProfilDetails() {
 	return <div>Profil Details page</div>;
 }
+
+export default ProfilDetails;
