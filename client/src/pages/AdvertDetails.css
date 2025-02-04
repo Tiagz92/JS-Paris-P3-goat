@@ -6,7 +6,6 @@ body {
 	padding: 0;
 	justify-content: center;
 	align-items: center;
-	
 }
 .advert-container {
 	display: flex;
@@ -23,7 +22,7 @@ body {
 	height: 80vh;
 	overflow: hidden;
 	padding-top: 10px;
-  margin: 2rem;
+	margin: 2rem;
 }
 
 .advert-profile {
@@ -33,9 +32,9 @@ body {
 	align-items: center;
 	gap: 10px;
 	max-width: 40%;
-  min-height: 80%;
-  overflow: auto;
-  flex-wrap: wrap;
+	min-height: 80%;
+	overflow: auto;
+	flex-wrap: wrap;
 }
 .profile-header {
 	justify-content: center;
@@ -78,7 +77,7 @@ body {
 	justify-content: center;
 	text-align: center;
 	color: var(--text-black);
-  margin-bottom: 2rem;
+	margin-bottom: 2rem;
 }
 .profile-booking {
 	display: flex;
@@ -202,7 +201,7 @@ body {
 	.calendar h1 {
 		font-size: 1rem;
 	}
-  
+
 	.reservation-button {
 		width: 100px;
 		height: 35px;
