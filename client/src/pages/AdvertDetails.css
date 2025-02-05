@@ -23,6 +23,7 @@ body {
 	overflow: hidden;
 	padding-top: 10px;
 	margin: 2rem;
+	margin-top: 0;
 }
 
 .advert-profile {
@@ -164,47 +165,94 @@ body {
 	color: var(--text-black);
 	margin: 20px 0;
 }
-@media (max-width: 768px) {
+
+@media (max-width: 1024px) {
 	.advert-container {
-		width: 100vw;
-		height: auto;
-		padding: 10px;
-		box-shadow: none;
-		border: none;
+		padding: 15px;
 		display: flex;
-		flex-direction: column;
+		flex-direction: column !important; /* Force la disposition en colonne */
+		align-items: center;
+		gap: 20px;
+		height: auto; 
+		overflow: visible;
+    justify-content: center;
+    margin: 2rem;
+    border: 3px solid var(--orange);
+    border-radius: 10px;
+    box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.3);
+	}
+
+	.advert-profile {
+		display: flex;
+    flex-direction: row;
+    justify-content: center;
+		align-items: center;
+		text-align: center;
+		width: 100%;
+		gap: 25px;
 	}
 
 	.profile-header {
-		gap: 10px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: 20px;
 	}
 
 	.img-goat {
-		width: 120px;
-		height: 120px;
+		width: 140px; 
+		height: 140px;
+		object-fit: cover;
 	}
 
 	.profile-name {
-		font-size: 1.8rem;
+		font-size: 2rem;
+		text-align: center;
 	}
 
 	.profile-tags {
+		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
 		gap: 10px;
+		max-width: 100%;
 	}
 
 	.profile-description {
-		font-size: 0.85rem;
+		font-size: 1rem;
+		text-align: center;
+		padding: 0 15px;
+		width: 100%;
+		max-width: 500px; 
 	}
 
-	.calendar h1 {
-		font-size: 1rem;
+	.profile-calendar {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: auto;
+    max-width: 100%;
+		padding: 15px;
+		margin-top: 20px; 
+	}
+
+	.profile-calendar h1 {
+		font-size: 1.5rem;
+		margin-bottom: 15px;
+	}
+
+	.advert-reservation {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+		margin-top: 15px;
 	}
 
 	.reservation-button {
-		width: 100px;
-		height: 35px;
-		font-size: 0.8rem;
+		width: 150px;
+		height: 45px;
+		font-size: 1rem;
 	}
 }
+

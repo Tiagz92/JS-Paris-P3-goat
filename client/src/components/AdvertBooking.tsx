@@ -29,11 +29,11 @@ const WeekScheduler = () => {
 
 	return (
 		<div className="week-scheduler">
+			<h2>(Semaine {currentWeekOffset})</h2>
 			<div className="scheduler-header">
 				<button type="button" onClick={() => changeWeek(-1)}>
 					Semaine Précédente
 				</button>
-				<h2>(Semaine {currentWeekOffset})</h2>
 				<button type="button" onClick={() => changeWeek(1)}>
 					Semaine Suivante
 				</button>

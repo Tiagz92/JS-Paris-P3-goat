@@ -13,6 +13,9 @@
 	font-size: 1.5rem;
 	font-weight: bold;
 	margin-bottom: 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .scheduler-header {
@@ -34,12 +37,6 @@
 
 .scheduler-header button:hover {
 	background-color: #e5e7eb;
-}
-
-.scheduler-header h2 {
-	margin: 0;
-	font-size: 1.5rem;
-	font-weight: bold;
 }
 
 .scheduler-grid {
@@ -89,12 +86,27 @@
 }
 
 @media (max-width: 600px) {
+  .week-scheduler {
+    max-width: 100%;
+    overflow:auto;
+    margin: auto;
+    padding: 10px;
+    border: 2px solid var(--orange);
+    border-radius: 10px;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+
+  }
 	.scheduler-grid {
 		grid-template-columns: 80px repeat(5, 1fr);
+		overflow-x: auto;
 	}
 
-	.scheduler-header h2 {
+	.week-scheduler h2 {
 		font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 	}
 
 	.scheduler-header button {
