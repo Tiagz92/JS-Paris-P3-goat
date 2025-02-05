@@ -3,6 +3,7 @@ import advertActions from "./modules/advert/advertActions";
 import advertServices from "./modules/advert/advertServices";
 import goatActions from "./modules/goat/goatActions";
 import mainTagActions from "./modules/tag/mainTagActions";
+import fileUpload from "./services/fileUpload";
 
 const router = express.Router();
 
@@ -34,6 +35,6 @@ router.get("/advert/maintags", advertActions.getMainTags);
 
 router.post("/api/adverts", advertServices.validateAdvert, advertActions.add);
 
-router.post("/api/goats", goatActions.add);
+router.post("/api/goats", fileUpload.any(), goatActions.add);
 
 export default router;

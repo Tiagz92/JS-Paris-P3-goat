@@ -37,13 +37,16 @@ function Register() {
 		const form = new FormData();
 		form.append("lastname", lastname);
 		form.append("firstname", firstname);
-		form.append("bornAt", bornAt);
+		form.append("born_at", bornAt);
 		form.append("email", email);
 		form.append("password", password);
 		form.append("presentation", presentation);
 
+
 		if (avatar.current?.files?.[0]) {
 			form.append("picture", avatar.current.files[0]);
+		} else {
+			throw new Error("La photo de profil est obligatoire");
 		}
 
 		if (videoInput.current?.files?.[0]) {
@@ -53,6 +56,9 @@ function Register() {
 		try {
 			const response = await fetch("http://localhost:3310/api/goats", {
 				method: "POST",
+				// headers: {
+				// 	"Content-Type": "application/x-www-form-urlencoded"
+				// },
 				body: form,
 			});
 			if (!response.ok) {
