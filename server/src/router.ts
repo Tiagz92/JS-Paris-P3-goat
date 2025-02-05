@@ -14,6 +14,9 @@ router.get("/api/main-tag", mainTagActions.browse);
 
 router.get("/api/adverts", advertActions.browse);
 
+router.get("/api/adverts", advertActions.browse);
+router.get("/api/adverts/:id", advertActions.read);
+router.post("/api/adverts", advertActions.add);
 router.post("/api/advert", advertServices.validateAdvert, advertActions.add);
 
 router.get("/api/advert/:id", advertActions.read);
