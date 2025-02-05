@@ -42,7 +42,6 @@ function Register() {
 		form.append("password", password);
 		form.append("presentation", presentation);
 
-
 		if (avatar.current?.files?.[0]) {
 			form.append("picture", avatar.current.files[0]);
 		} else {
