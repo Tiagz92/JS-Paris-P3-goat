@@ -173,19 +173,19 @@ body {
 		flex-direction: column !important; /* Force la disposition en colonne */
 		align-items: center;
 		gap: 20px;
-		height: auto; 
+		height: auto;
 		overflow: visible;
-    justify-content: center;
-    margin: 2rem;
-    border: 3px solid var(--orange);
-    border-radius: 10px;
-    box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.3);
+		justify-content: center;
+		margin: 2rem;
+		border: 3px solid var(--orange);
+		border-radius: 10px;
+		box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.3);
 	}
 
 	.advert-profile {
 		display: flex;
-    flex-direction: row;
-    justify-content: center;
+		flex-direction: row;
+		justify-content: center;
 		align-items: center;
 		text-align: center;
 		width: 100%;
@@ -201,7 +201,7 @@ body {
 	}
 
 	.img-goat {
-		width: 140px; 
+		width: 140px;
 		height: 140px;
 		object-fit: cover;
 	}
@@ -224,7 +224,7 @@ body {
 		text-align: center;
 		padding: 0 15px;
 		width: 100%;
-		max-width: 500px; 
+		max-width: 500px;
 	}
 
 	.profile-calendar {
@@ -232,9 +232,9 @@ body {
 		flex-direction: column;
 		align-items: center;
 		width: auto;
-    max-width: 100%;
+		max-width: 100%;
 		padding: 15px;
-		margin-top: 20px; 
+		margin-top: 20px;
 	}
 
 	.profile-calendar h1 {
@@ -255,4 +255,3 @@ body {
 		font-size: 1rem;
 	}
 }
-
