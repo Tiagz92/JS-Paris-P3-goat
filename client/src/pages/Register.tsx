@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
-import "./Register.css";
+import { useNavigate } from "react-router-dom";
 import { Avatar } from "@mui/material";
 import Button from "@mui/material/Button";
 import { toast } from "react-toastify";
+import "./Register.css";
 
 function Register() {
 	const [profilePic, setProfilePic] = useState<string | null>(null);
@@ -33,6 +34,8 @@ function Register() {
 		}
 	};
 
+	const navigate = useNavigate();
+
 	const handleSubmit = async () => {
 		const form = new FormData();
 		form.append("lastname", lastname);
@@ -55,9 +58,6 @@ function Register() {
 		try {
 			const response = await fetch("http://localhost:3310/api/goats", {
 				method: "POST",
-				// headers: {
-				// 	"Content-Type": "application/x-www-form-urlencoded"
-				// },
 				body: form,
 			});
 			if (!response.ok) {
@@ -66,6 +66,7 @@ function Register() {
 
 			const result = await response.json();
 			toast.info("Inscription terminée avec succès !", result);
+			navigate("/home");
 		} catch (error) {
 			toast.error(
 				"Oups...il semble que ton inscription ne soit pas complète 🐐",
