@@ -17,8 +17,9 @@ router.get("/api/main-tags", mainTagActions.browse);
 router.get("/api/main-tag", mainTagActions.browse);
 
 router.get("/api/adverts", advertActions.browse);
-
-router.get("/api/advert/:id", advertActions.read);
+router.get("/api/adverts/:id", advertActions.read);
+router.post("/api/adverts", advertActions.add);
+router.post("/api/advert", advertServices.validateAdvert, advertActions.add);
 
 router.get(
 	"/advert/search/subtag/:mainTagId",

@@ -1,0 +1,120 @@
+.week-scheduler {
+	padding: 16px;
+	background-color: #f3f4f6;
+	font-family: var(--font);
+	max-height: 330px;
+	overflow: auto;
+	border: 2px solid var(--orange);
+	border-radius: 10px;
+	box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.week-scheduler h2 {
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.scheduler-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 16px;
+}
+
+.scheduler-header button {
+	padding: 8px 16px;
+	font-size: 14px;
+	cursor: pointer;
+	background-color: #ffffff;
+	border: 1px solid #d1d5db;
+	border-radius: 8px;
+	transition: background-color 0.3s;
+}
+
+.scheduler-header button:hover {
+	background-color: #e5e7eb;
+}
+
+.scheduler-grid {
+	display: grid;
+	grid-template-columns: 100px repeat(5, 1fr);
+	border: 1px solid #d1d5db;
+	background-color: #ffffff;
+	overflow: hidden;
+}
+
+.grid-header,
+.grid-time,
+.grid-slot {
+	border: 1px solid #d1d5db;
+	padding: 12px;
+	text-align: center;
+}
+
+.grid-header {
+	background-color: #f3f4f6;
+	font-weight: bold;
+}
+
+.empty-cell {
+	background-color: #f3f4f6;
+	border: none;
+}
+
+.grid-time {
+	background-color: #f9f9f9;
+	font-weight: bold;
+}
+
+.grid-slot {
+	height: 50px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+}
+
+.grid-slot:hover {
+	background-color: #e5e7eb;
+}
+
+.grid-slot.selected {
+	background-color: var(--orange);
+	color: white;
+}
+
+@media (max-width: 600px) {
+	.week-scheduler {
+		max-width: 100%;
+		overflow: auto;
+		margin: auto;
+		padding: 10px;
+		border: 2px solid var(--orange);
+		border-radius: 10px;
+		box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+	}
+	.scheduler-grid {
+		grid-template-columns: 80px repeat(5, 1fr);
+		overflow-x: auto;
+	}
+
+	.week-scheduler h2 {
+		font-size: 1.2rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+	}
+
+	.scheduler-header button {
+		padding: 6px 12px;
+		font-size: 12px;
+	}
+
+	.grid-slot {
+		height: 40px;
+		font-size: 12px;
+	}
+}
