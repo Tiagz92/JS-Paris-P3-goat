@@ -4,16 +4,14 @@ import mysql from "mysql2/promise";
 import "dotenv/config";
 
 const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
-const targetDbName = DB_NAME; // Adaptez si nécessaire
+const targetDbName = DB_NAME; // Cette variable prendra la valeur définie dans .env.test lors des tests
 
-// Construction du chemin vers le fichier SQL contenant le schéma
-const schema = path.join(__dirname, "../schema.sql");
+// Si le fichier schema.sql est dans server/database/
+const schema = path.join(__dirname, "..", "database", "schema.sql");
 
 const migrate = async () => {
 	try {
 		console.info("Starting migration...");
-
-		// Afficher les variables d'environnement (attention aux infos sensibles)
 		console.info({
 			DB_HOST,
 			DB_PORT,

@@ -1,11 +1,11 @@
 import { AbstractSeeder } from "./AbstractSeeder";
 
-export class AdvertSeeder extends AbstractSeeder {
+class AdvertSeeder extends AbstractSeeder {
 	constructor() {
 		super({ table: "advert", truncate: true, dependencies: [] });
 	}
 
-	async run() {
+	run() {
 		const tagIds = {
 			1: [1, 2, 3, 4, 5, 6, 7],
 			2: [8, 9, 10, 11, 12, 13, 14, 15],
@@ -40,3 +40,5 @@ export class AdvertSeeder extends AbstractSeeder {
 		}
 	}
 }
+
+export default AdvertSeeder;

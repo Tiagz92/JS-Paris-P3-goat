@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
+* {
+	box-sizing: border-box;
+}
+
 :root {
 	--white: #fafafa;
 	--darkblue: #2930d3;
@@ -73,6 +77,56 @@ p {
 	cursor: pointer;
 }
 
+.yellow-button:hover {
+	transform: scale(1.02);
+	color: var(--orange);
+	background-color: #fafafa;
+	border: 3px solid var(--orange);
+	box-shadow: 10px 10px 12px 1px rgba(0, 0, 0, 0.45);
+}
+
+.darkblue-button {
+	font-size: 1rem;
+	font-weight: bold;
+	text-align: center;
+	background-color: var(--darkblue);
+	color: var(--text-white);
+	border-radius: 1rem;
+	border: none;
+	padding: 0.5rem;
+	cursor: pointer;
+}
+
+.darkblue-button:hover {
+	transform: scale(1.02);
+	color: var(--darkblue);
+	background-color: var(--light-blue);
+	border: 3px solid var(--darkblue);
+	box-shadow: 10px 10px 12px 1px rgba(0, 0, 0, 0.45);
+}
+
+.lightblue-button {
+	font-size: 1rem;
+	font-weight: bold;
+	text-align: center;
+	background-color: var(--darkblue);
+	color: var(--text-white);
+	border-radius: 1rem;
+	border: none;
+	padding: 0.5rem;
+	cursor: pointer;
+	background-color: var(--light-blue);
+	color: var(--text-white);
+}
+
+.lightblue-button:hover {
+	transform: scale(1.02);
+	color: var(--darkblue);
+	background-color: var(--light-blue);
+	border: 3px solid var(--darkblue);
+	box-shadow: 10px 10px 12px 1px rgba(0, 0, 0, 0.45);
+}
+
 .card {
 	background-color: var(--white);
 	color: var(--text-black);
@@ -83,4 +137,15 @@ p {
 footer {
 	background-color: var(--white);
 	color: var(--text-black);
+}
+
+@media screen and (min-width: 480px) and (max-width: 720px) {
+	.title {
+		font-size: 2rem;
+		font-weight: 400;
+	}
+
+	.yellow-button {
+		font-size: 0.5rem;
+	}
 }

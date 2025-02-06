@@ -1,19 +1,21 @@
 import type { RowDataPacket } from "mysql2";
 import client from "../../../database/client";
+import { generateGoogleMeetLink } from "../../../src/utils/googleMeet";
+import { sendReservationEmail } from "../../../src/utils/mailService";
 import { ReservationRepository } from "./ReservationRepository";
 import type { Reservation } from "./ReservationRepository";
 
 // On omet la propriété "constructor" pour éviter les problèmes liés à RowDataPacket.
 interface ReservationResponse
 	extends Omit<Partial<Reservation>, "constructor"> {
-	id: number;
+	insertId: number;
 	google_meet_link: string;
 	status: "pending" | "confirmed" | "cancelled" | "completed" | undefined;
 }
 
 export const ReservationActions = {
 	async createReservation(
-		goatId: number,
+		userId: number,
 		slotId: number,
 	): Promise<ReservationResponse> {
 		try {
@@ -30,17 +32,41 @@ export const ReservationActions = {
 			// Récupérer les détails du créneau
 			const slot = slotRows[0];
 			const startTime = new Date(slot.start_time);
+			// Calculer l'heure de fin à partir de la durée (supposée en minutes)
+			const duration = Number(slot.duration);
+			const endTime = new Date(startTime.getTime() + duration * 60000);
 
-			// Création de la réservation en passant start_at et duration
+			// Générer le lien Google Meet pour la plage horaire
+			const google_meet_link = await generateGoogleMeetLink(startTime, endTime);
+
+			// Créer la réservation (on retire start_at et duration car ils ne font pas partie du schéma)
 			const reservation = await ReservationRepository.create({
 				slot_id: slotId,
-				user_id: goatId,
-				start_at: startTime,
-				duration: slot.duration,
+				user_id: userId,
+				google_meet_link,
 			});
 
-			return {
+			if (!reservation) {
+				throw new Error(
+					"Reservation creation failed: Slot not found or not available",
+				);
+			}
+
+			// Préparer les détails pour le mail (adapter selon vos besoins)
+			const reservationDetails = {
 				id: reservation.id,
+				slot: slot.start_time, // Vous pouvez formatter cette date
+				google_meet_link: reservation.google_meet_link,
+			};
+
+			// Envoyer l'email récapitulatif (l'adresse email est à adapter)
+			await sendReservationEmail(
+				"destinataire@example.com",
+				reservationDetails,
+			);
+
+			return {
+				insertId: reservation.id,
 				google_meet_link: reservation.google_meet_link,
 				status: reservation.status || "confirmed",
 			};
@@ -58,11 +84,9 @@ export const ReservationActions = {
 		return reservation;
 	},
 
-	async getUserReservations(goatId: number): Promise<Reservation[]> {
+	async getUserReservations(userId: number): Promise<Reservation[]> {
 		const reservations =
-			await ReservationRepository.getUserReservations(goatId);
-
-		// Validation optionnelle du lien Meet
+			await ReservationRepository.getUserReservations(userId);
 		for (const reservation of reservations) {
 			if (
 				!reservation.google_meet_link?.startsWith("https://meet.google.com/")
@@ -70,44 +94,42 @@ export const ReservationActions = {
 				console.warn(`Invalid Meet link for reservation ${reservation.id}`);
 			}
 		}
-
 		return reservations;
 	},
 
 	async cancelReservation(
-		goatId: number,
+		userId: number,
 		reservationId: number,
 	): Promise<boolean> {
 		try {
-			// Vérifier que la réservation existe et appartient au goat
 			const reservation = await this.getReservationById(reservationId);
-
-			if (reservation.user_id !== goatId) {
+			if (reservation.user_id !== userId) {
 				throw new Error("Unauthorized");
 			}
 
-			// Vérifier le délai d'annulation en récupérant l'heure de début du créneau
 			const [slotRows] = await client.query<RowDataPacket[]>(
 				"SELECT start_time FROM slot WHERE id = ?",
 				[reservation.slot_id],
 			);
+
+			if (slotRows.length === 0) {
+				throw new Error("Slot not found");
+			}
 
 			const slot = slotRows[0];
 			const startTime = new Date(slot.start_time);
 			const now = new Date();
 			const hoursUntilStart =
 				(startTime.getTime() - now.getTime()) / (1000 * 60 * 60);
-
 			if (hoursUntilStart < 24) {
 				throw new Error(
 					"Cannot cancel reservation less than 24 hours before start time",
 				);
 			}
 
-			// Annuler la réservation
 			return await ReservationRepository.cancelReservation(
 				reservationId,
-				goatId,
+				userId,
 			);
 		} catch (error) {
 			console.error("Error cancelling reservation:", error);
@@ -115,11 +137,9 @@ export const ReservationActions = {
 		}
 	},
 
-	async getUpcomingReservations(goatId: number): Promise<Reservation[]> {
+	async getUpcomingReservations(userId: number): Promise<Reservation[]> {
 		const upcomingReservations =
-			await ReservationRepository.getUpcomingReservations(goatId);
-
-		// Validation optionnelle du lien Meet
+			await ReservationRepository.getUpcomingReservations(userId);
 		for (const reservation of upcomingReservations) {
 			if (
 				!reservation.google_meet_link?.startsWith("https://meet.google.com/")
@@ -129,12 +149,11 @@ export const ReservationActions = {
 				);
 			}
 		}
-
 		return upcomingReservations;
 	},
 
 	async checkReservationConflict(
-		goatId: number,
+		userId: number,
 		slotId: number,
 	): Promise<boolean> {
 		const [rows] = await client.query<RowDataPacket[]>(
@@ -145,9 +164,10 @@ export const ReservationActions = {
              WHERE r.user_id = ?
              AND r.status != 'cancelled'
              AND ABS(TIMESTAMPDIFF(MINUTE, s1.start_time, s2.start_time)) < s1.duration`,
-			[slotId, goatId],
+			[slotId, userId],
 		);
-
 		return (rows[0] as { count: number }).count > 0;
 	},
 };
+
+export default ReservationActions;

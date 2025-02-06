@@ -5,15 +5,11 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
--- -----------------------------------------------------
 -- Schema goat_db
--- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `goat_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE `goat_db`;
 
--- -----------------------------------------------------
 -- Table `goat_db`.`main_tag`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `goat_db`.`main_tag` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
@@ -25,9 +21,7 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
--- -----------------------------------------------------
 -- Table `goat_db`.`sub_tag`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `goat_db`.`sub_tag` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
@@ -39,9 +33,7 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
--- -----------------------------------------------------
 -- Table `goat_db`.`goat`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `goat_db`.`goat` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `lastname` VARCHAR(255) NOT NULL,
@@ -51,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `goat_db`.`goat` (
   `password` VARCHAR(255) NOT NULL COMMENT 'Stores hashed password',
   `picture` VARCHAR(255) NOT NULL,
   `presentation` TEXT NOT NULL,
-  `video` VARCHAR(255) NULL DEFAULT NULL,
+  `video` VARCHAR(255) DEFAULT NULL,
   `status` ENUM('active', 'inactive', 'suspended') DEFAULT 'active',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -62,13 +54,11 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
--- -----------------------------------------------------
 -- Table `goat_db`.`advert`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `goat_db`.`advert` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `description` TEXT NOT NULL,
-  `goat_id` INT NULL DEFAULT NULL,
+  `goat_id` INT DEFAULT NULL,
   `main_tag_id` INT NOT NULL,
   `sub_tag_id` INT NOT NULL,
   `status` ENUM('active', 'inactive', 'archived') DEFAULT 'active',
@@ -93,18 +83,16 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
--- -----------------------------------------------------
 -- Table `goat_db`.`main_sub_tag`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `goat_db`.`main_sub_tag` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `main_tag_id` INT NOT NULL,
   `sub_tag_id` INT NOT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_main_sub_tag` (`main_tag_id`, `sub_tag_id`),
   INDEX `fk_main_tag_id_idx` (`main_tag_id` ASC) VISIBLE,
   INDEX `fk_sub_tag_id_idx` (`sub_tag_id` ASC) VISIBLE,
-  UNIQUE KEY `unique_main_sub_tag` (`main_tag_id`, `sub_tag_id`),
   CONSTRAINT `fk_main_tag_id`
     FOREIGN KEY (`main_tag_id`)
     REFERENCES `goat_db`.`main_tag` (`id`),
@@ -116,18 +104,16 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
--- -----------------------------------------------------
 -- Table `goat_db`.`slot`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `goat_db`.`slot` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `start_at` DATETIME NOT NULL,
   `duration` INT NOT NULL,
-  `meet_link` VARCHAR(255) NULL DEFAULT NULL,
-  `comment` TEXT NULL DEFAULT NULL,
+  `meet_link` VARCHAR(255) DEFAULT NULL,
+  `comment` TEXT DEFAULT NULL,
   `status` ENUM('available', 'reserved', 'cancelled', 'completed') DEFAULT 'available',
   `advert_id` INT NOT NULL,
-  `goat_id` INT NULL DEFAULT NULL,
+  `goat_id` INT DEFAULT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -140,16 +126,13 @@ CREATE TABLE IF NOT EXISTS `goat_db`.`slot` (
   CONSTRAINT `fk_slot_goat_id`
     FOREIGN KEY (`goat_id`)
     REFERENCES `goat_db`.`goat` (`id`),
-  CONSTRAINT `check_duration_positive` 
-    CHECK (duration > 0)
+  CONSTRAINT `check_duration_positive` CHECK ((`duration` > 0))
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
--- -----------------------------------------------------
 -- Table `goat_db`.`reservations`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `goat_db`.`reservations` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `slot_id` INT NOT NULL,
@@ -169,6 +152,20 @@ CREATE TABLE IF NOT EXISTS `goat_db`.`reservations` (
     FOREIGN KEY (`user_id`)
     REFERENCES `goat_db`.`goat` (`id`)
     ON DELETE CASCADE
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+-- Table `goat_db`.`item`
+CREATE TABLE IF NOT EXISTS `goat_db`.`item` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `description` TEXT DEFAULT NULL,
+  `price` DECIMAL(10,2) NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
