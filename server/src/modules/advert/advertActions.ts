@@ -5,11 +5,7 @@ import mainTagRepository from "../mainTag/mainTagRepository";
 import subTagRepository from "../subTag/subTagRepository";
 import advertRepository from "./advertRepository";
 
-const browse: RequestHandler = async (
-	req: Request,
-	res: Response,
-	next: NextFunction,
-) => {
+const browse: RequestHandler = async (req, res, next) => {
 	try {
 		const adverts = await advertRepository.readAll();
 
@@ -45,6 +41,7 @@ const browse: RequestHandler = async (
 		next(err);
 	}
 };
+
 const read: RequestHandler = async (req, res, next) => {
 	try {
 		const advertId = Number(req.params.id);
@@ -75,7 +72,7 @@ const read: RequestHandler = async (req, res, next) => {
 	}
 };
 
-const add: RequestHandler = async (req: Request, res: Response, next) => {
+const add: RequestHandler = async (req, res, next) => {
 	try {
 		const newAdvert = {
 			goat_id: req.body.goat_id,
@@ -94,6 +91,7 @@ const add: RequestHandler = async (req: Request, res: Response, next) => {
 		next(err);
 	}
 };
+
 const searchDescription: RequestHandler = async (req, res, next) => {
 	try {
 		const query = req.query.q as string;
@@ -107,6 +105,7 @@ const searchDescription: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
+
 const getMainTags: RequestHandler = async (req, res, next) => {
 	try {
 		const mainTags = await advertRepository.getMainTags();
@@ -115,6 +114,7 @@ const getMainTags: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
+
 const searchMainTagsByName: RequestHandler = async (req, res, next) => {
 	try {
 		const query = req.query.q as string;
@@ -128,6 +128,7 @@ const searchMainTagsByName: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
+
 const searchSubTagsByName: RequestHandler = async (req, res, next) => {
 	try {
 		const query = req.query.q as string;
@@ -156,6 +157,7 @@ const filterAdverts: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
+
 const getSubTagsByMainTag: RequestHandler = async (
 	req,
 	res,

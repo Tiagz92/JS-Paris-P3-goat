@@ -13,7 +13,7 @@ function Home() {
 	return (
 		<div className="search">
 			<SearchBar onSearchFocus={() => {}} />
-			<div className="image">
+			<div className="banner">
 				<img src={ImageHome} alt="ImageHome" className="image-home" />
 			</div>
 
