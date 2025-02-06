@@ -44,4 +44,8 @@ router.post(
 	goatActions.add,
 );
 
+router.get(
+	"/api/goats",
+);
+
 export default router;
