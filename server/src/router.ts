@@ -3,7 +3,7 @@ import advertActions from "./modules/advert/advertActions";
 import advertServices from "./modules/advert/advertServices";
 import authServices from "./modules/auth/authServices";
 import goatActions from "./modules/goat/goatActions";
-import mainTagActions from "./modules/tag/mainTagActions";
+import mainTagActions from "./modules/mainTag/mainTagActions";
 import fileUpload from "./services/fileUpload";
 
 const router = express.Router();
@@ -15,7 +15,6 @@ const router = express.Router();
 // Define item-related routes
 
 router.get("/api/main-tags", mainTagActions.browse);
-router.get("/api/main-tag", mainTagActions.browse);
 
 router.get("/api/adverts", advertActions.browse);
 router.get("/api/adverts/:id", advertActions.read);
