@@ -1,10 +1,10 @@
 import express from "express";
 import advertActions from "./modules/advert/advertActions";
 import advertServices from "./modules/advert/advertServices";
+import authServices from "./modules/auth/authServices";
 import goatActions from "./modules/goat/goatActions";
 import mainTagActions from "./modules/tag/mainTagActions";
 import fileUpload from "./services/fileUpload";
-import authServices from "./modules/auth/authServices";
 
 const router = express.Router();
 
@@ -37,6 +37,11 @@ router.get("/advert/maintags", advertActions.getMainTags);
 
 router.post("/api/adverts", advertServices.validateAdvert, advertActions.add);
 
-router.post("/api/goats", fileUpload.any(), authServices.hashPassword, goatActions.add);
+router.post(
+	"/api/goats",
+	fileUpload.any(),
+	authServices.hashPassword,
+	goatActions.add,
+);
 
 export default router;

@@ -31,7 +31,8 @@ function NavBar() {
 				>
 					Crée ton annonce !
 				</button>
-				<img src={connexionIcon} alt="connexion" className="connexion-icon" />
+				<img src={connexionIcon} alt="connexion" className="connexion-icon" onClick={() => navigate("/profile")}
+				onKeyPress={() => navigate("/profile")}/>
 			</div>
 		</div>
 	);

@@ -1,7 +1,7 @@
-import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Avatar } from "@mui/material";
 import Button from "@mui/material/Button";
+import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./Register.css";
 
@@ -66,7 +66,7 @@ function Register() {
 
 			const result = await response.json();
 			toast.info("Inscription terminée avec succès !", result);
-			navigate("/home");
+			navigate("/profile");
 		} catch (error) {
 			toast.error(
 				"Oups...il semble que ton inscription ne soit pas complète 🐐",
