@@ -1,6 +1,6 @@
+import argon from "argon2";
 import type { RequestHandler } from "express";
 import goatRepository from "../goat/goatRepository";
-import argon from "argon2";
 
 const login: RequestHandler = async (req, res, next) => {
 	const { email, password } = req.body;

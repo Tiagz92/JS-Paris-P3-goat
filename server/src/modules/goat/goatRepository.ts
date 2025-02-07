@@ -40,8 +40,10 @@ class goatRepository {
 		return result.insertId;
 	}
 
-	async readUserByEmail (email: string) {
-		return databaseClient.query<Rows>("SELECT * From goat WHERE email = ?", [email]);
+	async readUserByEmail(email: string) {
+		return databaseClient.query<Rows>("SELECT * From goat WHERE email = ?", [
+			email,
+		]);
 	}
 }
 

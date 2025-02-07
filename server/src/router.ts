@@ -1,11 +1,11 @@
 import express from "express";
 import advertActions from "./modules/advert/advertActions";
 import advertServices from "./modules/advert/advertServices";
+import authActions from "./modules/auth/authActions";
 import authServices from "./modules/auth/authServices";
 import goatActions from "./modules/goat/goatActions";
 import mainTagActions from "./modules/mainTag/mainTagActions";
 import fileUpload from "./services/fileUpload";
-import authActions from "./modules/auth/authActions";
 
 const router = express.Router();
 
