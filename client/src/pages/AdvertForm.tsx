@@ -24,7 +24,7 @@ function AdvertForm() {
 	const [isFormValid, setIsFormValid] = useState(false);
 
 	useEffect(() => {
-		fetch("http://localhost:3310/api/main-tag")
+		fetch("http://localhost:3310/api/main-tags")
 			.then((response) => response.json())
 			.then((mainTags) => {
 				setMainTags(mainTags);
