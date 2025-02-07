@@ -65,7 +65,7 @@ function Register() {
 			}
 
 			const result = await response.json();
-			toast.info("Inscription terminée avec succès !", result);
+			toast.info("Inscription terminée avec succès ! ", result);
 			navigate("/profile");
 		} catch (error) {
 			toast.error(

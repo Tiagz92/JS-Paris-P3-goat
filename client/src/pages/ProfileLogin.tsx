@@ -24,7 +24,7 @@ function Login() {
 				},
 			);
 			if (response.status === 200) navigate("/adverts");
-			else setError("Veuillez remplir tous les champs.")
+			else setError("Veuillez remplir tous les champs.");
 		} catch (error) {
 			console.error(error);
 			setError("Une erreur est survenue.");

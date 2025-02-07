@@ -5,6 +5,7 @@ import authServices from "./modules/auth/authServices";
 import goatActions from "./modules/goat/goatActions";
 import mainTagActions from "./modules/mainTag/mainTagActions";
 import fileUpload from "./services/fileUpload";
+import authActions from "./modules/auth/authActions";
 
 const router = express.Router();
 
@@ -44,5 +45,7 @@ router.post(
 );
 
 router.get("/api/goats");
+
+router.post("/api/login", authActions.login);
 
 export default router;
