@@ -7,13 +7,6 @@ interface MainTag {
 }
 
 class mainTagRepository {
-	async readAll() {
-		const [mainTags] = await databaseClient.query<Rows>(
-			"SELECT * FROM main_tag",
-		);
-		return mainTags;
-	}
-
 	async read(id: number) {
 		const [[rows]] = await databaseClient.query<Rows>(
 			"SELECT * FROM main_tag WHERE id = ?",
@@ -22,6 +15,14 @@ class mainTagRepository {
 
 		return rows as MainTag;
 	}
+	
+	async readAll() {
+		const [mainTags] = await databaseClient.query<Rows>(
+			"SELECT * FROM main_tag",
+		);
+		return mainTags;
+	}
+
 }
 
 export default new mainTagRepository();

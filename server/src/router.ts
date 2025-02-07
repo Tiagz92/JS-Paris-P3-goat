@@ -26,15 +26,15 @@ router.get(
 	advertActions.getSubTagsByMainTag,
 );
 
+router.get("/advert/maintags", advertActions.getMainTags);
+
+router.post("/api/adverts", advertServices.validateAdvert, advertActions.add);
+
 router.get("/search/description", advertActions.searchDescription);
 router.get("/search/maintags", advertActions.searchMainTagsByName);
 router.get("/search/subtags", advertActions.searchSubTagsByName);
 
 router.get("/filter/advert", advertActions.filterAdverts);
-
-router.get("/advert/maintags", advertActions.getMainTags);
-
-router.post("/api/adverts", advertServices.validateAdvert, advertActions.add);
 
 router.post(
 	"/api/goats",
