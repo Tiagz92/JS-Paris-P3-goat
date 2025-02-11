@@ -10,6 +10,8 @@ import AdvertList from "./pages/AdvertList";
 import Faq from "./pages/Faq";
 import Home from "./pages/Home";
 import ProfileDetails from "./pages/ProfileDetails";
+import ProfileLogin from "./pages/ProfileLogin";
+import Register from "./pages/Register";
 
 /* ************************************************************************* */
 
@@ -47,8 +49,16 @@ const router = createBrowserRouter([
 				element: <AdvertDetails />,
 			},
 			{
+				path: "profile",
+				element: <ProfileLogin />,
+			},
+			{
 				path: "profile/:id",
 				element: <ProfileDetails />,
+			},
+			{
+				path: "register",
+				element: <Register />,
 			},
 			{
 				path: "about",

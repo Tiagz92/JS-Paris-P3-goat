@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
+import subTagRepository from "../subTag/subTagRepository";
 import mainTagRepository from "./mainTagRepository";
-import subTagRepository from "./subTagRepository";
 
 const browse: RequestHandler = async (req, res, next) => {
 	try {

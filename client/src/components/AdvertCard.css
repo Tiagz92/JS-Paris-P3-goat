@@ -225,7 +225,7 @@
 	margin-bottom: 1rem;
 	padding: 1rem;
 	text-align: center;
-	width: 22rem;
+	width: 23rem;
 	height: 25rem;
 	position: relative;
 }
@@ -261,15 +261,16 @@
 .main-tag-name,
 .sub-tag-name {
 	text-transform: uppercase;
+	font-weight: 700;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	border: 3px solid;
 	border-radius: 30px;
-	padding: 2px;
+	padding: 1rem;
 	width: 10rem;
 	height: 2.5rem;
-	font-size: 2vh;
+	font-size: 1.5vh;
 	margin: 0;
 }
 
@@ -284,7 +285,7 @@
 }
 
 .description {
-	padding: 0;
+	padding: 1rem;
 	width: 350px;
 	white-space: nowrap;
 	overflow: hidden;

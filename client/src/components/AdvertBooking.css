@@ -5,7 +5,15 @@
 	padding: 20px;
 	background-color: #ffffff;
 	border-radius: 8px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.week-scheduler h2 {
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .scheduler-header {
@@ -196,5 +204,39 @@
 	}
 	to {
 		left: 100%;
+	}
+}
+
+@media (max-width: 600px) {
+	.week-scheduler {
+		max-width: 100%;
+		overflow: auto;
+		margin: auto;
+		padding: 10px;
+		border: 2px solid var(--orange);
+		border-radius: 10px;
+		box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+	}
+	.scheduler-grid {
+		grid-template-columns: 80px repeat(5, 1fr);
+		overflow-x: auto;
+	}
+
+	.week-scheduler h2 {
+		font-size: 1.2rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+	}
+
+	.scheduler-header button {
+		padding: 6px 12px;
+		font-size: 12px;
+	}
+
+	.grid-slot {
+		height: 40px;
+		font-size: 12px;
 	}
 }

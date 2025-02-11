@@ -1,22 +1,15 @@
 import type {
 	FieldPacket,
+	OkPacket,
+	PoolConnection,
 	ResultSetHeader,
 	RowDataPacket,
 } from "mysql2/promise";
-import client from "../../../database/client";
-
-// Interface pour représenter une réservation
-export interface Reservation {
-	id: number;
-	slot_id: number;
-	user_id: number; // goat_id
-	google_meet_link: string;
-	status?: "pending" | "confirmed" | "cancelled" | "completed";
-	created_at?: Date;
-	start_at?: Date;
-	duration?: number;
-	slot_meet_link?: string;
-}
+import { TABLES } from "../../config/database";
+import database from "../../database/client";
+import { sendReservationConfirmation } from "../../services/emailService";
+import { createGoogleMeetEvent } from "../../services/googleCalendar";
+import type { Reservation } from "../../types/models";
 
 export const ReservationRepository = {
 	/**
@@ -29,7 +22,7 @@ export const ReservationRepository = {
 	}): Promise<Reservation> {
 		try {
 			// Vérifier la disponibilité du créneau
-			const [slotCheck] = await client.query<RowDataPacket[]>(
+			const [slotCheck] = await database.query<RowDataPacket[]>(
 				"SELECT * FROM slot WHERE id = ? AND status = 'available'",
 				[reservationData.slot_id],
 			);
@@ -38,7 +31,7 @@ export const ReservationRepository = {
 			}
 
 			// Créer la réservation
-			const [result]: [ResultSetHeader, FieldPacket[]] = await client.query(
+			const [result]: [ResultSetHeader, FieldPacket[]] = await database.query(
 				"INSERT INTO reservations (slot_id, user_id, google_meet_link, status) VALUES (?, ?, ?, 'pending')",
 				[
 					reservationData.slot_id,
@@ -48,12 +41,12 @@ export const ReservationRepository = {
 			);
 
 			// Mettre à jour le statut du créneau
-			await client.query("UPDATE slot SET status = 'reserved' WHERE id = ?", [
+			await database.query("UPDATE slot SET status = 'reserved' WHERE id = ?", [
 				reservationData.slot_id,
 			]);
 
 			// Récupérer la réservation créée
-			const [newReservation] = await client.query<RowDataPacket[]>(
+			const [newReservation] = await database.query<RowDataPacket[]>(
 				"SELECT * FROM reservations WHERE id = ?",
 				[result.insertId],
 			);
@@ -69,7 +62,7 @@ export const ReservationRepository = {
 	 * Récupère une réservation par son ID.
 	 */
 	async findById(id: number): Promise<Reservation | null> {
-		const [rows]: [RowDataPacket[], FieldPacket[]] = await client.query(
+		const [rows]: [RowDataPacket[], FieldPacket[]] = await database.query(
 			"SELECT r.*, s.start_at, s.duration, s.meet_link as slot_meet_link FROM reservations r JOIN slot s ON r.slot_id = s.id WHERE r.id = ?",
 			[id],
 		);
@@ -80,7 +73,7 @@ export const ReservationRepository = {
 	 * Récupère toutes les réservations d'un utilisateur.
 	 */
 	async getUserReservations(goatId: number): Promise<Reservation[]> {
-		const [rows] = await client.query(
+		const [rows] = await database.query(
 			`SELECT r.*, s.start_at, s.duration, s.meet_link as slot_meet_link
              FROM reservations r 
              JOIN slot s ON r.slot_id = s.id 
@@ -98,7 +91,7 @@ export const ReservationRepository = {
 		try {
 			// Vérifier si la réservation existe et appartient à l'utilisateur
 			const [reservationCheck]: [RowDataPacket[], FieldPacket[]] =
-				await client.query(
+				await database.query(
 					"SELECT * FROM reservations WHERE id = ? AND user_id = ?",
 					[id, goatId],
 				);
@@ -107,10 +100,11 @@ export const ReservationRepository = {
 			}
 
 			// Vérifier le délai d'annulation (24 heures avant le début)
-			const [slotCheck]: [RowDataPacket[], FieldPacket[]] = await client.query(
-				"SELECT start_at FROM slot WHERE id = (SELECT slot_id FROM reservations WHERE id = ?)",
-				[id],
-			);
+			const [slotCheck]: [RowDataPacket[], FieldPacket[]] =
+				await database.query(
+					"SELECT start_at FROM slot WHERE id = (SELECT slot_id FROM reservations WHERE id = ?)",
+					[id],
+				);
 			const startTime = new Date(slotCheck[0].start_at);
 			const now = new Date();
 			const hoursDifference =
@@ -122,14 +116,14 @@ export const ReservationRepository = {
 			}
 
 			// Mettre à jour la réservation
-			const [result]: [ResultSetHeader, FieldPacket[]] = await client.query(
+			const [result]: [ResultSetHeader, FieldPacket[]] = await database.query(
 				"UPDATE reservations SET status = 'cancelled' WHERE id = ?",
 				[id],
 			);
 
 			if (result.affectedRows > 0) {
 				// Libérer le créneau
-				await client.query(
+				await database.query(
 					"UPDATE slot s JOIN reservations r ON s.id = r.slot_id SET s.status = 'available' WHERE r.id = ?",
 					[id],
 				);
@@ -146,7 +140,7 @@ export const ReservationRepository = {
 	 * Récupère les prochaines réservations d'un utilisateur.
 	 */
 	async getUpcomingReservations(goatId: number): Promise<Reservation[]> {
-		const [rows] = await client.query(
+		const [rows] = await database.query(
 			`SELECT r.*, s.start_at, s.duration, s.meet_link as slot_meet_link
              FROM reservations r 
              JOIN slot s ON r.slot_id = s.id 

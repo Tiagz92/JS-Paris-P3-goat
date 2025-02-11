@@ -43,7 +43,6 @@ describe("Installation", () => {
 		// Query the 'item' table to check if any data has been inserted
 		const [rows] =
 			await databaseClient.query<RowDataPacket[]>("select * from item");
-
 		// Expecting rows to be returned, indicating successful migration
 		expect(rows.length).toBeGreaterThanOrEqual(0);
 	});

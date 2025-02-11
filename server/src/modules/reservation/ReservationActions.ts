@@ -2,8 +2,8 @@ import type { RowDataPacket } from "mysql2";
 import client from "../../../database/client";
 import { generateGoogleMeetLink } from "../../../src/utils/googleMeet";
 import { sendReservationEmail } from "../../../src/utils/mailService";
+import type { Reservation } from "../../types/models";
 import { ReservationRepository } from "./ReservationRepository";
-import type { Reservation } from "./ReservationRepository";
 
 // On omet la propriété "constructor" pour éviter les problèmes liés à RowDataPacket.
 interface ReservationResponse

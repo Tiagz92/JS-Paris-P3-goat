@@ -1,4 +1,4 @@
-import type { OkPacket, RowDataPacket } from "mysql2/promise";
+import type { OkPacket, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import databaseClient from "../../../database/client";
 
 type Advert = {
@@ -7,10 +7,11 @@ type Advert = {
 	goat_id: number;
 	main_tag_id: number;
 	sub_tag_id: number;
-	goat_firstname: string;
 	goat_picture: string;
+	goat_firstname: string;
 	main_tag_name: string;
 	sub_tag_name: string;
+	goat_name: string;
 };
 
 class AdvertRepository {
@@ -19,10 +20,12 @@ class AdvertRepository {
 		const [result] = await databaseClient.query<OkPacket>(
 			"INSERT INTO advert (description, goat_id, main_tag_id, sub_tag_id) VALUES (?, ?, ?, ?)",
 			[
+				advert.goat_picture,
+				advert.goat_firstname,
+				advert.goat_name,
+				advert.main_tag_name,
+				advert.sub_tag_name,
 				advert.description,
-				advert.goat_id,
-				advert.main_tag_id,
-				advert.sub_tag_id,
 			],
 		);
 		return result.insertId;
@@ -153,6 +156,14 @@ class AdvertRepository {
 			console.error("Erreur SQL récupération des sous-tags:", error);
 			throw error;
 		}
+	}
+
+	async create(newAdvert: Advert) {
+		const [result] = await databaseClient.query<ResultSetHeader>(
+			"INSERT INTO adverts SET ?",
+			[newAdvert],
+		);
+		return result.insertId;
 	}
 }
 

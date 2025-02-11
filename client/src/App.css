@@ -23,6 +23,7 @@ body {
 	color: var(--text-black);
 	margin: 0;
 	padding: 0;
+	line-height: 1.5;
 }
 
 .logo {
@@ -78,7 +79,6 @@ p {
 }
 
 .yellow-button:hover {
-	transform: scale(1.02);
 	color: var(--orange);
 	background-color: #fafafa;
 	border: 3px solid var(--orange);
@@ -92,13 +92,12 @@ p {
 	background-color: var(--darkblue);
 	color: var(--text-white);
 	border-radius: 1rem;
-	border: none;
+	border: 3px solid var(--darkblue);
 	padding: 0.5rem;
 	cursor: pointer;
 }
 
 .darkblue-button:hover {
-	transform: scale(1.02);
 	color: var(--darkblue);
 	background-color: var(--light-blue);
 	border: 3px solid var(--darkblue);
@@ -109,18 +108,15 @@ p {
 	font-size: 1rem;
 	font-weight: bold;
 	text-align: center;
-	background-color: var(--darkblue);
-	color: var(--text-white);
-	border-radius: 1rem;
-	border: none;
-	padding: 0.5rem;
-	cursor: pointer;
 	background-color: var(--light-blue);
 	color: var(--text-white);
+	border-radius: 1rem;
+	border: 3px solid var(--light-blue);
+	padding: 0.5rem;
+	cursor: pointer;
 }
 
 .lightblue-button:hover {
-	transform: scale(1.02);
 	color: var(--darkblue);
 	background-color: var(--light-blue);
 	border: 3px solid var(--darkblue);
