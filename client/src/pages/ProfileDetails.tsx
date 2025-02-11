@@ -1,3 +1,4 @@
+import "./ProfileDetails.css";
 import { useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import AdvertBooking from "../components/AdvertBooking";
@@ -56,12 +57,45 @@ function ProfilDetails() {
 	if (!profile) return <div className="status">Aucune profil trouvé</div>;
 
 	return (
-		<>
-			<img className="img-goat" src={profile.picture} alt={profile.firstname} />
-			<h2>Bonjour {profile.firstname}</h2>
-			<p className="profile-description">{profile.presentation}</p>
-			<AdvertBooking />
-		</>
+		<div className="profileContainer">
+			<div className="Profile">
+				<div className="profilePresentation">
+					<div className="pictureContainer">
+						<img
+							className="pictureGoat"
+							src={profile.picture}
+							alt={profile.firstname}
+						/>
+					</div>
+					<div className="textContainer">
+						<h1>Bonjour {profile.firstname}</h1>
+						<p className="profileDescription">{profile.presentation}</p>
+					</div>
+				</div>
+				<div className="calendar">
+					<AdvertBooking />
+				</div>
+			</div>
+			<div className="Recap">
+				<button type="button" className="yellow-button">
+					Réserver un cours
+				</button>
+				<div>
+					<h1>Mes récompenses</h1>
+				</div>
+				<div>
+					<h1>Mes statistiques</h1>
+				</div>
+				<div>
+					<h1>Modification</h1>
+					<button type="button" className="yellow-button">
+					Modifier mon profil
+				</button><button type="button" className="yellow-button">
+					Modifier une annonce
+				</button>
+				</div>
+			</div>
+		</div>
 	);
 }
 
