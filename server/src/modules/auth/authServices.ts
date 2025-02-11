@@ -1,6 +1,6 @@
 import argon from "argon2";
 import type { RequestHandler } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { type Secret } from "jsonwebtoken";
 
 const hashPassword: RequestHandler = async (req, res, next) => {
 	const { password } = req.body;
@@ -17,7 +17,7 @@ const isAuth: RequestHandler = (req, res, next) => {
 	const token = req.headers.authorization;
 	if (!token) res.sendStatus(401);
 	else {
-		const isTokenValid = jwt.verify(token, process.env.APP_SECRET);
+		const isTokenValid = jwt.verify(token, process.env.APP_SECRET as Secret);
 		if (!isTokenValid) res.sendStatus(401);
 		else next();
 	}

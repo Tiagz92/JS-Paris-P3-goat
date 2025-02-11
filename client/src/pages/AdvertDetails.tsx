@@ -28,8 +28,8 @@ function AdvertDetails() {
 					`${import.meta.env.VITE_API_URL}/api/adverts/${id}`,
 					{
 						headers: {
-							Authorization: user.token
-						}
+							Authorization: user.token,
+						},
 					},
 				);
 

@@ -23,7 +23,6 @@ router.post(
 );
 router.post("/api/login", authActions.login);
 
-
 router.get("/api/main-tags", mainTagActions.browse);
 router.get("/api/adverts", advertActions.browse);
 
@@ -44,7 +43,7 @@ router.use(authServices.isAuth);
 
 // Private routes
 router.post("/api/adverts", advertServices.validateAdvert, advertActions.add);
-router.get("/api/goats/:id", goatActions.read );
+router.get("/api/goats/:id", goatActions.read);
 router.get("/api/adverts/:id", advertActions.read);
 
 export default router;

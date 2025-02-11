@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import type { FormEventHandler } from "react";
 import type { MainTag, SubTag } from "../types/Advert";
 import type { AppContextInterface } from "../types/appContext.type";
-import type { FormEventHandler } from "react";
 
 function AdvertForm() {
 	const [mainTags, setMainTags] = useState<MainTag[]>([]);
@@ -65,7 +65,7 @@ function AdvertForm() {
 
 	const { user } = useOutletContext<AppContextInterface>();
 
-	const handleSubmit : FormEventHandler = async (event) => {
+	const handleSubmit: FormEventHandler = async (event) => {
 		event.preventDefault();
 		if (
 			formData.main_tag_id === null ||
@@ -77,14 +77,17 @@ function AdvertForm() {
 		}
 
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/api/adverts`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: user.token
+			const response = await fetch(
+				`${import.meta.env.VITE_API_URL}/api/adverts`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: user.token,
+					},
+					body: JSON.stringify(formData),
 				},
-				body: JSON.stringify(formData),
-			});
+			);
 
 			if (!response.ok) {
 				throw new Error("Erreur lors de la création de l'annonce 🐐");

@@ -1,7 +1,7 @@
-import { useOutletContext, useParams } from "react-router-dom";
-import type { AppContextInterface } from "../types/appContext.type";
 import { useEffect, useState } from "react";
+import { useOutletContext, useParams } from "react-router-dom";
 import AdvertBooking from "../components/AdvertBooking";
+import type { AppContextInterface } from "../types/appContext.type";
 
 type Goat = {
 	id: number;
@@ -10,13 +10,13 @@ type Goat = {
 	picture: string;
 	presentation: string;
 	video: string;
-}
+};
 
 function ProfilDetails() {
 	const { id } = useParams<{ id: string }>();
-		const [profile, setProfile] = useState<Goat | null>(null);
-		const [loading, setLoading] = useState(true);
-		const [error, setError] = useState<string | null>(null);
+	const [profile, setProfile] = useState<Goat | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 	const { user } = useOutletContext<AppContextInterface>();
 
 	useEffect(() => {
@@ -46,9 +46,9 @@ function ProfilDetails() {
 			} finally {
 				setLoading(false);
 			}
-			};
+		};
 
-			fetchProfilDetails();
+		fetchProfilDetails();
 	}, [id, user.token]);
 
 	if (loading) return <div className="status">Chargement...</div>;
@@ -57,11 +57,7 @@ function ProfilDetails() {
 
 	return (
 		<>
-		<img
-						className="img-goat"
-						src={profile.picture}
-						alt={profile.firstname}
-					/>
+			<img className="img-goat" src={profile.picture} alt={profile.firstname} />
 			<h2>Bonjour {profile.firstname}</h2>
 			<p className="profile-description">{profile.presentation}</p>
 			<AdvertBooking />
