@@ -1,13 +1,17 @@
-import { useNavigate } from "react-router-dom";
 import "./ProfileLogin.css";
+
 import { useRef, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
+
 import type { FormEventHandler } from "react";
+import type { AppContextInterface } from "../types/appContext.type";
 
 function Login() {
 	const emailRef = useRef<HTMLInputElement>(null);
 	const passwordRef = useRef<HTMLInputElement>(null);
-
 	const [error, setError] = useState("");
+	const navigate = useNavigate();
+	const { setUser } = useOutletContext<AppContextInterface>();
 
 	const submitLogin: FormEventHandler = async (event) => {
 		event.preventDefault();
@@ -23,15 +27,17 @@ function Login() {
 					}),
 				},
 			);
-			if (response.status === 200) navigate("/adverts");
-			else setError("Veuillez remplir tous les champs.");
+			if (response.status === 200) {
+				const user = await response.json();
+				setUser(user);
+				navigate(`/profile/${user.id}`);
+			} else setError("Veuillez remplir tous les champs.");
 		} catch (error) {
 			console.error(error);
 			setError("Une erreur est survenue.");
 		}
 	};
 
-	const navigate = useNavigate();
 	return (
 		<div className="profilecontainer">
 			<div className="profileframe">

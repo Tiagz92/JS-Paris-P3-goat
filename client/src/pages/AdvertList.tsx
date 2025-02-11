@@ -6,6 +6,7 @@ import SearchBar from "../components/SearchBar";
 import type { Advert } from "../types/Advert";
 import "./AdvertList.css";
 
+
 function AdvertList() {
 	const [adverts, setAdverts] = useState<Advert[]>([]);
 	const [filteredAdverts, setFilteredAdverts] = useState<Advert[]>([]);

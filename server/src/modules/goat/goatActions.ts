@@ -1,6 +1,20 @@
 import type { RequestHandler } from "express";
 import goatRepository from "./goatRepository";
 
+const read: RequestHandler = async (req, res, next) => {
+	try {
+		const goatId = Number(req.params.id);
+		const goat = await goatRepository.read(goatId);
+		if (goat == null) {
+			res.sendStatus(404);
+		} else {
+			res.json(goat);
+		}
+	} catch (err) {
+		next(err);
+	}
+};
+
 const add: RequestHandler = async (req, res, next) => {
 	try {
 		const files = req.files as Express.Multer.File[] | undefined;
@@ -28,4 +42,4 @@ const add: RequestHandler = async (req, res, next) => {
 	}
 };
 
-export default { add };
+export default { read, add };

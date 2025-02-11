@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import "./AdvertDetails.css";
 import AdvertBooking from "../components/AdvertBooking";
+import type { AppContextInterface } from "../types/appContext.type";
 
 type Advert = {
 	description: string;
@@ -18,12 +19,18 @@ function AdvertDetails() {
 	const [advert, setAdvert] = useState<Advert | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const { user } = useOutletContext<AppContextInterface>();
 
 	useEffect(() => {
 		const fetchAdvertDetails = async () => {
 			try {
 				const response = await fetch(
 					`${import.meta.env.VITE_API_URL}/api/adverts/${id}`,
+					{
+						headers: {
+							Authorization: user.token
+						}
+					},
 				);
 
 				if (!response.ok) {
@@ -44,7 +51,7 @@ function AdvertDetails() {
 		};
 
 		fetchAdvertDetails();
-	}, [id]);
+	}, [id, user.token]);
 
 	if (loading) return <div className="status">Chargement...</div>;
 	if (error) return <div className="status">Erreur : {error}</div>;
