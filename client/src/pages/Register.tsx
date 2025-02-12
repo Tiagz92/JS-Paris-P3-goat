@@ -30,7 +30,6 @@ function Register() {
 		}
 	};
 
-	const [edit, setEdit] = useState(false);
 	const navigate = useNavigate();
 
 	const handleSubmit = async () => {
@@ -86,7 +85,6 @@ function Register() {
 									onClick={() => {
 										if (avatar.current) {
 											avatar.current.click();
-											setEdit(true);
 										}
 									}}
 								>
