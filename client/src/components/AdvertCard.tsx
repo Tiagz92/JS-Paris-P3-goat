@@ -2,9 +2,8 @@ import "../components/AdvertCard.css";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { toast } from "react-toastify";
 import onlineCourse from "../assets/images/onlineCourse.png";
-import type { AppContextInterface } from "../types/appContext.type";
 import type { Advert } from "../types/Advert";
-
+import type { AppContextInterface } from "../types/appContext.type";
 
 interface AdvertCardProps {
 	readonly advert: Advert;
