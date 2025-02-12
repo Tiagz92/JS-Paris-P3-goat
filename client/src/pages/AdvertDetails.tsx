@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import "./AdvertDetails.css";
 import AdvertBooking from "../components/AdvertBooking";
+import type { AppContextInterface } from "../types/appContext.type";
 
 interface Slot {
 	date: string;
@@ -27,12 +29,18 @@ const AdvertDetails = () => {
 	const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [message, setMessage] = useState("");
+	const { user } = useOutletContext<AppContextInterface>();
 
 	useEffect(() => {
 		const fetchAdvertDetails = async () => {
 			try {
 				const response = await fetch(
 					`${import.meta.env.VITE_API_URL}/api/adverts/${id}`,
+					{
+						headers: {
+							Authorization: user.token,
+						},
+					},
 				);
 				if (!response.ok)
 					throw new Error("Erreur lors du chargement des données.");
@@ -45,7 +53,7 @@ const AdvertDetails = () => {
 			}
 		};
 		fetchAdvertDetails();
-	}, [id]);
+	}, [id, user.token]);
 
 	const handleConfirm = async () => {
 		if (!selectedSlot) return;

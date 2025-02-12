@@ -1,8 +1,12 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import type { MainTag, SubTag } from "../types/Advert";
 import "./AdvertForm.css";
+
+import { useEffect, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { toast } from "react-toastify";
+
+import type { FormEventHandler } from "react";
+import type { MainTag, SubTag } from "../types/Advert";
+import type { AppContextInterface } from "../types/appContext.type";
 
 function AdvertForm() {
 	const [mainTags, setMainTags] = useState<MainTag[]>([]);
@@ -24,7 +28,7 @@ function AdvertForm() {
 	const [isFormValid, setIsFormValid] = useState(false);
 
 	useEffect(() => {
-		fetch("http://localhost:3310/api/main-tag")
+		fetch("http://localhost:3310/api/main-tags")
 			.then((response) => response.json())
 			.then((mainTags) => {
 				setMainTags(mainTags);
@@ -59,7 +63,10 @@ function AdvertForm() {
 		setIsFormValid(isValid);
 	}, [formData]);
 
-	const handleSubmit = async () => {
+	const { user } = useOutletContext<AppContextInterface>();
+
+	const handleSubmit: FormEventHandler = async (event) => {
+		event.preventDefault();
 		if (
 			formData.main_tag_id === null ||
 			formData.sub_tag_id === null ||
@@ -70,13 +77,17 @@ function AdvertForm() {
 		}
 
 		try {
-			const response = await fetch("http://localhost:3310/api/advert", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
+			const response = await fetch(
+				`${import.meta.env.VITE_API_URL}/api/adverts`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: user.token,
+					},
+					body: JSON.stringify(formData),
 				},
-				body: JSON.stringify(formData),
-			});
+			);
 
 			if (!response.ok) {
 				throw new Error("Erreur lors de la création de l'annonce 🐐");
@@ -105,9 +116,9 @@ function AdvertForm() {
 
 				<form
 					className="form"
-					onSubmit={(e) => {
-						e.preventDefault();
-						handleSubmit();
+					onSubmit={(event) => {
+						event.preventDefault();
+						handleSubmit(event);
 					}}
 				>
 					<div className="form-group">
