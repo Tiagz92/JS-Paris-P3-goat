@@ -32,11 +32,11 @@ router.get(
 	advertActions.getSubTagsByMainTag,
 );
 
-router.get("/filter/advert", advertActions.filterAdverts);
-
 router.get("/search/description", advertActions.searchDescription);
 router.get("/search/maintags", advertActions.searchMainTagsByName);
 router.get("/search/subtags", advertActions.searchSubTagsByName);
+
+router.get("/filter/advert", advertActions.filterAdverts);
 
 // Apply auth middleswares for all followings routes
 router.use(authServices.isAuth);

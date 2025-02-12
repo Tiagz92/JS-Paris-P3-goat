@@ -1,6 +1,6 @@
 import "./ProfileDetails.css";
 import { useEffect, useState } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import AdvertBooking from "../components/AdvertBooking";
 import type { AppContextInterface } from "../types/appContext.type";
 
@@ -18,6 +18,7 @@ function ProfilDetails() {
 	const [profile, setProfile] = useState<Goat | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const navigate = useNavigate();
 	const { user } = useOutletContext<AppContextInterface>();
 
 	useEffect(() => {
@@ -77,7 +78,8 @@ function ProfilDetails() {
 				</div>
 			</div>
 			<div className="Recap">
-				<button type="button" className="yellow-button">
+				<button type="button" className="yellow-button" onClick={() => navigate("/adverts")}
+					onKeyPress={() => navigate("/adverts")}>
 					Réserver un cours
 				</button>
 				<div>
@@ -89,10 +91,11 @@ function ProfilDetails() {
 				<div>
 					<h1>Modification</h1>
 					<button type="button" className="yellow-button">
-					Modifier mon profil
-				</button><button type="button" className="yellow-button">
-					Modifier une annonce
-				</button>
+						Modifier mon profil
+					</button>
+					<button type="button" className="yellow-button">
+						Modifier une annonce
+					</button>
 				</div>
 			</div>
 		</div>

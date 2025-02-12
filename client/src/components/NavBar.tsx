@@ -1,10 +1,18 @@
+import "./NavBar.css";
 import connexionIcon from "../assets/images/connexion-icon.png";
 import logo from "../assets/images/logoGOAT.png";
-import "./NavBar.css";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import type { User } from "../types/user.type";
 
-function NavBar() {
+interface NavBarProps {
+	user: User | null; 
+	setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  }
+
+function NavBar ({ user }: NavBarProps){
 	const navigate = useNavigate();
+	
 
 	return (
 		<div className="navbar">
@@ -27,7 +35,14 @@ function NavBar() {
 				<button
 					type="button"
 					className="yellow-button"
-					onClick={() => navigate("/adverts/add")}
+					onClick={() => {
+						if (user) {
+							navigate("/adverts/add");
+						} else {
+							toast.error("Tu dois être connecté pour créer une annonce !");
+							navigate("/profile");
+						}
+					}}
 				>
 					Crée ton annonce !
 				</button>
