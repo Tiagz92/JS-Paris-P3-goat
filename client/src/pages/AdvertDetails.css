@@ -62,6 +62,7 @@ body {
 	color: var(--text-black);
 	margin: 0;
 }
+
 .profile-calendar {
 	display: flex;
 	justify-content: center;
@@ -72,6 +73,7 @@ body {
 	overflow: auto;
 	flex-wrap: wrap;
 }
+
 .profile-calendar h1 {
 	font-size: 2rem;
 	font-weight: bolder;
@@ -80,6 +82,7 @@ body {
 	color: var(--text-black);
 	margin-bottom: 2rem;
 }
+
 .profile-booking {
 	display: flex;
 	flex-direction: flex-end;
@@ -87,6 +90,7 @@ body {
 	align-items: center;
 	gap: 10px;
 }
+
 .profile-tags {
 	display: flex;
 	flex-direction: row;
