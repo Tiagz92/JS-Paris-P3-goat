@@ -1,7 +1,7 @@
 import "./ProfileLogin.css";
 import { useRef, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
 import type { FormEventHandler } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import type { AppContextInterface } from "../types/appContext.type";
 
 function Login() {

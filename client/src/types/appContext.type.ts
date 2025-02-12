@@ -5,4 +5,3 @@ export interface AppContextInterface {
 	user: User;
 	setUser: Dispatch<SetStateAction<User>>;
 }
- 

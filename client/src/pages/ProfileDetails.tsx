@@ -78,8 +78,12 @@ function ProfilDetails() {
 				</div>
 			</div>
 			<div className="Recap">
-				<button type="button" className="yellow-button" onClick={() => navigate("/adverts")}
-					onKeyPress={() => navigate("/adverts")}>
+				<button
+					type="button"
+					className="yellow-button"
+					onClick={() => navigate("/adverts")}
+					onKeyPress={() => navigate("/adverts")}
+				>
 					Réserver un cours
 				</button>
 				<div>

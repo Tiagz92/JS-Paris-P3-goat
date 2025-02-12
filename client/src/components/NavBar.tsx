@@ -1,18 +1,17 @@
 import "./NavBar.css";
-import connexionIcon from "../assets/images/connexion-icon.png";
-import logo from "../assets/images/logoGOAT.png";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import connexionIcon from "../assets/images/connexion-icon.png";
+import logo from "../assets/images/logoGOAT.png";
 import type { User } from "../types/user.type";
 
 interface NavBarProps {
-	user: User | null; 
+	user: User | null;
 	setUser: React.Dispatch<React.SetStateAction<User | null>>;
-  }
+}
 
-function NavBar ({ user }: NavBarProps){
+function NavBar({ user }: NavBarProps) {
 	const navigate = useNavigate();
-	
 
 	return (
 		<div className="navbar">

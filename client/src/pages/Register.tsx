@@ -7,7 +7,7 @@ import "./Register.css";
 function Register() {
 	const [profilePic, setProfilePic] = useState<string | null>(null);
 	const avatar = useRef<HTMLInputElement | null>(null);
-	const [ edit, setEdit ] = useState(false);
+	const [edit, setEdit] = useState(false);
 
 	const handleFileChange = () => {
 		const file = avatar.current?.files?.[0];

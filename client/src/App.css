@@ -113,7 +113,6 @@ footer {
 	color: var(--text-black);
 }
 
-
 @media screen and (min-width: 480px) and (max-width: 720px) {
 	.title {
 		font-size: 2rem;
