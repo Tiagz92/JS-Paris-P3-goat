@@ -12,7 +12,17 @@ type Advert = {
 	main_tag_name: string;
 	sub_tag_name: string;
 	goat_name: string;
+	advert_date: string;
+	advert_time: string;
 };
+
+interface Slot {
+	start_at: string;
+	duration: number;
+	meet_link: string;
+	comment: string;
+	advert_id: number;
+}
 
 class AdvertRepository {
 	async create(advert: Omit<Advert, "id">): Promise<number> {
@@ -30,9 +40,31 @@ class AdvertRepository {
 		return result.insertId;
 	}
 
+	async createSlot(slot: Slot): Promise<number> {
+		const [result] = await databaseClient.query<Result>(
+			"INSERT INTO slot (start_at, duration, meet_link, comment, advert_id) VALUES (?, ?, ?, ?, ?)",
+			[
+				slot.start_at,
+				slot.duration,
+				slot.meet_link,
+				slot.comment,
+				slot.advert_id,
+			],
+		);
+		return result.insertId;
+	}
+
 	async read(id: number): Promise<Advert | null> {
 		const [rows] = await databaseClient.query<Rows>(
 			"SELECT * FROM advert WHERE id = ?",
+			[id],
+		);
+		return (rows[0] as Advert) || null;
+	}
+
+	async readConfirmationDetails(id: number): Promise<Advert | null> {
+		const [rows] = await databaseClient.query<Rows>(
+			"SELECT id, goat_id, main_tag_name, sub_tag_name, goat_firstname, description, date, time FROM advert WHERE id = ?",
 			[id],
 		);
 		return (rows[0] as Advert) || null;

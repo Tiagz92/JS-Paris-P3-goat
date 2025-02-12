@@ -36,6 +36,7 @@ router.get("/filter/advert", advertActions.filterAdverts);
 router.get("/advert/maintags", advertActions.getMainTags);
 
 router.post("/api/adverts", advertServices.validateAdvert, advertActions.add);
+router.post("/api/slots/", advertActions.addSlot);
 
 router.post(
 	"/api/goats",

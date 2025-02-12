@@ -5,7 +5,21 @@ import mainTagRepository from "../mainTag/mainTagRepository";
 import subTagRepository from "../subTag/subTagRepository";
 import advertRepository from "./advertRepository";
 
-const browse: RequestHandler = async (req, res, next) => {
+interface Advert {
+	goat_id: number;
+	main_tag_id: number;
+	sub_tag_id: number;
+	goat_firstname: string;
+	goat_picture: string;
+	main_tag_name: string;
+	sub_tag_name: string;
+}
+
+const browse: RequestHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction,
+) => {
 	try {
 		const adverts = await advertRepository.readAll();
 
@@ -41,7 +55,6 @@ const browse: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
-
 const read: RequestHandler = async (req, res, next) => {
 	try {
 		const advertId = Number(req.params.id);
@@ -65,6 +78,7 @@ const read: RequestHandler = async (req, res, next) => {
 				res.sendStatus(404);
 			}
 			advert.sub_tag_name = subTag.name;
+
 			res.json(advert);
 		}
 	} catch (err) {
@@ -72,7 +86,21 @@ const read: RequestHandler = async (req, res, next) => {
 	}
 };
 
-const add: RequestHandler = async (req, res, next) => {
+const readConfirmationDetails: RequestHandler = async (req, res, next) => {
+	try {
+		const advertId = Number(req.params.id);
+		const advert = await advertRepository.read(advertId);
+		if (advert == null) {
+			res.sendStatus(404);
+		} else {
+			res.json(advert);
+		}
+	} catch (err) {
+		next(err);
+	}
+};
+
+const add: RequestHandler = async (req: Request, res: Response, next) => {
 	try {
 		const newAdvert = {
 			goat_id: req.body.goat_id,
@@ -84,6 +112,8 @@ const add: RequestHandler = async (req, res, next) => {
 			sub_tag_name: req.body.sub_tag_name,
 			goat_name: req.body.goat_name,
 			description: req.body.description,
+			advert_date: req.body.advert_date,
+			advert_time: req.body.advert_time,
 		};
 		const insertId = await advertRepository.create(newAdvert);
 		res.status(201).json({ insertId });
@@ -91,7 +121,22 @@ const add: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
-
+const addSlot: RequestHandler = async (req: Request, res: Response, next) => {
+	try {
+		const newSlot = {
+			goat_id: req.body.goat_id,
+			start_at: req.body.start_at,
+			duration: req.body.duration,
+			meet_link: req.body.meet_link,
+			comment: req.body.comment,
+			advert_id: req.body.advert_id,
+		};
+		const insertId = await advertRepository.createSlot(newSlot);
+		res.status(201).json({ insertId });
+	} catch (err) {
+		next(err);
+	}
+};
 const searchDescription: RequestHandler = async (req, res, next) => {
 	try {
 		const query = req.query.q as string;
@@ -105,7 +150,6 @@ const searchDescription: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
-
 const getMainTags: RequestHandler = async (req, res, next) => {
 	try {
 		const mainTags = await advertRepository.getMainTags();
@@ -114,7 +158,6 @@ const getMainTags: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
-
 const searchMainTagsByName: RequestHandler = async (req, res, next) => {
 	try {
 		const query = req.query.q as string;
@@ -128,7 +171,6 @@ const searchMainTagsByName: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
-
 const searchSubTagsByName: RequestHandler = async (req, res, next) => {
 	try {
 		const query = req.query.q as string;
@@ -157,7 +199,6 @@ const filterAdverts: RequestHandler = async (req, res, next) => {
 		next(err);
 	}
 };
-
 const getSubTagsByMainTag: RequestHandler = async (
 	req,
 	res,
@@ -187,6 +228,8 @@ export default {
 	browse,
 	read,
 	add,
+	addSlot,
+	readConfirmationDetails,
 	searchDescription,
 	getMainTags,
 	searchMainTagsByName,

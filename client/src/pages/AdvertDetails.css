@@ -10,20 +10,21 @@ body {
 .advert-container {
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
+	justify-content: space-evenly;
 	align-items: center;
 	flex-wrap: wrap;
 	padding: 20px;
 	background: var(--white);
 	border: 3px solid var(--orange);
-	border-radius: 10px;
+	border-radius: 20px;
 	box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.3);
 	width: auto;
-	height: 80vh;
+	height: 80%;
 	overflow: hidden;
 	padding-top: 10px;
-	margin: 2rem;
+	margin: 3rem;
 	margin-top: 0;
+	gap: 20px;
 }
 
 .advert-profile {
@@ -32,18 +33,21 @@ body {
 	justify-content: center;
 	align-items: center;
 	gap: 10px;
-	max-width: 40%;
-	min-height: 80%;
+	max-width: 50%;
+	min-height: 100%;
 	overflow: auto;
 	flex-wrap: wrap;
+	margin-bottom: 100px;
 }
 .profile-header {
 	justify-content: center;
-	flex-direction: space-between;
+	flex-direction: row;
 	display: flex;
 	align-items: center;
-	gap: 60px;
-	margin-bottom: 20px;
+	gap: 100px;
+	max-width: 100%;
+	height: fit-content;
+	margin-bottom: 50px;
 }
 
 .img-goat {
@@ -67,8 +71,9 @@ body {
 	justify-content: center;
 	text-align: right;
 	align-items: center;
-	max-width: 60%;
-	min-height: 80%;
+	max-width: 50%;
+	max-height: 50%;
+	height: fit-content;
 	overflow: auto;
 	flex-wrap: wrap;
 }
@@ -76,9 +81,11 @@ body {
 	font-size: 2rem;
 	font-weight: bolder;
 	justify-content: center;
+	align-items: center;
 	text-align: center;
 	color: var(--text-black);
-	margin-bottom: 2rem;
+	margin-bottom: 1rem;
+	margin-top: 1rem;
 }
 .profile-booking {
 	display: flex;
@@ -165,6 +172,95 @@ body {
 	color: var(--text-black);
 	margin: 20px 0;
 }
+.modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-content {
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+	text-align: center;
+	transform: scale(0.9);
+	animation: popIn 0.3s ease-out forwards;
+	width: 80%;
+	height: 80%;
+	overflow: hidden;
+}
+.modal-content h2 {
+	font-size: 3rem;
+	color: var(--orange);
+	margin-bottom: 10px;
+}
+.modal-content p {
+	font-family: var(--font);
+	font-size: 1.5rem;
+	margin-bottom: 10px;
+	color: var(--text-black);
+}
+.modal-content p.tag-name {
+	font-family: var(--font);
+	font-size: 1.5rem;
+	margin-bottom: 10px;
+	color: var(--orange);
+}
+.modal-content input {
+	width: 80%;
+	height: 25%;
+	padding: 10px;
+	margin-bottom: 10px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+}
+.modal-content ::placeholder {
+	color: gray;
+	font-family: var(--font);
+	font-size: 1rem;
+}
+.modal-content button {
+	background: var(--orange);
+	color: white;
+	border: none;
+	padding: 10px 15px;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background 0.3s ease;
+	margin-top: 10px;
+}
+
+.modal-content button:hover {
+	background: var(--white);
+	color: var(--orange);
+	border: 2px solid var(--orange);
+	box-shadow: 10px 10px 12px 1px rgba(0, 0, 0, 0.45);
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes popIn {
+	from {
+		transform: scale(0.9);
+	}
+	to {
+		transform: scale(1);
+	}
+}
 
 @media (max-width: 1024px) {
 	.advert-container {
@@ -189,7 +285,7 @@ body {
 		align-items: center;
 		text-align: center;
 		width: 100%;
-		gap: 25px;
+		gap: 20px;
 	}
 
 	.profile-header {
@@ -197,12 +293,14 @@ body {
 		flex-direction: column;
 		align-items: center;
 		text-align: center;
-		gap: 20px;
+		width: 100%;
+		gap: 50px;
+		padding: 15px;
 	}
 
 	.img-goat {
-		width: 140px;
-		height: 140px;
+		width: 160px;
+		height: 160px;
 		object-fit: cover;
 	}
 
