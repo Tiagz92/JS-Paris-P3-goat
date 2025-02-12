@@ -3,12 +3,14 @@ import "./AdvertForm.css";
 import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { toast } from "react-toastify";
+import AdvertBooking from "../components/AdvertBooking";
 
 import type { FormEventHandler } from "react";
 import type { MainTag, SubTag } from "../types/Advert";
 import type { AppContextInterface } from "../types/appContext.type";
 
 function AdvertForm() {
+	const [step, setStep] = useState(1);
 	const [mainTags, setMainTags] = useState<MainTag[]>([]);
 	const [subTags, setSubTags] = useState<SubTag[]>([]);
 	const [selectedMainTag, setSelectedMainTag] = useState<number | null>(null);
@@ -111,99 +113,116 @@ function AdvertForm() {
 
 	return (
 		<div className="form-page">
+			<h1 className="form-title">Crée ton annonce !</h1>
 			<div className="advert-form">
-				<h1 className="form-title">Crée ton annonce !</h1>
+				{step === 1 && (
+					<form
+						className="form"
+						onSubmit={(event) => {
+							event.preventDefault();
+							handleSubmit(event);
+						}}
+					>
+						<div className="form-group">
+							<label htmlFor="main-tag-select">
+								Quel savoir veux-tu transmettre ?
+							</label>
+							<select
+								id="main-tag-select"
+								className="tag-list"
+								value={formData.main_tag_id ?? ""}
+								onChange={(e) => {
+									const mainTagId = e.target.value
+										? Number(e.target.value)
+										: null;
+									setFormData((prev) => ({
+										...prev,
+										main_tag_id: mainTagId,
+									}));
+									setSelectedMainTag(mainTagId);
+								}}
+							>
+								<option value="">Choisis un savoir</option>
+								{mainTags.map((mainTag) => (
+									<option key={mainTag.id} value={mainTag.id}>
+										{mainTag.name}
+									</option>
+								))}
+							</select>
+						</div>
 
-				<form
-					className="form"
-					onSubmit={(event) => {
-						event.preventDefault();
-						handleSubmit(event);
-					}}
-				>
-					<div className="form-group">
-						<label htmlFor="main-tag-select">
-							Quel savoir veux-tu transmettre ?
-						</label>
-						<select
-							id="main-tag-select"
-							className="tag-list"
-							value={formData.main_tag_id ?? ""}
-							onChange={(e) => {
-								const mainTagId = e.target.value
-									? Number(e.target.value)
-									: null;
-								setFormData((prev) => ({ ...prev, main_tag_id: mainTagId }));
-								setSelectedMainTag(mainTagId);
-							}}
-						>
-							<option value="">Choisis un savoir</option>
-							{mainTags.map((mainTag) => (
-								<option key={mainTag.id} value={mainTag.id}>
-									{mainTag.name}
+						<div className="form-group">
+							<label htmlFor="sub-tag-select">
+								Quelle sous-catégorie veux-tu proposer ?
+							</label>
+							<select
+								className="tag-list"
+								value={formData.sub_tag_id ? formData.sub_tag_id : ""}
+								disabled={selectedMainTag === null}
+								onChange={(e) => {
+									const subTagId = e.target.value
+										? Number(e.target.value)
+										: null;
+									setFormData((prev) => ({
+										...prev,
+										sub_tag_id: subTagId,
+									}));
+								}}
+							>
+								<option value="">
+									{selectedMainTag === null
+										? ""
+										: "Choisis une sous-catégorie "}
 								</option>
-							))}
-						</select>
-					</div>
+								{subTags.map((subTag) => (
+									<option key={subTag.id} value={subTag.id}>
+										{subTag.name}
+									</option>
+								))}
+							</select>
+						</div>
 
-					<div className="form-group">
-						<label htmlFor="sub-tag-select">
-							Quelle sous-catégorie veux-tu proposer ?
-						</label>
-						<select
-							className="tag-list"
-							value={formData.sub_tag_id ? formData.sub_tag_id : ""}
-							disabled={selectedMainTag === null}
-							onChange={(e) => {
-								const subTagId = e.target.value ? Number(e.target.value) : null;
-								setFormData((prev) => ({ ...prev, sub_tag_id: subTagId }));
-							}}
-						>
-							<option value="">
-								{selectedMainTag === null ? "" : "Choisis une sous-catégorie "}
-							</option>
-							{subTags.map((subTag) => (
-								<option key={subTag.id} value={subTag.id}>
-									{subTag.name}
-								</option>
-							))}
-						</select>
-					</div>
+						<div className="form-group-description">
+							<label htmlFor="description" className="description-label">
+								Ajoute un texte descriptif à ton annonce
+							</label>
+							<input
+								type="text"
+								placeholder="Je suis un expert en... / Je peux t'aider à... / Je suis passionné par..."
+								className="textDescription"
+								value={formData.description}
+								onChange={(e) =>
+									setFormData((prev) => ({
+										...prev,
+										description: e.target.value,
+									}))
+								}
+								required
+							/>
+						</div>
 
-					<div className="form-group-description">
-						<label htmlFor="description" className="description-label">
-							Ajoute un texte descriptif à ton annonce
-						</label>
-						<input
-							type="text"
-							placeholder="Je suis un expert en... / Je peux t'aider à... / Je suis passionné par..."
-							className="textDescription"
-							value={formData.description}
-							onChange={(e) =>
-								setFormData((prev) => ({
-									...prev,
-									description: e.target.value,
-								}))
-							}
-							required
-						/>
-					</div>
+						<div className="submit-button">
+							<button className={`darkblue-button ${
+									!isFormValid ? "disabled-button" : ""
+								}`} type="button" onClick={() => setStep(2)}>Suivant</button>
+						</div>
+					</form>
+				)}
 
-					<div className="submit-button">
+				{step === 2 && (
+					<div className="advert-booking">
+						< AdvertBooking />
 						<button
-							className={`darkblue-button ${!isFormValid ? "disabled-button" : ""}`}
+							className={`darkblue-button ${
+								!isFormValid ? "disabled-button" : ""
+							}`}
 							type="submit"
 							disabled={!isFormValid}
 						>
 							Valide ton annonce
 						</button>
 					</div>
-				</form>
-
-				<h3 className="advertising-text">
-					Après cette étape, ton annonce sera disponible sur les créneaux de
-					réservation que tu as définis sur ton profil !
-				</h3>
+				)}
 			</div>
 		</div>
 	);
