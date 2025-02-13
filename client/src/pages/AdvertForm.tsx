@@ -3,13 +3,19 @@ import "./AdvertForm.css";
 import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { toast } from "react-toastify";
-import AdvertBooking from "../components/AdvertBooking";
+import AdvertSlot from "../components/AdvertSlot";
 
 import type { FormEventHandler } from "react";
 import type { MainTag, SubTag } from "../types/Advert";
 import type { AppContextInterface } from "../types/appContext.type";
 
+interface Slot {
+	day: string;
+	hour: string;
+}
+
 function AdvertForm() {
+	const { user } = useOutletContext<AppContextInterface>();
 	const [step, setStep] = useState(1);
 	const [mainTags, setMainTags] = useState<MainTag[]>([]);
 	const [subTags, setSubTags] = useState<SubTag[]>([]);
@@ -24,7 +30,7 @@ function AdvertForm() {
 		main_tag_id: null,
 		sub_tag_id: null,
 		description: "",
-		goat_id: 1,
+		goat_id: user.id,
 	});
 
 	const [isFormValid, setIsFormValid] = useState(false);
@@ -65,16 +71,19 @@ function AdvertForm() {
 		setIsFormValid(isValid);
 	}, [formData]);
 
-	const { user } = useOutletContext<AppContextInterface>();
+	const [selectedSlots, setSelectedSlots] = useState<Slot[]>([]);
 
 	const handleSubmit: FormEventHandler = async (event) => {
 		event.preventDefault();
 		if (
 			formData.main_tag_id === null ||
 			formData.sub_tag_id === null ||
-			formData.description.trim() === ""
+			formData.description.trim() === "" ||
+			selectedSlots.length === 0
 		) {
-			toast.error("Tous les champs sont obligatoires ! 🐐");
+			toast.error(
+				"Tous les champs et au moins un créneau sont obligatoires ! 🐐",
+			);
 			return;
 		}
 
@@ -87,7 +96,7 @@ function AdvertForm() {
 						"Content-Type": "application/json",
 						Authorization: user.token,
 					},
-					body: JSON.stringify(formData),
+					body: JSON.stringify({ formData, slots: selectedSlots }),
 				},
 			);
 
@@ -102,9 +111,10 @@ function AdvertForm() {
 				main_tag_id: null,
 				sub_tag_id: null,
 				description: "",
-				goat_id: 1,
+				goat_id: user.id,
 			});
 			setSelectedMainTag(null);
+			setSelectedSlots([]);
 			navigate("/adverts");
 		} catch (error) {
 			toast.error("Oups...il semble que ton annonce n'est pas complète 🐐");
@@ -202,25 +212,45 @@ function AdvertForm() {
 						</div>
 
 						<div className="submit-button">
-							<button className={`darkblue-button ${
+							<button
+								className={`darkblue-button ${
 									!isFormValid ? "disabled-button" : ""
-								}`} type="button" onClick={() => setStep(2)}>Suivant</button>
+								}`}
+								type="button"
+								onClick={() => setStep(2)}
+							>
+								Suivant
+							</button>
 						</div>
 					</form>
 				)}
 
 				{step === 2 && (
 					<div className="advert-booking">
-						< AdvertBooking />
-						<button
-							className={`darkblue-button ${
-								!isFormValid ? "disabled-button" : ""
-							}`}
-							type="submit"
-							disabled={!isFormValid}
-						>
-							Valide ton annonce
-						</button>
+						<p>Sélectionne entre 1 à 3 créneaux :</p>
+						<AdvertSlot
+							selectedSlots={selectedSlots}
+							setSelectedSlots={setSelectedSlots}
+						/>
+						<div className="navigateButtons">
+							<button
+								className="darkblue-button"
+								type="button"
+								onClick={() => setStep(1)}
+							>
+								Retour
+							</button>
+							<button
+								className={`darkblue-button ${
+									!isFormValid ? "disabled-button" : ""
+								}`}
+								type="button"
+								disabled={!isFormValid}
+								onClick={handleSubmit}
+							>
+								Valide ton annonce
+							</button>
+						</div>
 					</div>
 				)}
 			</div>

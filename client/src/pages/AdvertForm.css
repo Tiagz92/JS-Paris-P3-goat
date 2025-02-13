@@ -1,9 +1,13 @@
-.advert-form {
+.form-page {
 	border: 0.1rem solid var(--darkblue);
 	padding: 2rem;
 	margin: 2rem;
 	border-radius: 1rem;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.advert-form {
+	margin: 2rem;
 	display: flex;
 	flex-direction: column;
 }
@@ -67,6 +71,17 @@
 
 .disabled-button {
 	opacity: 0.5;
+}
+
+.advert-booking p {
+	margin: 1rem;
+	text-align: left;
+}
+
+.navigateButtons {
+	display: flex;
+	justify-content: center;
+	margin: 1rem
 }
 
 @media screen and (min-width: 480px) and (max-width: 720px) {

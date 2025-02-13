@@ -26,11 +26,11 @@ router.post("/api/login", authActions.login);
 router.get("/api/main-tags", mainTagActions.browse);
 router.get("/api/adverts", advertActions.browse);
 
-router.get("/advert/maintags", advertActions.getMainTags);
 router.get(
 	"/advert/search/subtag/:mainTagId",
 	advertActions.getSubTagsByMainTag,
 );
+router.get("/advert/maintags", advertActions.getMainTags);
 
 router.get("/search/description", advertActions.searchDescription);
 router.get("/search/maintags", advertActions.searchMainTagsByName);
