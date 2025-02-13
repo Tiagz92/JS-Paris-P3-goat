@@ -29,7 +29,7 @@ function AdvertBooking({ selectedSlot, setSelectedSlot }: AdvertBookingProps) {
 			startDate.setDate(
 				startDate.getDate() - startDate.getDay() + 1 + weekOffset * 7,
 			);
-			const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
+			const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
 
 			return days.map((day, index) => {
 				const date = new Date(startDate);

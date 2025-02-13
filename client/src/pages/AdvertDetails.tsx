@@ -14,11 +14,17 @@ type Advert = {
 	goat_picture: string;
 };
 
+interface Slot {
+	date: string;
+	hour: string;
+}
+
 function AdvertDetails() {
 	const { id } = useParams<{ id: string }>();
 	const [advert, setAdvert] = useState<Advert | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
 	const { user } = useOutletContext<AppContextInterface>();
 
 	useEffect(() => {
@@ -80,7 +86,10 @@ function AdvertDetails() {
 			</div>
 			<div className="profile-calendar">
 				<h1>Sélectionnez une date</h1>
-				<AdvertBooking />
+				<AdvertBooking
+					selectedSlot={selectedSlot}
+					setSelectedSlot={setSelectedSlot}
+				/>
 				<div className="advert-reservation">
 					<button type="button" className="reservation-button">
 						Réserver

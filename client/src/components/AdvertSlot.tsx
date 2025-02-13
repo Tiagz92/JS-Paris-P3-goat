@@ -18,6 +18,8 @@ function AdvertSlot({ selectedSlots, setSelectedSlots }: AdvertSlotProps) {
 		{ name: "Mercredi" },
 		{ name: "Jeudi" },
 		{ name: "Vendredi" },
+		{ name: "Samedi" },
+		{ name: "Dimanche" },
 	]);
 
 	const [reservedSlots, setReservedSlots] = useState<Slot[]>([]);

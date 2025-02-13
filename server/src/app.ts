@@ -88,6 +88,8 @@ if (fs.existsSync(publicFolderPath)) {
 	app.use(express.static(publicFolderPath));
 }
 
+app.use("/public", express.static(path.join(__dirname, "public")));
+
 // Serve client resources
 
 const clientBuildPath = path.join(__dirname, "../../client/dist");

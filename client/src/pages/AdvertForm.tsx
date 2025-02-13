@@ -14,6 +14,38 @@ interface Slot {
 	hour: string;
 }
 
+const getNextDateForDay = (dayName: string): string => {
+	const daysOfWeek = [
+		"Dimanche",
+		"Lundi",
+		"Mardi",
+		"Mercredi",
+		"Jeudi",
+		"Vendredi",
+		"Samedi",
+	];
+
+	const today = new Date();
+	const todayIndex = today.getDay();
+	const targetIndex = daysOfWeek.indexOf(dayName);
+
+	if (targetIndex === -1) throw new Error("Jour invalide");
+
+	let daysToAdd = targetIndex - todayIndex;
+	if (daysToAdd <= 0) daysToAdd += 7;
+
+	const targetDate = new Date();
+	targetDate.setDate(today.getDate() + daysToAdd);
+
+	return targetDate.toISOString().split("T")[0];
+};
+
+const formatSlotsForBackend = (slots: Slot[]) => {
+	return slots.map((slot) => ({
+		start_at: `${getNextDateForDay(slot.day)} ${slot.hour}:00`,
+	}));
+};
+
 function AdvertForm() {
 	const { user } = useOutletContext<AppContextInterface>();
 	const [step, setStep] = useState(1);
@@ -75,6 +107,7 @@ function AdvertForm() {
 
 	const handleSubmit: FormEventHandler = async (event) => {
 		event.preventDefault();
+
 		if (
 			formData.main_tag_id === null ||
 			formData.sub_tag_id === null ||
@@ -87,6 +120,8 @@ function AdvertForm() {
 			return;
 		}
 
+		const formattedSlots = formatSlotsForBackend(selectedSlots);
+
 		try {
 			const response = await fetch(
 				`${import.meta.env.VITE_API_URL}/api/adverts`,
@@ -96,7 +131,10 @@ function AdvertForm() {
 						"Content-Type": "application/json",
 						Authorization: user.token,
 					},
-					body: JSON.stringify({ formData, slots: selectedSlots }),
+					body: JSON.stringify({
+						...formData,
+						slots: formattedSlots,
+					}),
 				},
 			);
 

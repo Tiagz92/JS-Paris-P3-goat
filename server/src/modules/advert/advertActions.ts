@@ -1,9 +1,9 @@
 import type { RequestHandler } from "express";
-import type { NextFunction, Request, Response } from "express";
 import goatRepository from "../goat/goatRepository";
 import mainTagRepository from "../mainTag/mainTagRepository";
 import subTagRepository from "../subTag/subTagRepository";
 import advertRepository from "./advertRepository";
+import slotRepository from "../slot/slotRepository";
 
 const browse: RequestHandler = async (req, res, next) => {
 	try {
@@ -74,6 +74,8 @@ const read: RequestHandler = async (req, res, next) => {
 
 const add: RequestHandler = async (req, res, next) => {
 	try {
+
+		console.log("🛠 req.body :", req.body);
 		const newAdvert = {
 			goat_id: req.body.goat_id,
 			main_tag_id: req.body.main_tag_id,
@@ -85,7 +87,37 @@ const add: RequestHandler = async (req, res, next) => {
 			goat_name: req.body.goat_name,
 			description: req.body.description,
 		};
+		
+		const slots = req.body.slots; 
+		console.log("🛠 slots :", slots);
+
+		if (!Array.isArray(slots) || slots.length === 0) {
+			console.log("⚠️ Aucun créneau (slots) reçu !");
+			res.status(400).json({ message: "Aucun créneau envoyé." });
+			return;
+		}
+
 		const insertId = await advertRepository.create(newAdvert);
+
+		await Promise.all(
+			slots.map(async (slot) => {
+				if (!slot.start_at) {
+					console.error("❌ Erreur : `start_at` manquant pour un slot :", slot);
+					return;
+				}
+
+				const newSlot = {
+					advert_id: insertId,
+					start_at: new Date(slot.start_at)
+						.toISOString()
+						.slice(0, 19)
+						.replace("T", " "), // Conversion propre en `YYYY-MM-DD HH:mm:ss`
+				};
+
+				await slotRepository.create(newSlot);
+			}),
+		);
+
 		res.status(201).json({ insertId });
 	} catch (err) {
 		next(err);
