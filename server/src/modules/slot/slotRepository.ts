@@ -1,15 +1,7 @@
 import databaseClient from "../../../database/client";
 import type { Result } from "../../../database/client";
-
-type Slot = {
-	id: number;
-	start_at: string;
-	duration: number;
-	meet_link: string;
-	comment: string;
-	advert_id: number;
-	goat_id: number;
-};
+import type { Slot } from "../../types/slot"; 
+  
 
 class slotRepository {
 	async create(slot: Slot) {

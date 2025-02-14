@@ -4,6 +4,7 @@ import mainTagRepository from "../mainTag/mainTagRepository";
 import subTagRepository from "../subTag/subTagRepository";
 import advertRepository from "./advertRepository";
 import slotRepository from "../slot/slotRepository";
+import type { Slot } from "../../types/slot"; 
 
 const browse: RequestHandler = async (req, res, next) => {
 	try {
@@ -74,8 +75,6 @@ const read: RequestHandler = async (req, res, next) => {
 
 const add: RequestHandler = async (req, res, next) => {
 	try {
-
-		console.log("🛠 req.body :", req.body);
 		const newAdvert = {
 			goat_id: req.body.goat_id,
 			main_tag_id: req.body.main_tag_id,
@@ -87,12 +86,10 @@ const add: RequestHandler = async (req, res, next) => {
 			goat_name: req.body.goat_name,
 			description: req.body.description,
 		};
-		
-		const slots = req.body.slots; 
-		console.log("🛠 slots :", slots);
+
+		const slots = req.body.slots;
 
 		if (!Array.isArray(slots) || slots.length === 0) {
-			console.log("⚠️ Aucun créneau (slots) reçu !");
 			res.status(400).json({ message: "Aucun créneau envoyé." });
 			return;
 		}
@@ -106,12 +103,16 @@ const add: RequestHandler = async (req, res, next) => {
 					return;
 				}
 
-				const newSlot = {
+				const newSlot : Slot = {
 					advert_id: insertId,
 					start_at: new Date(slot.start_at)
 						.toISOString()
 						.slice(0, 19)
-						.replace("T", " "), // Conversion propre en `YYYY-MM-DD HH:mm:ss`
+						.replace("T", " "),
+					duration: slot.duration ?? 60,
+					meet_link: slot.meet_link ?? null,
+					comment: slot.comment ?? null,
+					goat_id: slot.goat_id ?? insertId,
 				};
 
 				await slotRepository.create(newSlot);
