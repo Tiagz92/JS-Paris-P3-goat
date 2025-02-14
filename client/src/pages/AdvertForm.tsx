@@ -1,7 +1,7 @@
 import "./AdvertForm.css";
 
 import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import AdvertSlot from "../components/AdvertSlot";
 
@@ -104,6 +104,39 @@ function AdvertForm() {
 	}, [formData]);
 
 	const [selectedSlots, setSelectedSlots] = useState<Slot[]>([]);
+
+	const { id } = useParams<{ id: string }>();
+
+	useEffect(() => {
+		if (user?.id && id) {
+			fetch(`${import.meta.env.VITE_API_URL}/api/goats/${id}`, {
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${user.token}`,
+				},
+			})
+				.then((response) => {
+					if (!response.ok) {
+						throw new Error(
+							"Erreur lors du chargement des données utilisateur",
+						);
+					}
+					return response.json();
+				})
+				.then((data) => {
+					setFormData((prev) => ({
+						...prev,
+						goat_id: data.id,
+					}));
+				})
+				.catch((error) => {
+					toast.error(
+						"Impossible de récupérer les infos de l'utilisateur 🐐",
+						error,
+					);
+				});
+		}
+	}, [user, id]);
 
 	const handleSubmit: FormEventHandler = async (event) => {
 		event.preventDefault();

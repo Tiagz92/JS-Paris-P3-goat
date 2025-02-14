@@ -74,8 +74,6 @@ const read: RequestHandler = async (req, res, next) => {
 
 const add: RequestHandler = async (req, res, next) => {
 	try {
-
-		console.log("🛠 req.body :", req.body);
 		const newAdvert = {
 			goat_id: req.body.goat_id,
 			main_tag_id: req.body.main_tag_id,
@@ -89,10 +87,8 @@ const add: RequestHandler = async (req, res, next) => {
 		};
 		
 		const slots = req.body.slots; 
-		console.log("🛠 slots :", slots);
 
 		if (!Array.isArray(slots) || slots.length === 0) {
-			console.log("⚠️ Aucun créneau (slots) reçu !");
 			res.status(400).json({ message: "Aucun créneau envoyé." });
 			return;
 		}
@@ -101,17 +97,12 @@ const add: RequestHandler = async (req, res, next) => {
 
 		await Promise.all(
 			slots.map(async (slot) => {
-				if (!slot.start_at) {
-					console.error("❌ Erreur : `start_at` manquant pour un slot :", slot);
-					return;
-				}
-
 				const newSlot = {
 					advert_id: insertId,
 					start_at: new Date(slot.start_at)
 						.toISOString()
 						.slice(0, 19)
-						.replace("T", " "), // Conversion propre en `YYYY-MM-DD HH:mm:ss`
+						.replace("T", " "), 
 				};
 
 				await slotRepository.create(newSlot);
