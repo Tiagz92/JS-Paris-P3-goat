@@ -4,7 +4,6 @@ import "./AdvertDetails.css";
 import AdvertBooking from "../components/AdvertBooking";
 
 type Advert = {
-	id: number;
 	description: string;
 	goat_id: number;
 	main_tag_name: number;
@@ -24,7 +23,13 @@ function AdvertDetails() {
 		const fetchAdvertDetails = async () => {
 			try {
 				const response = await fetch(
-					`${import.meta.env.VITE_API_URL}/api/adverts/${id}`,
+					`http://localhost:3310/api/adverts/${id}`,
+					{
+						headers: {
+							Accept: "application/json",
+							"Content-Type": "application/json",
+						},
+					},
 				);
 
 				if (!response.ok) {
@@ -74,7 +79,7 @@ function AdvertDetails() {
 			</div>
 			<div className="profile-calendar">
 				<h1>Sélectionnez une date</h1>
-				<AdvertBooking advertId={advert.id} />
+				<AdvertBooking advertId={Number.parseInt(id || "0", 10)} />
 				<div className="advert-reservation">
 					<button type="button" className="reservation-button">
 						Réserver

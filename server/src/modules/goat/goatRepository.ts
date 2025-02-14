@@ -1,6 +1,16 @@
 import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
-import database from "../../database/client";
+import database from "../../../database/client";
 import type { Goat } from "../../types/models";
+
+export interface NewGoat {
+	first_name: string;
+	name: string;
+	email: string;
+	password: string;
+	picture: string;
+	presentation: string;
+	video: string | null;
+}
 
 class GoatRepository {
 	async read(id: number): Promise<Goat | null> {
@@ -11,27 +21,17 @@ class GoatRepository {
 		return rows.length > 0 ? (rows[0] as Goat) : null;
 	}
 
-	async createGoat(goat: {
-		lastname: string;
-		firstname: string;
-		born_at: Date;
-		email: string;
-		password: string;
-		picture: string;
-		presentation: string;
-		video: string | null;
-	}): Promise<number> {
+	async createGoat(goatData: NewGoat): Promise<number> {
 		const [result] = await database.query<ResultSetHeader>(
-			"INSERT INTO goat (lastname, firstname, born_at, email, password, picture, presentation, video) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+			"INSERT INTO goat (first_name, name, email, password, picture, presentation, video) VALUES (?, ?, ?, ?, ?, ?, ?)",
 			[
-				goat.lastname,
-				goat.firstname,
-				goat.born_at,
-				goat.email,
-				goat.password,
-				goat.picture,
-				goat.presentation,
-				goat.video,
+				goatData.first_name,
+				goatData.name,
+				goatData.email,
+				goatData.password,
+				goatData.picture,
+				goatData.presentation,
+				goatData.video,
 			],
 		);
 		return result.insertId;

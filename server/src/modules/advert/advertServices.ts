@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import database from "../../../database/client";
 
 const validateAdvert = (req: Request, res: Response, next: NextFunction) => {
 	const advert = req.body;
@@ -11,4 +12,4 @@ const validateAdvert = (req: Request, res: Response, next: NextFunction) => {
 	} else next();
 };
 
-export default { validateAdvert };
+export const advertServices = { validateAdvert };

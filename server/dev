@@ -1,0 +1,11 @@
+> tsx watch --clear-screen=false ./src/main
+
+Server is listening on port 3310
+Using database goat_db
+^C10:46:32 [tsx] Previous process hasn't exited yet. Force killing...
+npm error Lifecycle script `dev` failed with error:
+npm error code 130
+npm error path /Users/tiagodealmeida/Documents/Wildcodeschool/projets/JS-Paris-P3-goat/server
+npm error workspace @js-monorepo/server
+npm error location /Users/tiagodealmeida/Documents/Wildcodeschool/projets/JS-Paris-P3-goat/server
+npm error command failed

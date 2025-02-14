@@ -14,7 +14,7 @@ async function testMeetingCreation() {
 		console.info("Début :", startTime);
 		console.info("Fin :", endTime);
 
-		const meetLink = await generateGoogleMeetLink(startTime, endTime);
+		const meetLink = await generateGoogleMeetLink(startTime, 60); // Durée en minutes
 		console.info("Lien Google Meet créé :", meetLink);
 	} catch (error) {
 		console.error("Erreur :", error);

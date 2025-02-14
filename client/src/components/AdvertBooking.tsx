@@ -8,12 +8,6 @@ interface Slot {
 	status: "available" | "reserved" | "cancelled" | "completed";
 }
 
-interface ReservationResponse {
-	id: number;
-	google_meet_link: string;
-	status: string;
-}
-
 interface AvailabilityMap {
 	[key: string]: {
 		slot: Slot;
@@ -30,15 +24,14 @@ const WeekScheduler = ({ advertId }: { advertId: number }) => {
 	const [bookingInProgress, setBookingInProgress] = useState(false);
 	const [meetLink, setMeetLink] = useState<string | null>(null);
 
-	const generateDays = (weekOffset: number) => {
+	const generateDays = (_weekOffset: number) => {
 		const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
-		return days.map((day) => `${day} S${weekOffset}`);
+		return days;
 	};
 
 	const changeWeek = (offset: number) => {
-		// Limite le nombre de semaines passées ou futures
-		const MAX_WEEKS_BACK = 4; // Nombre max de semaines dans le passé
-		const MAX_WEEKS_FORWARD = 12; // Nombre max de semaines dans le futur
+		const MAX_WEEKS_BACK = 4;
+		const MAX_WEEKS_FORWARD = 12;
 
 		// Calcule la nouvelle valeur de l'offset
 		const newOffset = currentWeekOffset + offset;
@@ -67,21 +60,48 @@ const WeekScheduler = ({ advertId }: { advertId: number }) => {
 		const fetchSlots = async () => {
 			setIsLoading(true);
 			try {
-				const response = await fetch(
-					`/api/adverts/${advertId}/slots?week=${currentWeekOffset}`,
+				console.info(
+					"Fetching slots for advertId:",
+					advertId,
+					"week:",
+					currentWeekOffset,
 				);
-				const slots: Slot[] = await response.json();
+				const response = await fetch(
+					`http://localhost:3310/api/adverts/${advertId}/slots?week=${currentWeekOffset}`,
+					{
+						headers: {
+							Accept: "application/json",
+							"Content-Type": "application/json",
+						},
+					},
+				);
+
+				if (!response.ok) {
+					throw new Error(`Erreur HTTP: ${response.status}`);
+				}
+
+				const slots = await response.json();
+				console.info("Slots reçus du serveur:", slots);
 
 				const slotsMap: AvailabilityMap = {};
-
-				// Remplacement de forEach par for...of
 				for (const slot of slots) {
 					const date = new Date(slot.start_at);
+					const dayIndex = date.getDay() - 1;
 					const day = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"][
-						date.getDay() - 1
+						dayIndex
 					];
 					const hour = date.getHours();
-					const key = `${day} S${currentWeekOffset}-${hour}`;
+					const key = `${day} S${currentWeekOffset} S${currentWeekOffset}-${hour}`;
+
+					console.info("Traitement du créneau:", {
+						date,
+						dayIndex,
+						day,
+						hour,
+						key,
+						status: slot.status,
+						rawSlot: slot,
+					});
 
 					slotsMap[key] = {
 						slot,
@@ -89,6 +109,7 @@ const WeekScheduler = ({ advertId }: { advertId: number }) => {
 					};
 				}
 
+				console.info("Carte finale des créneaux:", slotsMap);
 				setAvailableSlots(slotsMap);
 			} catch (error) {
 				console.error("Erreur lors du chargement des créneaux :", error);
@@ -103,8 +124,15 @@ const WeekScheduler = ({ advertId }: { advertId: number }) => {
 	const toggleSlot = (day: string, hour: number) => {
 		if (bookingInProgress) return;
 
-		const slotKey = `${day}-${hour}`;
-		const slotInfo = availableSlots[slotKey];
+		const key = `${day} S${currentWeekOffset} S${currentWeekOffset}-${hour}`;
+		const slotInfo = availableSlots[key];
+
+		console.info("Toggling slot:", {
+			key,
+			exists: !!slotInfo,
+			available: slotInfo?.available,
+			status: slotInfo?.slot?.status,
+		});
 
 		if (slotInfo?.available) {
 			setSelectedSlotId(
@@ -118,46 +146,92 @@ const WeekScheduler = ({ advertId }: { advertId: number }) => {
 	};
 
 	const handleBooking = async () => {
-		if (selectedSlotId && !bookingInProgress) {
-			setBookingInProgress(true);
-			try {
-				const response = await fetch("/api/reservations", {
+		if (!selectedSlotId || bookingInProgress) return;
+
+		setBookingInProgress(true);
+
+		try {
+			// Récupérer l'email de l'utilisateur connecté (à adapter selon votre système d'authentification)
+			const userEmail =
+				localStorage.getItem("userEmail") ||
+				sessionStorage.getItem("userEmail");
+
+			if (!userEmail) {
+				throw new Error("Vous devez être connecté pour réserver un créneau");
+			}
+
+			const response = await fetch(
+				`http://localhost:3310/api/slots/${selectedSlotId}/reserve`,
+				{
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
+						// Ajouter le token d'authentification si nécessaire
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
 					},
 					body: JSON.stringify({
-						slot_id: selectedSlotId,
-						user_id: 1, // À remplacer par l'ID de l'utilisateur connecté
+						email: userEmail,
 					}),
-				});
+				},
+			);
 
-				if (response.ok) {
-					const reservationData: ReservationResponse = await response.json();
-
-					const newAvailableSlots = { ...availableSlots };
-					for (const key of Object.keys(newAvailableSlots)) {
-						const slotInfo = newAvailableSlots[key];
-						if (slotInfo.slot.id === selectedSlotId) {
-							slotInfo.available = false;
-							slotInfo.slot.status = "reserved";
-						}
-					}
-
-					setAvailableSlots(newAvailableSlots);
-					setSelectedSlotId(null);
-					setShowBookingConfirmation(true);
-					setMeetLink(reservationData.google_meet_link);
-				} else {
-					throw new Error("Erreur lors de la réservation");
-				}
-			} catch (error) {
-				console.error("Erreur lors de la réservation :", error);
-				alert("Erreur lors de la réservation");
-			} finally {
-				setBookingInProgress(false);
+			if (!response.ok) {
+				const errorData = await response.json();
+				throw new Error(errorData.message || "Erreur lors de la réservation");
 			}
+
+			const data = await response.json();
+			setMeetLink(data.meetLink);
+			setShowBookingConfirmation(true);
+
+			// Rafraîchir les créneaux
+			const fetchSlots = async () => {
+				// ... votre code existant pour fetchSlots ...
+			};
+			await fetchSlots();
+		} catch (error) {
+			console.error("Erreur lors de la réservation :", error);
+			alert(
+				error instanceof Error
+					? error.message
+					: "Erreur lors de la réservation",
+			);
+		} finally {
+			setBookingInProgress(false);
 		}
+	};
+
+	const isSlotAvailable = (day: string, hour: number) => {
+		const searchKey = `${day} S${currentWeekOffset} S${currentWeekOffset}-${hour}`;
+		const allKeys = Object.keys(availableSlots);
+		console.info("Comparaison des clés:", {
+			searchKey,
+			allKeys,
+			match: allKeys.includes(searchKey),
+		});
+		return availableSlots[searchKey]?.available === true;
+	};
+
+	const renderTimeSlots = () => {
+		return hours.map((hour) => (
+			<React.Fragment key={hour}>
+				<div className="time-slot">{`${hour}:00`}</div>
+				{days.map((day) => {
+					const isAvailable = isSlotAvailable(day, hour);
+					return (
+						<button
+							type="button"
+							key={`${day} S${currentWeekOffset} S${currentWeekOffset}-${hour}`}
+							className={`slot ${isAvailable ? "available" : "unavailable"}`}
+							onClick={() => toggleSlot(day, hour)}
+							disabled={!isAvailable}
+						>
+							{/* Pas de texte, le style CSS s'occupera de l'apparence */}
+						</button>
+					);
+				})}
+			</React.Fragment>
+		));
 	};
 
 	return (
@@ -182,44 +256,12 @@ const WeekScheduler = ({ advertId }: { advertId: number }) => {
 			<div className="scheduler-grid">
 				<div className="grid-header empty-cell" />
 				{days.map((day) => (
-					<div key={day} className="grid-header">
-						{day}
+					<div key={`${day} S${currentWeekOffset}`} className="grid-header">
+						{`${day} S${currentWeekOffset}`}
 					</div>
 				))}
 
-				{hours.map((hour) => (
-					<React.Fragment key={hour}>
-						<div className="grid-time">
-							{`${hour.toString().padStart(2, "0")}:00`}
-						</div>
-						{days.map((day) => {
-							const slotKey = `${day}-${hour}`;
-							const slotInfo = availableSlots[slotKey];
-							const isAvailable = slotInfo?.available;
-							const isSelected = slotInfo?.slot.id === selectedSlotId;
-
-							return (
-								<button
-									type="button"
-									key={slotKey}
-									className={`grid-slot ${
-										isLoading
-											? "loading"
-											: isSelected
-												? "selected"
-												: !isAvailable
-													? "unavailable"
-													: ""
-									}`}
-									onClick={() => toggleSlot(day, hour)}
-									disabled={isLoading || !isAvailable}
-								>
-									{isSelected ? "✓" : ""}
-								</button>
-							);
-						})}
-					</React.Fragment>
-				))}
+				{renderTimeSlots()}
 			</div>
 
 			<div className="booking-section">

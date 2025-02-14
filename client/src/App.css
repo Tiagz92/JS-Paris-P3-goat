@@ -52,30 +52,7 @@ p {
 	cursor: pointer;
 	color: var(--text-white);
 	background-color: var(--orange);
-	border-color: var(--orange);
-	padding: 0.5rem;
-}
-
-.darkblue-button {
-	font-size: 1rem;
-	font-weight: bolder;
-	text-align: center;
-	background-color: var(--darkblue);
-	color: var(--text-white);
-	border-radius: 1rem;
-	padding: 0.5rem;
-	width: 40%;
-	cursor: pointer;
-}
-
-.light-blue-button {
-	font-size: 1rem;
-	font-weight: bolder;
-	text-align: center;
-	background-color: var(--light-blue);
-	color: var(--text-black);
-	border-radius: 10%;
-	cursor: pointer;
+	border: 3px solid var(--orange);
 }
 
 .yellow-button:hover {

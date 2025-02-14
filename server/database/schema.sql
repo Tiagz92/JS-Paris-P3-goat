@@ -12,7 +12,7 @@ USE `goat_db`;
 -- Table `goat_db`.`main_tag`
 CREATE TABLE IF NOT EXISTS `goat_db`.`main_tag` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -24,10 +24,12 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- Table `goat_db`.`sub_tag`
 CREATE TABLE IF NOT EXISTS `goat_db`.`sub_tag` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
+  `main_tag_id` INT NOT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`main_tag_id`) REFERENCES `goat_db`.`main_tag` (`id`)
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -36,12 +38,11 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- Table `goat_db`.`goat`
 CREATE TABLE IF NOT EXISTS `goat_db`.`goat` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `lastname` VARCHAR(255) NOT NULL,
-  `firstname` VARCHAR(255) NOT NULL,
-  `born_at` DATE NOT NULL,
-  `email` VARCHAR(255) NOT NULL,
+  `first_name` VARCHAR(100) NOT NULL,
+  `last_name` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(255) NOT NULL UNIQUE,
   `password` VARCHAR(255) NOT NULL COMMENT 'Stores hashed password',
-  `picture` VARCHAR(255) NOT NULL,
+  `avatar` VARCHAR(255),
   `presentation` TEXT NOT NULL,
   `video` VARCHAR(255) DEFAULT NULL,
   `status` ENUM('active', 'inactive', 'suspended') DEFAULT 'active',
@@ -58,7 +59,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 CREATE TABLE IF NOT EXISTS `goat_db`.`advert` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `description` TEXT NOT NULL,
-  `goat_id` INT DEFAULT NULL,
+  `goat_id` INT NOT NULL,
   `main_tag_id` INT NOT NULL,
   `sub_tag_id` INT NOT NULL,
   `status` ENUM('active', 'inactive', 'archived') DEFAULT 'active',
@@ -108,12 +109,11 @@ COLLATE = utf8mb4_0900_ai_ci;
 CREATE TABLE IF NOT EXISTS `goat_db`.`slot` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `start_at` DATETIME NOT NULL,
-  `duration` INT NOT NULL,
-  `meet_link` VARCHAR(255) DEFAULT NULL,
-  `comment` TEXT DEFAULT NULL,
-  `status` ENUM('available', 'reserved', 'cancelled', 'completed') DEFAULT 'available',
+  `duration` INT NOT NULL, -- durée en minutes
+  `status` ENUM('available', 'reserved', 'cancelled') DEFAULT 'available',
   `advert_id` INT NOT NULL,
-  `goat_id` INT DEFAULT NULL,
+  `goat_id` INT NOT NULL,
+  `meet_link` VARCHAR(255),
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -176,10 +176,10 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- Insertion des données de test
-INSERT INTO `goat_db`.`goat` (lastname, firstname, born_at, email, password, picture, presentation, video)
+INSERT INTO `goat_db`.`goat` (first_name, last_name, email, password, avatar, presentation, video)
 VALUES
- ('Valjean', 'Jean', '1984-01-01', 'jean.valjean@mail.com', SHA2('123456', 256), 'https://www.zoologiste.com/images/xl/chevre.jpg', 'Salut, moi c''est Jean, j''ai 24 ans et je suis étudiant en 2ème année en Histoire classique à Paris Sorbonne.', 'https://www.youtube.com/watch?v=3wvatkyji1w'),
- ('Martin', 'Julie', '1999-12-24', 'julie.martin@mail.com', SHA2('abcd', 256), 'https://media.istockphoto.com/id/177369626/fr/photo/dr%C3%B4le-de-ch%C3%A8vre-envoie-sa-languette.jpg?s=612x612&w=0&k=20&c=qi4mhhIVM80vPLFztpO9ki0mO-6YwQXOifq72TyW7Tw=', 'Hello, je suis Julie, j''aime la vie et manger.', NULL);
+ ('Valjean', 'Jean', 'jean.valjean@mail.com', SHA2('123456', 256), 'https://www.zoologiste.com/images/xl/chevre.jpg', 'Salut, moi c''est Jean, j''ai 24 ans et je suis étudiant en 2ème année en Histoire classique à Paris Sorbonne.', 'https://www.youtube.com/watch?v=3wvatkyji1w'),
+ ('Martin', 'Julie', 'julie.martin@mail.com', SHA2('abcd', 256), 'https://media.istockphoto.com/id/177369626/fr/photo/dr%C3%B4le-de-ch%C3%A8vre-envoie-sa-languette.jpg?s=612x612&w=0&k=20&c=qi4mhhIVM80vPLFztpO9ki0mO-6YwQXOifq72TyW7Tw=', 'Hello, je suis Julie, j''aime la vie et manger.', NULL);
 
 -- Insertion des main_tags
 INSERT INTO main_tag (name)
@@ -201,137 +201,137 @@ VALUES
   ('Autres');
 
 -- Insertion des sub_tags
-INSERT INTO sub_tag (name)
+INSERT INTO sub_tag (name, main_tag_id)
 VALUES
   -- Maths
-('Géométrie'),
-('Algèbre'),
-('Statistiques et probabilités'),
-('Analyse'),
-('Arithmétique'),
-('Logique et raisonnement'),
-('Maths appliquées'),
+('Géométrie', 1),
+('Algèbre', 1),
+('Statistiques et probabilités', 1),
+('Analyse', 1),
+('Arithmétique', 1),
+('Logique et raisonnement', 1),
+('Maths appliquées', 1),
 
 -- Français
-('Grammaire'),
-('Conjugaison'),
-('Orthographe'),
-('Rédaction'),
-('Analyse littéraire'),
-('Littérature'),
-('Poésie'),
-('Prise de parole'),
+('Grammaire', 2),
+('Conjugaison', 2),
+('Orthographe', 2),
+('Rédaction', 2),
+('Analyse littéraire', 2),
+('Littérature', 2),
+('Poésie', 2),
+('Prise de parole', 2),
 
 -- Histoire géographie
-('Histoire ancienne'),
-('Histoire moderne'),
-('Géopolitique'),
-('Cartographie'),
-('Enjeux environnementaux'),
-('Civilisations'),
-('Personnages historiques'),
-('Histoire locale'),
+('Histoire ancienne', 3),
+('Histoire moderne', 3),
+('Géopolitique', 3),
+('Cartographie', 3),
+('Enjeux environnementaux', 3),
+('Civilisations', 3),
+('Personnages historiques', 3),
+('Histoire locale', 3),
 
 -- Sciences
-('S.V.T.'),
-('Physique'),
-('Chimie'),
-('Sciences avancées'),
-('Ingénierie'),
-('Astronomie'),
-('Neurosciences'),
+('S.V.T.', 4),
+('Physique', 4),
+('Chimie', 4),
+('Sciences avancées', 4),
+('Ingénierie', 4),
+('Astronomie', 4),
+('Neurosciences', 4),
 
 -- Langues
-('Anglais'),
-('Espagnol'),
-('Allemand'),
-('Portuguais'),
-('Italien'),
-('Chinois'),
-('Japonais'),
-('Coréen'),
+('Anglais', 5),
+('Espagnol', 5),
+('Allemand', 5),
+('Portuguais', 5),
+('Italien', 5),
+('Chinois', 5),
+('Japonais', 5),
+('Coréen', 5),
 
 -- Culture
-("Histoire de l'art"),
-('Cinéma et audiovisuel'),
-('Traditions et folklore'),
-('Mythologie et légendes'),
-('Sciences humaines'),
-('Philosophie'),
-('Médias et actualités'),
+("Histoire de l'art", 6),
+('Cinéma et audiovisuel', 6),
+('Traditions et folklore', 6),
+('Mythologie et légendes', 6),
+('Sciences humaines', 6),
+('Philosophie', 6),
+('Médias et actualités', 6),
 
 -- Musique
-('Solfège'),
-('Instruments'),
-('Chant'),
-('Composition'),
-('Musique électronique'),
-('Histoire de la musique'),
-('Genres musicaux'),
+('Solfège', 7),
+('Instruments', 7),
+('Chant', 7),
+('Composition', 7),
+('Musique électronique', 7),
+('Histoire de la musique', 7),
+('Genres musicaux', 7),
 
 -- Art & design
-('Arts plastiques'),
-('Design graphique'),
-('Architecture'),
-('Sculpture'),
-('Photographie'),
-('Mode et textile'),
+('Arts plastiques', 8),
+('Design graphique', 8),
+('Architecture', 8),
+('Sculpture', 8),
+('Photographie', 8),
+('Mode et textile', 8),
 
 -- Numérique
-('Programmation'),
-('Création de sites web'),
-('Marketing digital'),
-('IA et machine learning'),
-('Cybersécurité'),
-('Logiciels informatiques'),
-('Analyse de données'),
+('Programmation', 9),
+('Création de sites web', 9),
+('Marketing digital', 9),
+('IA et machine learning', 9),
+('Cybersécurité', 9),
+('Logiciels informatiques', 9),
+('Analyse de données', 9),
 
 -- Développement personnel
-('Gestion du temps'),
-('Communication'),
-('Leadership'),
-('Coaching de vie'),
-('Créativité'),
+('Gestion du temps', 10),
+('Communication', 10),
+('Leadership', 10),
+('Coaching de vie', 10),
+('Créativité', 10),
 
 -- Finance / Administratif
-('Comptabilité'),
-('Épargne et investissement'),
-('Fiscalité et impôts'),
-("Gestion d'entreprise"),
-('Documents administratifs'),
-('Gestion des dettes et crédits'),
-('Création de budgets'),
-('Éducation financière'),
+('Comptabilité', 11),
+('Épargne et investissement', 11),
+('Fiscalité et impôts', 11),
+("Gestion d'entreprise", 11),
+('Documents administratifs', 11),
+('Gestion des dettes et crédits', 11),
+('Création de budgets', 11),
+('Éducation financière', 11),
 
 -- Sport
-('Musculation et fitness'),
-('Yoga et pilates'),
-('Préparation physique'),
-('Nutrition sportive'),
-('Équipements et techniques'),
-('Coaching'),
+('Musculation et fitness', 12),
+('Yoga et pilates', 12),
+('Préparation physique', 12),
+('Nutrition sportive', 12),
+('Équipements et techniques', 12),
+('Coaching', 12),
 
 -- Santé / Bien-être
-('Nutrition'),
-('Méditation et relaxation'),
-('Santé mentale'),
-('Médecine douce'),
-('Premiers secours'),
-('Soins du corps'),
-('Sommeil'),
-('Gestes et postures'),
+('Nutrition', 13),
+('Méditation et relaxation', 13),
+('Santé mentale', 13),
+('Médecine douce', 13),
+('Premiers secours', 13),
+('Soins du corps', 13),
+('Sommeil', 13),
+('Gestes et postures', 13),
 
 -- Voyage
-('Guides de voyage'),
-('Voyager pas cher'),
-('Voyager durablement'),
-('Cultures et traditions locales'),
-('Organisation et logistique'),
-('Conseils pour expatriés'),
-('Exploration insolite'),
+('Guides de voyage', 14),
+('Voyager pas cher', 14),
+('Voyager durablement', 14),
+('Cultures et traditions locales', 14),
+('Organisation et logistique', 14),
+('Conseils pour expatriés', 14),
+('Exploration insolite', 14),
 
 -- Autres
-('Autres');
+('Autres', 15);
 
 -- Insertion des relations main_tag/sub_tag
 INSERT INTO main_sub_tag (main_tag_id, sub_tag_id)

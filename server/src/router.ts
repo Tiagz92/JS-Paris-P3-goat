@@ -1,10 +1,23 @@
 import express from "express";
-import advertActions from "./modules/advert/advertActions";
-import advertServices from "./modules/advert/advertServices";
-import authServices from "./modules/auth/authServices";
-import goatActions from "./modules/goat/goatActions";
-import mainTagActions from "./modules/mainTag/mainTagActions";
-import fileUpload from "./services/fileUpload";
+import type { RequestHandler } from "express";
+import type { ParamsDictionary } from "express-serve-static-core";
+import multer from "multer";
+import { advertHandlers } from "./modules/advert/advertActions";
+import { advertServices } from "./modules/advert/advertServices";
+import { authServices } from "./modules/auth/authServices";
+import { goatHandlers } from "./modules/goat/goatActions";
+import { mainTagHandlers } from "./modules/mainTag/mainTagActions";
+import type { Advert, MainTag, SubTag } from "./types/models";
+const storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, "public/uploads/");
+	},
+	filename: (req, file, cb) => {
+		cb(null, `${Date.now()}-${file.originalname}`);
+	},
+});
+
+const fileUpload = multer({ storage });
 
 const router = express.Router();
 
@@ -12,35 +25,55 @@ const router = express.Router();
 // Define Your API Routes Here
 /* ************************************************************************* */
 
-// Define item-related routes
-
-router.get("/api/main-tags", mainTagActions.browse);
-
-router.get("/api/adverts", advertActions.browse);
-router.get("/api/adverts/:id", advertActions.read);
-router.post("/api/adverts", advertActions.add);
-router.post("/api/advert", advertServices.validateAdvert, advertActions.add);
-
+// Main tags routes
 router.get(
-	"/advert/search/subtag/:mainTagId",
-	advertActions.getSubTagsByMainTag,
+	"/main-tags",
+	mainTagHandlers.browse as unknown as RequestHandler<
+		ParamsDictionary,
+		MainTag[]
+	>,
+);
+router.get(
+	"/main-tags/:mainTagId/sub-tags",
+	advertHandlers.getSubTagsByMainTag as RequestHandler<
+		{ mainTagId: string },
+		SubTag[]
+	>,
 );
 
-router.get("/advert/maintags", advertActions.getMainTags);
-
-router.post("/api/adverts", advertServices.validateAdvert, advertActions.add);
-
-router.get("/search/description", advertActions.searchDescription);
-router.get("/search/maintags", advertActions.searchMainTagsByName);
-router.get("/search/subtags", advertActions.searchSubTagsByName);
-
-router.get("/filter/advert", advertActions.filterAdverts);
-
+router.get(
+	"/adverts",
+	advertHandlers.browse as RequestHandler<ParamsDictionary, Advert[]>,
+);
+router.get(
+	"/adverts/:id",
+	advertHandlers.read as RequestHandler<{ id: string }, Advert | null>,
+);
 router.post(
-	"/api/goats",
+	"/adverts",
+	advertServices.validateAdvert,
+	advertHandlers.add as RequestHandler<ParamsDictionary, { insertId: number }>,
+);
+
+// Search routes
+router.get(
+	"/search/subtag/:mainTagId",
+	advertHandlers.getSubTagsByMainTag as RequestHandler<
+		{ mainTagId: string },
+		SubTag[]
+	>,
+);
+router.get(
+	"/search/maintags",
+	advertHandlers.getMainTags as RequestHandler<ParamsDictionary, MainTag[]>,
+);
+
+// Goat routes
+router.post(
+	"/goats",
 	fileUpload.any(),
 	authServices.hashPassword,
-	goatActions.add,
+	goatHandlers.add as RequestHandler<ParamsDictionary, { insertId: number }>,
 );
 
 export default router;

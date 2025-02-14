@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { type Credentials, OAuth2Client } from "google-auth-library";
 import { type calendar_v3, google } from "googleapis";
+import { getGoogleAuthToken } from "./getGoogleAuthToken";
 
 // Chemins des fichiers de configuration
 const CREDENTIALS_PATH =
@@ -72,64 +73,52 @@ interface EntryPoint extends calendar_v3.Schema$EntryPoint {
 /**
  * Génère un lien Google Meet pour un événement donné.
  * @param startTime - Date de début de l'événement.
- * @param endTime - Date de fin de l'événement.
+ * @param durationMinutes - Durée de l'événement en minutes.
  * @returns Promesse résolue avec le lien Meet généré.
  * @throws Une erreur si la génération du lien échoue.
  */
 export async function generateGoogleMeetLink(
 	startTime: Date,
-	endTime: Date,
+	durationMinutes: number,
 ): Promise<string> {
 	try {
-		// Validation des dates
-		if (startTime >= endTime) {
-			throw new Error(
-				"La date de début doit être antérieure à la date de fin.",
-			);
-		}
+		const auth = await getGoogleAuthToken();
+		const calendar = google.calendar({ version: "v3", auth });
 
-		// Initialisation du client Google Calendar
-		const calendar = google.calendar({
-			version: "v3",
-			auth: initializeOAuth2Client(),
-		});
+		const endTime = new Date(startTime.getTime() + durationMinutes * 60000);
 
-		// Création de l'événement avec une demande de conférence
 		const event: calendar_v3.Schema$Event = {
-			summary: "Session de coaching",
-			description: "Session de coaching via Google Meet",
-			start: { dateTime: startTime.toISOString(), timeZone: "Europe/Paris" },
-			end: { dateTime: endTime.toISOString(), timeZone: "Europe/Paris" },
+			summary: "Rendez-vous Goat",
+			description: "Consultation avec votre Goat",
+			start: {
+				dateTime: startTime.toISOString(),
+				timeZone: "Europe/Paris",
+			},
+			end: {
+				dateTime: endTime.toISOString(),
+				timeZone: "Europe/Paris",
+			},
 			conferenceData: {
 				createRequest: {
-					requestId: `meet-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+					requestId: `goat-meeting-${Date.now()}`,
 					conferenceSolutionKey: { type: "hangoutsMeet" },
 				},
 			},
 		};
 
-		// Insertion de l'événement dans le calendrier
 		const response = await calendar.events.insert({
 			calendarId: "primary",
-			requestBody: event,
 			conferenceDataVersion: 1,
+			requestBody: event,
 		});
 
-		// Extraction du lien Meet depuis la réponse
-		if (!response.data.conferenceData?.entryPoints?.length) {
-			throw new Error("Aucun lien de conférence généré.");
-		}
-		const meetLink = (
-			response.data.conferenceData.entryPoints as EntryPoint[]
-		).find((entryPoint) => entryPoint.entryPointType === "video")?.uri;
-
-		if (!meetLink) {
-			throw new Error("Lien de visioconférence non trouvé.");
+		if (!response.data.hangoutLink) {
+			throw new Error("Pas de lien Google Meet généré");
 		}
 
-		return meetLink;
+		return response.data.hangoutLink;
 	} catch (error) {
-		console.error("Erreur lors de la génération du lien Meet:", error);
-		throw new Error("Impossible de générer le lien Google Meet.");
+		console.error("Erreur lors de la création du lien Meet:", error);
+		throw error;
 	}
 }

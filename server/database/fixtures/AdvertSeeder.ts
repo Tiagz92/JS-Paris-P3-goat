@@ -1,42 +1,67 @@
+import type { Pool, RowDataPacket } from "mysql2/promise";
+import logger from "../../src/utils/logger";
 import { AbstractSeeder } from "./AbstractSeeder";
+import { GoatSeeder } from "./GoatSeeder";
+import { MainTagSeeder } from "./MainTagSeeder";
+import { SubTagSeeder } from "./SubTagSeeder";
 
-class AdvertSeeder extends AbstractSeeder {
-	constructor() {
-		super({ table: "advert", truncate: true, dependencies: [] });
+interface DBRow extends RowDataPacket {
+	id: number;
+}
+
+export class AdvertSeeder extends AbstractSeeder {
+	constructor(db: Pool) {
+		super({
+			table: "advert",
+			truncate: true,
+			dependencies: [MainTagSeeder, SubTagSeeder, GoatSeeder],
+			db,
+		});
 	}
 
-	run() {
-		const tagIds = {
-			1: [1, 2, 3, 4, 5, 6, 7],
-			2: [8, 9, 10, 11, 12, 13, 14, 15],
-			3: [16, 17, 18, 19, 20, 21, 22, 23],
-			4: [24, 25, 26, 27, 28, 29, 30],
-			5: [31, 32, 33, 34, 35, 36, 37, 38],
-			6: [39, 40, 41, 42, 43, 44, 45],
-			7: [46, 47, 48, 49, 50, 51, 52],
-			8: [53, 54, 55, 56, 57, 58],
-			9: [59, 60, 61, 62, 63, 64, 65],
-			10: [66, 67, 68, 69, 70],
-			11: [71, 72, 73, 74, 75, 76, 77, 79],
-			12: [78, 79, 80, 81, 82, 83, 84],
-			13: [85, 86, 87, 88, 89, 90, 91, 92],
-			14: [93, 94, 95, 96, 97, 98, 99],
-			15: [100],
-		};
+	async run(): Promise<void> {
+		try {
+			const [goats] = await this.db.query<DBRow[]>(
+				"SELECT id FROM goat LIMIT 1",
+			);
+			const [mainTags] = await this.db.query<DBRow[]>(
+				"SELECT id FROM main_tag LIMIT 1",
+			);
+			const [subTags] = await this.db.query<DBRow[]>(
+				"SELECT id FROM sub_tag LIMIT 1",
+			);
 
-		for (let index = 0; index < 10; index++) {
-			const randomMainTagId = Math.floor(Math.random() * 15) + 1;
-			const subTagIds = tagIds[randomMainTagId as keyof typeof tagIds];
-			const randomSubTagId =
-				subTagIds[Math.floor(Math.random() * subTagIds.length)];
+			if (
+				!Array.isArray(goats) ||
+				!goats.length ||
+				!Array.isArray(mainTags) ||
+				!mainTags.length ||
+				!Array.isArray(subTags) ||
+				!subTags.length
+			) {
+				throw new Error(
+					"Need at least one goat, main_tag and sub_tag to create adverts",
+				);
+			}
 
-			const fakeAdvert = {
-				description: this.faker.lorem.sentence(),
-				goat_id: index < 5 ? 1 : 2,
-				main_tag_id: randomMainTagId,
-				sub_tag_id: randomSubTagId,
-			};
-			this.insert(fakeAdvert);
+			const adverts = [
+				{
+					description: "Consultation JavaScript avec expert",
+					goat_id: goats[0].id,
+					main_tag_id: mainTags[0].id,
+					sub_tag_id: subTags[0].id,
+					status: "active",
+				},
+			];
+
+			for (const advert of adverts) {
+				this.insert(advert);
+			}
+
+			await Promise.all(this.promises);
+		} catch (error) {
+			logger.error("Error seeding adverts:", error);
+			throw error;
 		}
 	}
 }

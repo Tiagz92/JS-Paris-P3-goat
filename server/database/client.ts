@@ -1,4 +1,5 @@
-import { createPool } from "mysql2/promise";
+import mysql from "mysql2/promise";
+import "dotenv/config";
 import type { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
 const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
@@ -11,16 +12,16 @@ const getDatabaseName = () => {
 	return DB_NAME;
 };
 
-const database = createPool({
+const client = mysql.createPool({
 	host: DB_HOST,
-	port: Number.parseInt(DB_PORT as string, 10),
+	port: Number.parseInt(DB_PORT ?? "3306", 10),
 	user: DB_USER,
 	password: DB_PASSWORD,
 	database: getDatabaseName(),
 	connectionLimit: 10,
 });
 
-export default database;
+export default client;
 
 // ============ PARTIE TYPES ============
 
@@ -34,7 +35,7 @@ export type Rows = RowDataPacket[];
 
 export type DBRows = RowDataPacket[];
 
-export type ClientType = typeof database;
+export type ClientType = typeof client;
 
 // Types additionnels pour faciliter les imports
 export { ResultSetHeader, RowDataPacket } from "mysql2/promise";

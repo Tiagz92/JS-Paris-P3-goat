@@ -1,9 +1,24 @@
-import type { RowDataPacket } from "mysql2";
-import client from "../../../database/client";
-import { generateGoogleMeetLink } from "../../../src/utils/googleMeet";
-import { sendReservationEmail } from "../../../src/utils/mailService";
-import type { Reservation } from "../../types/models";
+import type { Request, Response } from "express";
+import type { RequestHandler } from "express-serve-static-core";
+import type { ResultSetHeader, RowDataPacket } from "mysql2";
+import database from "../../../database/client";
+import { sendBookingConfirmation } from "../../services/emailService";
+import type { Reservation, ReservationDetails } from "../../types/models";
+import { generateGoogleMeetLink } from "../../utils/googleMeet";
 import { ReservationRepository } from "./ReservationRepository";
+
+interface ReservationRow extends Reservation, RowDataPacket {}
+
+type JsonResponse<T> = T | { message: string } | { error: string };
+
+type CustomRequestHandler<
+	P = Record<string, unknown>,
+	ResBody = unknown,
+	ReqBody = unknown,
+> = (
+	req: Request<P, ResBody, ReqBody>,
+	res: Response<ResBody>,
+) => Promise<Response>;
 
 // On omet la propriété "constructor" pour éviter les problèmes liés à RowDataPacket.
 interface ReservationResponse
@@ -19,56 +34,67 @@ export const ReservationActions = {
 		slotId: number,
 	): Promise<ReservationResponse> {
 		try {
-			// Vérifier la disponibilité du créneau
-			const [slotRows] = await client.query<RowDataPacket[]>(
-				"SELECT * FROM slot WHERE id = ? AND status = 'available'",
+			const [slots] = await database.query<RowDataPacket[]>(
+				"SELECT s.*, g.first_name as goat_firstname FROM slot s JOIN goat g ON s.goat_id = g.id WHERE s.id = ? AND s.status = 'available'",
 				[slotId],
 			);
 
-			if (slotRows.length === 0) {
-				throw new Error("Slot not found or not available");
+			if (!Array.isArray(slots) || slots.length === 0) {
+				throw new Error("Ce créneau n'est plus disponible");
 			}
 
-			// Récupérer les détails du créneau
-			const slot = slotRows[0];
-			const startTime = new Date(slot.start_time);
-			// Calculer l'heure de fin à partir de la durée (supposée en minutes)
-			const duration = Number(slot.duration);
-			const endTime = new Date(startTime.getTime() + duration * 60000);
+			const slot = slots[0];
+			const startTime = new Date(slot.start_at);
 
-			// Générer le lien Google Meet pour la plage horaire
-			const google_meet_link = await generateGoogleMeetLink(startTime, endTime);
+			const meetLink = `https://meet.google.com/${Math.random().toString(36).substring(7)}`;
 
-			// Créer la réservation (on retire start_at et duration car ils ne font pas partie du schéma)
-			const reservation = await ReservationRepository.create({
-				slot_id: slotId,
-				user_id: userId,
-				google_meet_link,
-			});
-
-			if (!reservation) {
-				throw new Error(
-					"Reservation creation failed: Slot not found or not available",
-				);
-			}
-
-			// Préparer les détails pour le mail (adapter selon vos besoins)
-			const reservationDetails = {
-				id: reservation.id,
-				slot: slot.start_time, // Vous pouvez formatter cette date
-				google_meet_link: reservation.google_meet_link,
-			};
-
-			// Envoyer l'email récapitulatif (l'adresse email est à adapter)
-			await sendReservationEmail(
-				"destinataire@example.com",
-				reservationDetails,
+			const [result] = await database.query<ResultSetHeader>(
+				"INSERT INTO reservations (slot_id, user_id, google_meet_link, status) VALUES (?, ?, ?, 'confirmed')",
+				[slotId, userId, meetLink],
 			);
 
+			const reservation = {
+				id: result.insertId,
+				slot_id: slotId,
+				user_id: userId,
+				google_meet_link: meetLink,
+			};
+
+			await database.query(
+				"UPDATE slot SET status = 'reserved', meet_link = ? WHERE id = ?",
+				[meetLink, slotId],
+			);
+
+			const [userRows] = await database.query<RowDataPacket[]>(
+				"SELECT email, first_name FROM goat WHERE id = ?",
+				[userId],
+			);
+
+			if (userRows.length === 0) {
+				throw new Error("Utilisateur non trouvé");
+			}
+
+			const reservationDetails: ReservationDetails = {
+				id: reservation.id,
+				slot_id: slotId,
+				user_id: userId,
+				google_meet_link: meetLink,
+				date: startTime.toLocaleDateString(),
+				time: startTime.toLocaleTimeString(),
+				meetLink,
+				goatName: userRows[0].first_name,
+			};
+
+			try {
+				await sendBookingConfirmation(userRows[0].email, reservationDetails);
+			} catch (emailError) {
+				console.error("Erreur d'envoi d'email:", emailError);
+			}
+
 			return {
-				insertId: reservation.id,
-				google_meet_link: reservation.google_meet_link,
-				status: reservation.status || "confirmed",
+				insertId: 0,
+				google_meet_link: meetLink,
+				status: "confirmed",
 			};
 		} catch (error) {
 			console.error("Error creating reservation:", error);
@@ -107,8 +133,8 @@ export const ReservationActions = {
 				throw new Error("Unauthorized");
 			}
 
-			const [slotRows] = await client.query<RowDataPacket[]>(
-				"SELECT start_time FROM slot WHERE id = ?",
+			const [slotRows] = await database.query<RowDataPacket[]>(
+				"SELECT start_at FROM slot WHERE id = ?",
 				[reservation.slot_id],
 			);
 
@@ -117,7 +143,7 @@ export const ReservationActions = {
 			}
 
 			const slot = slotRows[0];
-			const startTime = new Date(slot.start_time);
+			const startTime = new Date(slot.start_at);
 			const now = new Date();
 			const hoursUntilStart =
 				(startTime.getTime() - now.getTime()) / (1000 * 60 * 60);
@@ -156,14 +182,14 @@ export const ReservationActions = {
 		userId: number,
 		slotId: number,
 	): Promise<boolean> {
-		const [rows] = await client.query<RowDataPacket[]>(
+		const [rows] = await database.query<RowDataPacket[]>(
 			`SELECT COUNT(*) as count
              FROM reservations r
              JOIN slot s1 ON r.slot_id = s1.id
              JOIN slot s2 ON s2.id = ?
              WHERE r.user_id = ?
              AND r.status != 'cancelled'
-             AND ABS(TIMESTAMPDIFF(MINUTE, s1.start_time, s2.start_time)) < s1.duration`,
+             AND ABS(TIMESTAMPDIFF(MINUTE, s1.start_at, s2.start_at)) < s1.duration`,
 			[slotId, userId],
 		);
 		return (rows[0] as { count: number }).count > 0;

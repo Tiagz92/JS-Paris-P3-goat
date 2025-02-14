@@ -1,7 +1,16 @@
-// Load the express module to create a web application
-import bodyParser from "body-parser";
+import fs from "node:fs";
+import path from "node:path";
+import cors from "cors";
+import type { ErrorRequestHandler } from "express";
 import express from "express";
 
+import advertRouter from "./modules/advert/advertRoutes";
+import reservationRouter from "./modules/reservation/reservationRoutes";
+import slotRouter from "./modules/slot/slotRoutes";
+import router from "./router";
+import logger from "./utils/logger";
+
+// Load the express module to create a web application
 const app = express();
 
 // Configure it
@@ -18,12 +27,6 @@ const app = express();
 // You should NOT do that: such code uses the `cors` module to allow all origins, which can pose security issues.
 // For this pedagogical template, the CORS code allows CLIENT_URL in development mode (when process.env.CLIENT_URL is defined).
 
-import cors from "cors";
-
-if (process.env.CLIENT_URL != null) {
-	app.use(cors({ origin: [process.env.CLIENT_URL] }));
-}
-
 // If you need to allow extra origins, you can add something like this:
 
 /*
@@ -36,6 +39,14 @@ app.use(
 
 // With ["http://mysite.com", "http://another-domain.com"]
 // to be replaced with an array of your trusted origins
+
+app.use(
+	cors({
+		origin: process.env.FRONTEND_URL ?? "http://localhost:3000",
+		optionsSuccessStatus: 200,
+		credentials: true,
+	}),
+);
 
 /* ************************************************************************* */
 
@@ -52,20 +63,28 @@ app.use(
 
 // Uncomment one or more of these options depending on the format of the data sent by your client:
 
-app.use(express.json({ limit: "5mb" }));
-app.use(
-	express.urlencoded({ extended: false, limit: "50mb", parameterLimit: 50000 }),
-);
+app.use(express.json());
+app.use((req, res, next) => {
+	if (req.method === "POST") {
+		logger.debug("Request URL:", req.url);
+		logger.debug("Request Headers:", req.headers);
+		logger.debug("Request Body:", req.body);
+	}
+	next();
+});
+app.use(express.urlencoded({ extended: true }));
 // app.use(express.text());
 // app.use(express.raw());
 
 /* ************************************************************************* */
 
 // Import the API router
-import router from "./router";
 
 // Mount the API router under the "/api" endpoint
-app.use(router);
+app.use("/api", router);
+app.use("/api/slots", slotRouter);
+app.use("/api/adverts", advertRouter);
+app.use("/api/reservations", reservationRouter);
 
 /* ************************************************************************* */
 
@@ -76,9 +95,6 @@ app.use(router);
 // What it's for:
 // - Serving client static files from the server, which is useful when building a single-page application with React.
 // - Redirecting unhandled requests (e.g., all requests not matching a defined API route) to the client's index.html. This allows the client to handle client-side routing.
-
-import fs from "node:fs";
-import path from "node:path";
 
 // Serve server resources
 
@@ -107,15 +123,10 @@ if (fs.existsSync(clientBuildPath)) {
 // Middleware for Error Logging
 // Important: Error-handling middleware should be defined last, after other app.use() and routes calls.
 
-import type { ErrorRequestHandler } from "express";
-
 // Define a middleware function to log errors
 const logErrors: ErrorRequestHandler = (err, req, res, next) => {
-	// Log the error to the console for debugging purposes
-	console.error(err);
-	console.error("on req:", req.method, req.path);
-
-	// Pass the error to the next middleware in the stack
+	logger.error(err);
+	logger.error("on req:", req.method, req.path);
 	next(err);
 };
 

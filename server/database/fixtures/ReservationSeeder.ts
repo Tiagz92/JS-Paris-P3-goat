@@ -1,20 +1,30 @@
-import { ReservationRepository } from "../../src/modules/reservation/ReservationRepository";
+import type { Pool } from "mysql2/promise";
+import logger from "../../src/utils/logger";
 import { AbstractSeeder } from "./AbstractSeeder";
+import { GoatSeeder } from "./GoatSeeder";
+import { SlotSeeder } from "./SlotSeeder";
 
 export class ReservationSeeder extends AbstractSeeder {
-	async run() {
-		const reservations = [
-			{
-				slot_id: 1,
-				user_id: 2,
-				start_at: new Date(),
-				duration: 60,
-				google_meet_link: "https://meet.google.com/example",
-			},
-		];
+	constructor(db: Pool) {
+		super({
+			table: "reservations",
+			truncate: true,
+			dependencies: [SlotSeeder, GoatSeeder],
+			db,
+		});
+	}
 
-		for (const res of reservations) {
-			await ReservationRepository.create(res);
+	async run(): Promise<void> {
+		try {
+			logger.info(
+				"Skipping reservation seeding - all slots are available by default",
+			);
+			return;
+		} catch (error) {
+			logger.error("Error seeding reservations:", error);
+			throw error;
 		}
 	}
 }
+
+export default ReservationSeeder;

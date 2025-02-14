@@ -1,9 +1,9 @@
 import type { RowDataPacket } from "mysql2/promise";
-import client from "../../../database/client";
+import database from "../../../database/client";
 
 class MainTagRepository {
 	async readAll() {
-		const [rows] = await client.query<RowDataPacket[]>(
+		const [rows] = await database.query<RowDataPacket[]>(
 			"SELECT * FROM main_tag",
 		);
 		return rows;

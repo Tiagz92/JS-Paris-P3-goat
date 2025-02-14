@@ -1,38 +1,46 @@
 import { faker } from "@faker-js/faker";
 import type { Faker } from "@faker-js/faker";
-
-// Import database client
-import database from "../client";
+import type { Pool } from "mysql2/promise";
 import type { DBResult, ResultSetHeader } from "../client";
 
 // Declare an object to store created objects from their names
 type Ref = object & { insertId: number };
 const refs: { [key: string]: Ref } = {};
 
-type SeederOptions = {
+export interface SeederOptions {
 	table: string;
 	truncate?: boolean;
-	dependencies?: (typeof AbstractSeeder)[];
-};
+	dependencies?: (new (dbPool: Pool) => AbstractSeeder)[];
+}
 
 // Provide faker access through AbstractSeed class
-abstract class AbstractSeeder implements SeederOptions {
+export abstract class AbstractSeeder implements SeederOptions {
 	table: string;
 	truncate: boolean;
-	dependencies: (typeof AbstractSeeder)[];
+	dependencies: (new (
+		dbPool: Pool,
+	) => AbstractSeeder)[];
 	promises: Promise<void>[];
 	faker: Faker;
+	protected db: Pool;
 
 	constructor({
 		table,
 		truncate = true,
-		dependencies = [] as (typeof AbstractSeeder)[],
-	}: SeederOptions) {
+		dependencies = [] as (new (
+			dbPool: Pool,
+		) => AbstractSeeder)[],
+		db,
+	}: SeederOptions & { db: Pool }) {
+		if (!db) {
+			throw new Error("Database connection is required");
+		}
 		this.table = table;
 		this.truncate = truncate;
 		this.dependencies = dependencies;
 		this.promises = [];
 		this.faker = faker;
+		this.db = db;
 	}
 
 	async #doInsert(data: { refName?: string } & object) {
@@ -48,7 +56,7 @@ abstract class AbstractSeeder implements SeederOptions {
 		const sql = `insert into ${this.table}(${fields}) values (${placeholders})`;
 
 		// Perform the query and if applicable store the insert id given the ref name
-		const [result] = await database.query<ResultSetHeader>(
+		const [result] = await this.db.query<ResultSetHeader>(
 			sql,
 			Object.values(values),
 		);
@@ -59,17 +67,13 @@ abstract class AbstractSeeder implements SeederOptions {
 		}
 	}
 
-	insert(data: { refName?: string } & object) {
+	protected insert<T extends object>(data: T & { refName?: string }): void {
 		this.promises.push(this.#doInsert(data));
 	}
 
-	run() {
-		throw new Error("You must implement this function");
-	}
+	abstract run(): Promise<void>;
 
 	getRef(name: string) {
 		return refs[name];
 	}
 }
-
-export { AbstractSeeder };

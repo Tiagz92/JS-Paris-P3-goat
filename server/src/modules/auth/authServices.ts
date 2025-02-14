@@ -1,15 +1,16 @@
-import argon from "argon2";
-import type { RequestHandler } from "express";
+import argon2 from "argon2";
+import type { NextFunction, Request, Response } from "express";
 
-const hashPassword: RequestHandler = async (req, res, next) => {
-	const { password } = req.body;
-	try {
-		const hash = await argon.hash(password);
-		req.body.password = hash;
-		next();
-	} catch (error) {
-		next(error);
-	}
+export const authServices = {
+	hashPassword: async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			if (req.body.password) {
+				const hashedPassword = await argon2.hash(req.body.password);
+				req.body.password = hashedPassword;
+			}
+			next();
+		} catch (err) {
+			next(err);
+		}
+	},
 };
-
-export default { hashPassword };
