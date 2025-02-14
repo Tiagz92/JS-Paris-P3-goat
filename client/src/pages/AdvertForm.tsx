@@ -7,7 +7,6 @@ import AdvertSlot from "../components/AdvertSlot";
 
 import type { FormEventHandler } from "react";
 import type { MainTag, SubTag } from "../types/Advert";
-import type { AppContextInterface } from "../types/appContext.type";
 
 interface Slot {
 	day: string;
@@ -47,7 +46,6 @@ const formatSlotsForBackend = (slots: Slot[]) => {
 };
 
 function AdvertForm() {
-	const { user } = useOutletContext<AppContextInterface>();
 	const [step, setStep] = useState(1);
 	const [mainTags, setMainTags] = useState<MainTag[]>([]);
 	const [subTags, setSubTags] = useState<SubTag[]>([]);
@@ -62,7 +60,7 @@ function AdvertForm() {
 		main_tag_id: null,
 		sub_tag_id: null,
 		description: "",
-		goat_id: user.id,
+		goat_id: 1,
 	});
 
 	const [isFormValid, setIsFormValid] = useState(false);
@@ -162,7 +160,6 @@ function AdvertForm() {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: user.token,
 					},
 					body: JSON.stringify({
 						...formData,
@@ -182,7 +179,7 @@ function AdvertForm() {
 				main_tag_id: null,
 				sub_tag_id: null,
 				description: "",
-				goat_id: user.id,
+				goat_id: 1,
 			});
 			setSelectedMainTag(null);
 			setSelectedSlots([]);

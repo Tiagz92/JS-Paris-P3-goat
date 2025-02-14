@@ -4,6 +4,7 @@ import mainTagRepository from "../mainTag/mainTagRepository";
 import subTagRepository from "../subTag/subTagRepository";
 import advertRepository from "./advertRepository";
 import slotRepository from "../slot/slotRepository";
+import type { Slot } from "../../types/slot"; 
 
 const browse: RequestHandler = async (req, res, next) => {
 	try {
