@@ -1,12 +1,13 @@
 import "./AdvertForm.css";
 
 import { useEffect, useState } from "react";
-import { useNavigate,  } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams,  } from "react-router-dom";
 import { toast } from "react-toastify";
 import AdvertSlot from "../components/AdvertSlot";
 
 import type { FormEventHandler } from "react";
 import type { MainTag, SubTag } from "../types/Advert";
+import type { AppContextInterface } from "../types/appContext.type";
 
 interface Slot {
 	day: string;
@@ -46,6 +47,8 @@ const formatSlotsForBackend = (slots: Slot[]) => {
 };
 
 function AdvertForm() {
+	const { id } = useParams<{ id: string }>();
+	const { user } = useOutletContext<AppContextInterface>();
 	const [step, setStep] = useState(1);
 	const [mainTags, setMainTags] = useState<MainTag[]>([]);
 	const [subTags, setSubTags] = useState<SubTag[]>([]);
@@ -60,7 +63,7 @@ function AdvertForm() {
 		main_tag_id: null,
 		sub_tag_id: null,
 		description: "",
-		goat_id: 1,
+		goat_id: user.id,
 	});
 
 	const [isFormValid, setIsFormValid] = useState(false);
@@ -103,38 +106,36 @@ function AdvertForm() {
 
 	const [selectedSlots, setSelectedSlots] = useState<Slot[]>([]);
 
-	// const { id } = useParams<{ id: string }>();
-
-	// useEffect(() => {
-	// 	if (user?.id && id) {
-	// 		fetch(`${import.meta.env.VITE_API_URL}/api/goats/${id}`, {
-	// 			headers: {
-	// 				"Content-Type": "application/json",
-	// 				Authorization: `Bearer ${user.token}`,
-	// 			},
-	// 		})
-	// 			.then((response) => {
-	// 				if (!response.ok) {
-	// 					throw new Error(
-	// 						"Erreur lors du chargement des données utilisateur",
-	// 					);
-	// 				}
-	// 				return response.json();
-	// 			})
-	// 			.then((data) => {
-	// 				setFormData((prev) => ({
-	// 					...prev,
-	// 					goat_id: data.id,
-	// 				}));
-	// 			})
-	// 			.catch((error) => {
-	// 				toast.error(
-	// 					"Impossible de récupérer les infos de l'utilisateur 🐐",
-	// 					error,
-	// 				);
-	// 			});
-	// 	}
-	// }, [user, id]);
+	useEffect(() => {
+	 	if (user?.id && id) {
+	 		fetch(`${import.meta.env.VITE_API_URL}/api/goats/${id}`, {
+	 			headers: {
+	 				"Content-Type": "application/json",
+	 				Authorization: user.token,
+	 			},
+	 		})
+	 			.then((response) => {
+	 				if (!response.ok) {
+	 					throw new Error(
+	 						"Erreur lors du chargement des données utilisateur",
+	 					);
+	 				}
+	 				return response.json();
+	 			})
+	 			.then((data) => {
+	 				setFormData((prev) => ({
+	 					...prev,
+	 					goat_id: data.id,
+	 				}));
+	 			})
+	 			.catch((error) => {
+	 				toast.error(
+	 					"Impossible de récupérer les infos de l'utilisateur 🐐",
+	 					error,
+	 				);
+	 			});
+	 	}
+	 }, [user, id]);
 
 	const handleSubmit: FormEventHandler = async (event) => {
 		event.preventDefault();
@@ -160,6 +161,7 @@ function AdvertForm() {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
+						Authorization: `Bearer ${user.token}`,
 					},
 					body: JSON.stringify({
 						...formData,
@@ -179,7 +181,7 @@ function AdvertForm() {
 				main_tag_id: null,
 				sub_tag_id: null,
 				description: "",
-				goat_id: 1,
+				goat_id: user.id,
 			});
 			setSelectedMainTag(null);
 			setSelectedSlots([]);
@@ -327,3 +329,4 @@ function AdvertForm() {
 }
 
 export default AdvertForm;
+
