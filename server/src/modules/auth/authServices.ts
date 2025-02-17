@@ -1,5 +1,5 @@
 import argon from "argon2";
-import type { NextFunction, Request, RequestHandler, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import type { Secret } from "jsonwebtoken";
 

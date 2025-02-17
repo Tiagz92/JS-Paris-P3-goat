@@ -25,12 +25,7 @@ class AdvertRepository {
 
 		const [result] = await databaseClient.query<Result>(
 			"INSERT INTO advert (goat_id, main_tag_id, sub_tag_id, description) VALUES (?, ?, ?, ?)",
-			[
-				goatId,
-				mainTagId,
-				subTagId,
-				advert.description,
-			],
+			[goatId, mainTagId, subTagId, advert.description],
 		);
 
 		return result.insertId;

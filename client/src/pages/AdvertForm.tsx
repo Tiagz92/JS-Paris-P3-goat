@@ -95,45 +95,11 @@ function AdvertForm() {
 		}
 	}, [mainTags, selectedMainTag]);
 
-	const [selectedSlots, setSelectedSlots] = useState<Slot[]>([]);
-
-	useEffect(() => {
-		if (user?.id && id) {
-			fetch(`${import.meta.env.VITE_API_URL}/api/goats/${id}`, {
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: user.token,
-				},
-			})
-				.then((response) => {
-					if (!response.ok) {
-						throw new Error(
-							"Erreur lors du chargement des données utilisateur",
-						);
-					}
-					return response.json();
-				})
-				.then((data) => {
-					setFormData((prev) => ({
-						...prev,
-						goat_id: data.id,
-					}));
-				})
-				.catch((error) => {
-					toast.error(
-						"Impossible de récupérer les infos de l'utilisateur 🐐",
-						error,
-					);
-				});
-		}
-	}, [user, id]);
-
 	useEffect(() => {
 		const isValid =
 			formData.main_tag_id !== null &&
 			formData.sub_tag_id !== null &&
-			formData.description.trim() !== "" &&
-			selectedSlots.length > 0; // Vérification ajoutée
+			formData.description.trim() !== "";
 		setIsFormValid(isValid);
 	}, [formData]);
 
@@ -174,23 +140,21 @@ function AdvertForm() {
 
 	const handleSubmit: FormEventHandler = async (event) => {
 		event.preventDefault();
-	
+
 		if (
 			formData.main_tag_id === null ||
 			formData.sub_tag_id === null ||
 			formData.description.trim() === "" ||
 			selectedSlots.length === 0
 		) {
-			toast.error("Tous les champs et au moins un créneau sont obligatoires ! 🐐");
+			toast.error(
+				"Tous les champs et au moins un créneau sont obligatoires ! 🐐",
+			);
 			return;
 		}
-	
+
 		const formattedSlots = formatSlotsForBackend(selectedSlots);
-		console.log("Données envoyées à l'API :", {
-			...formData,
-			slots: formattedSlots,
-		});
-	
+
 		try {
 			const response = await fetch(
 				`${import.meta.env.VITE_API_URL}/api/adverts`,
@@ -210,11 +174,10 @@ function AdvertForm() {
 			if (!response.ok) {
 				throw new Error("Erreur lors de la création de l'annonce 🐐");
 			}
-	
+
 			const result = await response.json();
-			console.log("Annonce créée avec succès :", result);
-			toast.info("Annonce créée avec succès !");
-	
+			toast.info("Annonce créée avec succès !", result);
+
 			setFormData({
 				main_tag_id: null,
 				sub_tag_id: null,
@@ -225,10 +188,9 @@ function AdvertForm() {
 			setSelectedSlots([]);
 			navigate("/adverts");
 		} catch (error) {
-			console.error("Erreur lors de la requête POST :", error);
 			toast.error("Oups...il semble que ton annonce n'est pas complète 🐐");
 		}
-	};	
+	};
 
 	return (
 		<div className="form-page">
@@ -353,7 +315,7 @@ function AdvertForm() {
 								className={`darkblue-button ${
 									!isFormValid ? "disabled-button" : ""
 								}`}
-								type="submit"
+								type="button"
 								disabled={!isFormValid}
 								onClick={handleSubmit}
 							>

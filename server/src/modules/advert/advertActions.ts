@@ -75,7 +75,6 @@ const read: RequestHandler = async (req, res, next) => {
 
 const add: RequestHandler = async (req, res, next) => {
 	try {
-
 		const newAdvert = {
 			goat_id: req.body.goat_id,
 			main_tag_id: req.body.main_tag_id,
