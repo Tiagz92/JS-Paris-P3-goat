@@ -115,7 +115,6 @@ COLLATE = utf8mb4_0900_ai_ci;
 CREATE TABLE IF NOT EXISTS `goat_db`.`slot` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `start_at` DATETIME NOT NULL,
-  `duration` INT NOT NULL,
   `meet_link` VARCHAR(255) DEFAULT NULL,
   `comment` TEXT NULL DEFAULT NULL,
   `advert_id` INT NOT NULL,

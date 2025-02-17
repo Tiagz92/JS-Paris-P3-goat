@@ -4,7 +4,7 @@ import mainTagRepository from "../mainTag/mainTagRepository";
 import subTagRepository from "../subTag/subTagRepository";
 import advertRepository from "./advertRepository";
 import slotRepository from "../slot/slotRepository";
-import type { Slot } from "../../types/slot"; 
+import type { Slot } from "../../types/slot";
 
 const browse: RequestHandler = async (req, res, next) => {
 	try {
@@ -75,8 +75,6 @@ const read: RequestHandler = async (req, res, next) => {
 
 const add: RequestHandler = async (req, res, next) => {
 	try {
-		console.log("📌 Corps de la requête reçue :", req.body); // Affiche tout le body reçu
-
 		const newAdvert = {
 			goat_id: req.body.goat_id,
 			main_tag_id: req.body.main_tag_id,
@@ -85,15 +83,10 @@ const add: RequestHandler = async (req, res, next) => {
 			goat_firstname: req.body.goat_firstname,
 			main_tag_name: req.body.main_tag_name,
 			sub_tag_name: req.body.sub_tag_name,
-			goat_name: req.body.goat_name,
 			description: req.body.description,
 		};
 
-		console.log("✅ Nouvel advert construit :", newAdvert);
-
-		const slots = req.body.slots; 
-
-		console.log("📌 Slots reçus :", slots); // Vérifie si les slots sont bien envoyés
+		const slots = req.body.slots;
 
 		if (!Array.isArray(slots) || slots.length === 0) {
 			console.error("❌ Aucun slot reçu ou format incorrect.");
@@ -102,22 +95,19 @@ const add: RequestHandler = async (req, res, next) => {
 		}
 
 		const insertId = await advertRepository.create(newAdvert);
-		console.log("🆕 Advert inséré avec l'ID :", insertId);
 
 		await Promise.all(
 			slots.map(async (slot) => {
-				console.log("📌 Slot avant transformation :", slot);
-
-				const newSlot : Slot = {
+				const newSlot: Slot = {
 					advert_id: insertId,
-					start_at: new Date(slot.start_at).toISOString().slice(0, 19).replace("T", " "),
-					duration: slot.duration ?? 60, 
+					start_at: new Date(slot.start_at)
+						.toISOString()
+						.slice(0, 19)
+						.replace("T", " "),
 					meet_link: slot.meet_link ?? null,
 					comment: slot.comment ?? null,
-					goat_id: slot.goat_id ?? insertId, 
+					goat_id: slot.goat_id ?? insertId,
 				};
-
-				console.log("✅ Slot transformé et prêt à être inséré :", newSlot);
 
 				await slotRepository.create(newSlot);
 			}),
