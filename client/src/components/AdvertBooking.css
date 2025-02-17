@@ -1,120 +1,102 @@
 .week-scheduler {
-	padding: 16px;
-	background-color: #f3f4f6;
-	font-family: var(--font);
-	max-height: 330px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background: var(--white);
+	border-radius: 20px;
+	padding: 1rem;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+	height: auto;
 	overflow: auto;
-	border: 2px solid var(--orange);
-	border-radius: 10px;
-	box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+	border: 3px solid var(--orange);
 }
-
 .week-scheduler h2 {
 	font-size: 1.5rem;
-	font-weight: bold;
-	margin-bottom: 16px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	margin-bottom: 10px;
+	color: var(--dark-blue);
 }
-
 .scheduler-header {
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 16px;
+	width: 100%;
+	margin-bottom: 15px;
 }
 
 .scheduler-header button {
-	padding: 8px 16px;
-	font-size: 14px;
+	background: var(--orange);
+	color: white;
+	border: none;
+	padding: 10px 15px;
+	border-radius: 5px;
 	cursor: pointer;
-	background-color: #ffffff;
-	border: 1px solid #d1d5db;
-	border-radius: 8px;
-	transition: background-color 0.3s;
+	transition: background 0.3s ease;
 }
 
 .scheduler-header button:hover {
-	background-color: #e5e7eb;
+	background: var(--white);
+	color: var(--orange);
 }
 
 .scheduler-grid {
 	display: grid;
-	grid-template-columns: 100px repeat(5, 1fr);
-	border: 1px solid #d1d5db;
-	background-color: #ffffff;
-	overflow: hidden;
+	align-items: center;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 10px;
+	width: 100%;
+	height: 50vh;
 }
 
-.grid-header,
-.grid-time,
-.grid-slot {
-	border: 1px solid #d1d5db;
-	padding: 12px;
+.day-column {
+	background: var(--light-gray);
+	padding: 10px;
+	border-radius: 5px;
 	text-align: center;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+	width: fit-content;
 }
 
-.grid-header {
-	background-color: #f3f4f6;
-	font-weight: bold;
+.day-column strong {
+	display: block;
+	font-size: 1.2rem;
+	margin-bottom: 10px;
+	color: var(--dark-blue);
+	width: 80px;
 }
 
-.empty-cell {
-	background-color: #f3f4f6;
-	border: none;
-}
-
-.grid-time {
-	background-color: #f9f9f9;
-	font-weight: bold;
-}
-
-.grid-slot {
-	height: 50px;
+.slot-button {
+	background: var(--white);
+	border: 1px solid var(--darkblue);
+	padding: 5px 10px;
+	border-radius: 5px;
+	width: 100%;
+	margin: 5px 0;
 	cursor: pointer;
-	transition: background-color 0.3s;
+	transition: all 0.3s ease;
+}
+.slot-button.reserved {
+	background-color: #ccc;
+	color: #666;
+	cursor: not-allowed;
 }
 
-.grid-slot:hover {
-	background-color: #e5e7eb;
-}
-
-.grid-slot.selected {
-	background-color: var(--orange);
+.slot-button:hover {
+	background: var(--light-blue);
 	color: white;
 }
 
-@media (max-width: 600px) {
-	.week-scheduler {
-		max-width: 100%;
-		overflow: auto;
-		margin: auto;
-		padding: 10px;
-		border: 2px solid var(--orange);
-		border-radius: 10px;
-		box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
-	}
+.slot-button.selected {
+	background: var(--orange);
+	color: white;
+	border-color: var(--orange);
+}
+
+@media (max-width: 768px) {
 	.scheduler-grid {
-		grid-template-columns: 80px repeat(5, 1fr);
-		overflow-x: auto;
+		grid-template-columns: repeat(2, 1fr);
 	}
 
-	.week-scheduler h2 {
-		font-size: 1.2rem;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
-	}
-
-	.scheduler-header button {
-		padding: 6px 12px;
-		font-size: 12px;
-	}
-
-	.grid-slot {
-		height: 40px;
-		font-size: 12px;
+	.scheduler-header {
+		flex-direction: column;
+		gap: 10px;
 	}
 }
