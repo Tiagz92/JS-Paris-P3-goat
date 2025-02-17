@@ -1,5 +1,4 @@
-import type { RequestHandler } from "express";
-import type { NextFunction, Request, Response } from "express";
+import type { RequestHandler, NextFunction, Request, Response } from "express";
 import goatRepository from "../goat/goatRepository";
 import mainTagRepository from "../mainTag/mainTagRepository";
 import subTagRepository from "../subTag/subTagRepository";

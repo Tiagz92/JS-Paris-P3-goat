@@ -8,7 +8,8 @@
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 	max-width: 100%;
 	max-height: 100vh;
-	overflow: auto;
+	overflow:hidden;
+  
 	border: 3px solid var(--orange);
 }
 .week-scheduler h2 {
@@ -41,10 +42,10 @@
 .scheduler-grid {
 	display: grid;
 	align-items: center;
-	grid-template-columns: repeat(5, 1fr);
+	grid-template-columns: repeat(7, 1fr);
 	gap: 10px;
-	width: 100%;
-	height: 50vh;
+	max-width: 100%;
+	height: 100vh;
 }
 
 .day-column {

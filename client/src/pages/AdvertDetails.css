@@ -75,7 +75,6 @@ body {
 	max-width: 50%;
 	max-height: 50%;
 	height: fit-content;
-	overflow: auto;
 	flex-wrap: wrap;
 }
 
