@@ -34,7 +34,7 @@ function AdvertDetails() {
 					`${import.meta.env.VITE_API_URL}/api/adverts/${id}`,
 					{
 						headers: {
-							Authorization: user.token,
+							Authorization: `Bearer ${user.token}`,
 						},
 					},
 				);
@@ -69,7 +69,7 @@ function AdvertDetails() {
 				<div className="profile-header">
 					<img
 						className="img-goat"
-						src={advert.goat_picture}
+						src={`http://localhost:3310/upload/${advert.goat_picture}`}
 						alt={advert.goat_firstname}
 					/>
 					<h1 className="profile-name">{advert.goat_firstname}</h1>
