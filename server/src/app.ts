@@ -75,14 +75,6 @@ if (fs.existsSync(publicFolderPath)) {
 import router from "./router";
 
 // Mount the API router under the "/api" endpoint
-// Define the path to the public folder
-const publicFolderPath = path.join(__dirname, "../../server/public");
-
-// Serve server resources (including /upload)
-if (fs.existsSync(publicFolderPath)) {
-  app.use("/upload", express.static(path.join(publicFolderPath, "upload")));
-  app.use(express.static(publicFolderPath));
-}
 
 // Import the API router and mount it under the "/api" endpoint
 app.use(router);
