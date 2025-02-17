@@ -9,7 +9,7 @@
 	border-radius: 10px;
 	box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.3);
 	width: auto;
-	height: 80vh;
+	height: auto;
 	overflow: hidden;
 	padding-top: 1rem;
 	margin: 2rem;
@@ -20,7 +20,7 @@
 .Profile {
 	display: flex;
 	flex-direction: column;
-	width: 80vh;
+	width: 100vh;
 }
 
 .profilePresentation {
