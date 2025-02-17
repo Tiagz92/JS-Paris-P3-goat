@@ -47,13 +47,11 @@ const formatSlotsForBackend = (slots: Slot[]) => {
 };
 
 function AdvertForm() {
-	const { id } = useParams<{ id: string }>();
 	const { user } = useOutletContext<AppContextInterface>();
 	const [step, setStep] = useState(1);
 	const [mainTags, setMainTags] = useState<MainTag[]>([]);
 	const [subTags, setSubTags] = useState<SubTag[]>([]);
 	const [selectedMainTag, setSelectedMainTag] = useState<number | null>(null);
-	const navigate = useNavigate();
 	const [formData, setFormData] = useState<{
 		main_tag_id: number | null;
 		sub_tag_id: number | null;
@@ -66,6 +64,7 @@ function AdvertForm() {
 		goat_id: user.id,
 	});
 
+	const navigate = useNavigate();
 	const [isFormValid, setIsFormValid] = useState(false);
 
 	useEffect(() => {
@@ -136,7 +135,42 @@ function AdvertForm() {
 			formData.description.trim() !== "" &&
 			selectedSlots.length > 0; // Vérification ajoutée
 		setIsFormValid(isValid);
-	}, [formData, selectedSlots]); // Ajout de selectedSlots
+	}, [formData]);
+
+	const [selectedSlots, setSelectedSlots] = useState<Slot[]>([]);
+
+	const { id } = useParams<{ id: string }>();
+
+	useEffect(() => {
+		if (user?.id && id) {
+			fetch(`${import.meta.env.VITE_API_URL}/api/goats/${id}`, {
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${user.token}`,
+				},
+			})
+				.then((response) => {
+					if (!response.ok) {
+						throw new Error(
+							"Erreur lors du chargement des données utilisateur",
+						);
+					}
+					return response.json();
+				})
+				.then((data) => {
+					setFormData((prev) => ({
+						...prev,
+						goat_id: data.id,
+					}));
+				})
+				.catch((error) => {
+					toast.error(
+						"Impossible de récupérer les infos de l'utilisateur 🐐",
+						error,
+					);
+				});
+		}
+	}, [user, id]);
 
 	const handleSubmit: FormEventHandler = async (event) => {
 		event.preventDefault();
@@ -158,19 +192,21 @@ function AdvertForm() {
 		});
 	
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/api/adverts`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${user.token}`,
+			const response = await fetch(
+				`${import.meta.env.VITE_API_URL}/api/adverts`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${user.token}`,
+					},
+					body: JSON.stringify({
+						...formData,
+						slots: formattedSlots,
+					}),
 				},
-				body: JSON.stringify({
-					...formData,
-					slots: formattedSlots,
-				}),
-			});
-	
-			console.log("Réponse du serveur :", response);
+			);
+
 			if (!response.ok) {
 				throw new Error("Erreur lors de la création de l'annonce 🐐");
 			}

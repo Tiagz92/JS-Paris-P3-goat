@@ -34,7 +34,7 @@ function ProfilDetails() {
 					`${import.meta.env.VITE_API_URL}/api/goats/${id}`,
 					{
 						headers: {
-							Authorization: user.token,
+							Authorization: `Bearer ${user.token}`,
 						},
 					},
 				);
