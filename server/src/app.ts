@@ -61,6 +61,16 @@ app.use(
 
 /* ************************************************************************* */
 
+// Serve server resources
+// Define the path to the public folder
+const publicFolderPath = path.join(__dirname, "../../server/public");
+
+// Serve server resources (including /upload)
+if (fs.existsSync(publicFolderPath)) {
+  app.use("/upload", express.static(path.join(publicFolderPath, "upload")));
+  app.use(express.static(publicFolderPath));
+}
+
 // Import the API router
 import router from "./router";
 
@@ -79,14 +89,6 @@ app.use(router);
 
 import fs from "node:fs";
 import path from "node:path";
-
-// Serve server resources
-
-const publicFolderPath = path.join(__dirname, "../../server/public");
-
-if (fs.existsSync(publicFolderPath)) {
-	app.use(express.static(publicFolderPath));
-}
 
 // Serve client resources
 
