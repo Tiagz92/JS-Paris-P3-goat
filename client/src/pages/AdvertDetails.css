@@ -10,7 +10,7 @@ body {
 .advert-container {
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
+	justify-content: space-between;
 	align-items: center;
 	flex-wrap: wrap;
 	padding: 20px;
@@ -24,6 +24,7 @@ body {
 	padding-top: 10px;
 	margin: 2rem;
 	margin-top: 0;
+	gap:0.5rem;
 }
 
 .advert-profile {
@@ -39,11 +40,11 @@ body {
 }
 .profile-header {
 	justify-content: center;
-	flex-direction: space-between;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
-	gap: 60px;
-	margin-bottom: 20px;
+	gap: 1rem;
+	margin-bottom: 0.5rem;
 }
 
 .img-goat {
@@ -63,6 +64,11 @@ body {
 	margin: 0;
 }
 
+.profile-description {
+	text-align: left;
+	justify-content: center;
+}
+
 .profile-calendar {
 	display: flex;
 	justify-content: center;
@@ -80,7 +86,7 @@ body {
 	justify-content: center;
 	text-align: center;
 	color: var(--text-black);
-	margin-bottom: 2rem;
+	margin: 1.5rem;
 }
 
 .profile-booking {

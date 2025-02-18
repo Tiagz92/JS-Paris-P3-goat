@@ -40,10 +40,39 @@
 .textContainer {
 	display: flex;
 	flex-direction: column;
+	justify-content: space-evenly;
 	margin: 1rem;
 }
 
-.profileDescription {
+.profilePresentation {
 	text-align: left;
+	justify-content: center;
+}
+
+.Recap {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: center;
+	margin-bottom: 30rem;
+}
+
+.booking-button{
+	margin-bottom: 10rem;
+}
+
+.yellow-button {
 	margin: 1rem;
 }
+
+
+h2 {
+	font-size: 3dvh;
+	margin: 1rem;
+}
+
+.collapse-content{
+	display: flex;
+	flex-direction: column;
+}
+

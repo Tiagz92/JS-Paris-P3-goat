@@ -51,6 +51,7 @@ function NavBar({ user }: NavBarProps) {
 					className="connexion-icon"
 					onClick={() => navigate("/profile")}
 					onKeyPress={() => navigate("/profile")}
+					title="Connecte toi"
 				/>
 			</div>
 		</div>

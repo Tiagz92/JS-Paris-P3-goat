@@ -74,6 +74,7 @@ p {
 	border: 3px solid var(--darkblue);
 	padding: 0.5rem;
 	cursor: pointer;
+	width: auto;
 }
 
 .darkblue-button:hover {
