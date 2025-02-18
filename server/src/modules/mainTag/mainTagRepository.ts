@@ -1,3 +1,4 @@
+import { RowDataPacket } from "mysql2/typings/mysql/lib/protocol/packets/RowDataPacket";
 import databaseClient from "../../../database/client";
 import type { Rows } from "../../../database/client";
 
@@ -15,14 +16,14 @@ class mainTagRepository {
 
 		return rows as MainTag;
 	}
-	
+
 	async readAll() {
 		const [mainTags] = await databaseClient.query<Rows>(
 			"SELECT * FROM main_tag",
 		);
+
 		return mainTags;
 	}
-
 }
 
 export default new mainTagRepository();

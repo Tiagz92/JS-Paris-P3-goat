@@ -26,17 +26,19 @@ interface Slot {
 
 class AdvertRepository {
 	async create(advert: Omit<Advert, "id">): Promise<number> {
+		const goatId = advert.goat_id;
+		const mainTagId = advert.main_tag_id;
+		const subTagId = advert.sub_tag_id;
+
+		if (!goatId || !mainTagId || !subTagId) {
+			throw new Error("Goat, main_tag, or sub_tag id is missing");
+		}
+
 		const [result] = await databaseClient.query<Result>(
-			"INSERT INTO advert ( goat_picture, goat_firstname, goat_name, main_tag_name, sub_tag_name, description) VALUES (?, ?, ?, ?, ?, ?)",
-			[
-				advert.goat_picture,
-				advert.goat_firstname,
-				advert.goat_name,
-				advert.main_tag_name,
-				advert.sub_tag_name,
-				advert.description,
-			],
+			"INSERT INTO advert (goat_id, main_tag_id, sub_tag_id, description) VALUES (?, ?, ?, ?)",
+			[goatId, mainTagId, subTagId, advert.description],
 		);
+
 		return result.insertId;
 	}
 

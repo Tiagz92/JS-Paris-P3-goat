@@ -1,11 +1,20 @@
 import type { Request, Response, NextFunction } from "express";  
 import { sendConfirmationEmail } from "../../modules/reservation/emailService";
-import type { ReservationData } from "../../modules/reservation/emailService";
+
+interface CorrectReservationData {
+  start_at: string;
+  meet_link: string;
+  duration: number;
+  first_name: string;
+  date: string;
+  time: string;
+  guests: number;
+}
 
 interface ReservationRequest extends Request {
   body: {
     email: string;
-    reservation: ReservationData; 
+    reservation: CorrectReservationData; 
   };
 }
 

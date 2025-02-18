@@ -38,15 +38,15 @@ function FilterMainTag() {
 		<div className="filter-container">
 			<h1>LES CATEGORIES</h1>
 			<h2>
-				Choisi le sujet qui t’intéresse et découvrir les membres prêts à en
-				discuter avec toi
+				Choisi le sujet qui t’intéresse et découvre les membres prêts à en
+				discuter avec toi !
 			</h2>
 			<div className="tags-grid">
 				{displayedTags.map((tag) => (
 					<button
 						key={tag.id}
 						type="button"
-						className="tag-item"
+						className="darkblue-button"
 						onClick={() => handleTagClick(tag)}
 					>
 						{tag.name}

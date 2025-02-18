@@ -3,6 +3,8 @@ import goatRepository from "../goat/goatRepository";
 import mainTagRepository from "../mainTag/mainTagRepository";
 import subTagRepository from "../subTag/subTagRepository";
 import advertRepository from "./advertRepository";
+import slotRepository from "../slot/slotRepository";
+import type { Slot } from "../../types/slot";
 
 interface Advert {
 	goat_id: number;
@@ -107,16 +109,44 @@ const add: RequestHandler = async (req: Request, res: Response, next) => {
 			sub_tag_id: req.body.sub_tag_id,
 			goat_picture: req.body.goat_picture,
 			goat_firstname: req.body.goat_firstname,
+			goat_name: req.body.goat_name, 
 			main_tag_name: req.body.main_tag_name,
 			sub_tag_name: req.body.sub_tag_name,
-			goat_name: req.body.goat_name,
 			description: req.body.description,
 			advert_date: req.body.advert_date,
 			advert_time: req.body.advert_time,
 		};
+
+		const slots = req.body.slots;
+
+		if (!Array.isArray(slots) || slots.length === 0) {
+			console.error("❌ Aucun slot reçu ou format incorrect.");
+			res.status(400).json({ message: "Aucun créneau envoyé." });
+			return;
+		}
+
 		const insertId = await advertRepository.create(newAdvert);
+
+		await Promise.all(
+			slots.map(async (slot) => {
+				const newSlot: Slot = {
+					advert_id: insertId,
+					start_at: new Date(slot.start_at)
+						.toISOString()
+						.slice(0, 19)
+						.replace("T", " "),
+					meet_link: slot.meet_link ?? null,
+					comment: slot.comment ?? null,
+					goat_id: slot.goat_id ?? insertId,
+				};
+
+				await slotRepository.create(newSlot);
+			}),
+		);
+
 		res.status(201).json({ insertId });
 	} catch (err) {
+		console.error("❌ Erreur lors de l'ajout d'un advert :", err);
 		next(err);
 	}
 };

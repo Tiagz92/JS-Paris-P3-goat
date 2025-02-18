@@ -22,7 +22,11 @@ function AdvertCard({ advert }: AdvertCardProps) {
 			/>
 			<img
 				className="goat-picture"
-				src={advert.goat_picture}
+				src={
+					advert.goat_picture.startsWith("https")
+						? advert.goat_picture
+						: `http://localhost:3310/upload/${advert.goat_picture}`
+				}
 				alt={advert.goat_firstname}
 			/>
 			<h2 className="goat-firstname">{advert.goat_firstname}</h2>

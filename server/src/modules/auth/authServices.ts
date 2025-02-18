@@ -1,8 +1,13 @@
 import argon from "argon2";
-import type { RequestHandler } from "express";
-import jwt, { type Secret } from "jsonwebtoken";
+import type { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import type { Secret } from "jsonwebtoken";
 
-const hashPassword: RequestHandler = async (req, res, next) => {
+const hashPassword = async (
+	req: Request,
+	res: Response,
+	next: NextFunction,
+) => {
 	const { password } = req.body;
 	try {
 		const hash = await argon.hash(password);
@@ -13,13 +18,28 @@ const hashPassword: RequestHandler = async (req, res, next) => {
 	}
 };
 
-const isAuth: RequestHandler = (req, res, next) => {
-	const token = req.headers.authorization;
-	if (!token) res.sendStatus(401);
-	else {
+const isAuth = (req: Request, res: Response, next: NextFunction) => {
+	const authHeader = req.headers.authorization;
+
+	if (!authHeader || !authHeader.startsWith("Bearer ")) {
+		return res.sendStatus(401);
+	}
+
+	const token = authHeader.split(" ")[1];
+
+	if (!token) {
+		return res.sendStatus(401);
+	}
+
+	try {
 		const isTokenValid = jwt.verify(token, process.env.APP_SECRET as Secret);
-		if (!isTokenValid) res.sendStatus(401);
-		else next();
+		if (!isTokenValid) {
+			return res.sendStatus(401);
+		}
+		next();
+	} catch (error) {
+		console.error("Erreur JWT:", error);
+		return res.sendStatus(403);
 	}
 };
 

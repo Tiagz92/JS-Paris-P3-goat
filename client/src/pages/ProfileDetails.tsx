@@ -13,11 +13,17 @@ type Goat = {
 	video: string;
 };
 
+interface Slot {
+	date: string;
+	hour: string;
+}
+
 function ProfilDetails() {
 	const { id } = useParams<{ id: string }>();
 	const [profile, setProfile] = useState<Goat | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
 	const navigate = useNavigate();
 	const { user } = useOutletContext<AppContextInterface>();
 
@@ -28,7 +34,7 @@ function ProfilDetails() {
 					`${import.meta.env.VITE_API_URL}/api/goats/${id}`,
 					{
 						headers: {
-							Authorization: user.token,
+							Authorization: `Bearer ${user.token}`,
 						},
 					},
 				);
@@ -64,7 +70,7 @@ function ProfilDetails() {
 					<div className="pictureContainer">
 						<img
 							className="pictureGoat"
-							src={profile.picture}
+							src={`${import.meta.env.VITE_API_URL}/upload/${profile.picture}`}
 							alt={profile.firstname}
 						/>
 					</div>
@@ -74,7 +80,10 @@ function ProfilDetails() {
 					</div>
 				</div>
 				<div className="calendar">
-					<AdvertBooking />
+					<AdvertBooking
+						selectedSlot={selectedSlot}
+						setSelectedSlot={setSelectedSlot}
+					/>
 				</div>
 			</div>
 			<div className="Recap">

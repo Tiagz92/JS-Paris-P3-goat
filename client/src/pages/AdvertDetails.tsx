@@ -20,10 +20,8 @@ interface Advert {
 }
 
 const AdvertDetails = () => {
-	const { id } = useParams();
+	const { id } = useParams<{ id: string }>();
 	const navigate = useNavigate();
-	const { user } = useOutletContext<AppContextInterface>();
-
 	const [advert, setAdvert] = useState<Advert | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
@@ -31,6 +29,7 @@ const AdvertDetails = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [message, setMessage] = useState("");
 	const [reservedSlots, setReservedSlots] = useState<Slot[]>([]);
+	const { user } = useOutletContext<AppContextInterface>();
 
 	useEffect(() => {
 		if (!user?.token) {
@@ -64,7 +63,6 @@ const reservationData = advert && selectedSlot && {
 		advert_id: Number(id),
 		user_id: user.id,
 		goat_id: advert.goat_id,
-    user_firstname: user.firstname,
     goat_firstname: advert.goat_firstname,
 		start_at: `${selectedSlot.date} ${selectedSlot.hour}`,
 		duration: 1,
@@ -125,7 +123,7 @@ const reservationData = advert && selectedSlot && {
 				<div className="profile-header">
 					<img
 						className="img-goat"
-						src={advert.goat_picture}
+						src={`http://localhost:3310/upload/${advert.goat_picture}`}
 						alt={advert.goat_firstname}
 					/>
 					<h1 className="profile-name">{advert.goat_firstname}</h1>
@@ -192,8 +190,9 @@ const reservationData = advert && selectedSlot && {
 					)}
 				</div>
 			</div>
-		</div>
+			</div>
 	);
 };
+	
 
 export default AdvertDetails;
