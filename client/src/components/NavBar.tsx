@@ -1,7 +1,7 @@
 import "./NavBar.css";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import connexionIcon from "../assets/images/connexion-icon.png";
+import connexionIcon from "../assets/connexion-icon.png";
 import logo from "../assets/images/logoGOAT.png";
 import type { User } from "../types/user.type";
 
