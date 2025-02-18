@@ -1,27 +1,28 @@
+
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useParams, useOutletContext } from "react-router-dom";
 import "./AdvertDetails.css";
 import AdvertBooking from "../components/AdvertBooking";
 import type { AppContextInterface } from "../types/appContext.type";
 
 interface Slot {
-	date: string;
-	hour: string;
+  date: string;
+  hour: string;
+}
+
+interface Advert {
+	goat_id: number;
+	goat_picture: string;
+	goat_firstname: string;
+	description: string;
+	main_tag_name: string;
+	sub_tag_name: string;
 }
 
 const AdvertDetails = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
-
-	interface Advert {
-		goat_id: number;
-		goat_picture: string;
-		goat_firstname: string;
-		description: string;
-		main_tag_name: string;
-		sub_tag_name: string;
-	}
+	const { user } = useOutletContext<AppContextInterface>();
 
 	const [advert, setAdvert] = useState<Advert | null>(null);
 	const [loading, setLoading] = useState(true);
@@ -29,17 +30,21 @@ const AdvertDetails = () => {
 	const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [message, setMessage] = useState("");
-	const { user } = useOutletContext<AppContextInterface>();
+	const [reservedSlots, setReservedSlots] = useState<Slot[]>([]);
 
 	useEffect(() => {
+		if (!user?.token) {
+			setError("Utilisateur non authentifié");
+			setLoading(false);
+			return;
+		}
+
 		const fetchAdvertDetails = async () => {
 			try {
 				const response = await fetch(
 					`${import.meta.env.VITE_API_URL}/api/adverts/${id}`,
 					{
-						headers: {
-							Authorization: user.token,
-						},
+						headers: { Authorization: user.token },
 					},
 				);
 				if (!response.ok)
@@ -53,54 +58,58 @@ const AdvertDetails = () => {
 			}
 		};
 		fetchAdvertDetails();
-	}, [id, user.token]);
+	}, [id, user]);
 
+const reservationData = advert && selectedSlot && {
+		advert_id: Number(id),
+		user_id: user.id,
+		goat_id: advert.goat_id,
+		start_at: `${selectedSlot.date} ${selectedSlot.hour}`,
+		duration: 1,
+		meet_link: "https://meet.jit.si/GoApprendreTransmettre",
+		comment: message,
+	};
 	const handleConfirm = async () => {
-		if (!selectedSlot) return;
+		if (!selectedSlot || !user?.token || !advert) return;
 
-		const userId = localStorage.getItem("userId");
-
-		if (!userId) {
-			console.error("Utilisateur non connecté !");
-			return;
-		}
-
-		const date = new Date(`${selectedSlot.date}T${selectedSlot.hour}:00`);
-
-		const reservationData = {
-			advert_id: id,
-			goat_id: advert?.goat_id,
-			start_at: date.toISOString(),
-			duration: 1,
-			meet_link: "toto",
-			comment: "toto",
-		};
+		const formattedDate = `${selectedSlot.date}T${selectedSlot.hour}:00Z`;
+		const date = new Date(formattedDate);
 
 		try {
 			const response = await fetch(
-				`${import.meta.env.VITE_API_URL}/api/slots/`,
+				`${import.meta.env.VITE_API_URL}/api/slots`,
 				{
 					method: "POST",
-					headers: { "Content-Type": "application/json" },
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: user.token,
+					},
 					body: JSON.stringify(reservationData),
 				},
 			);
 
 			if (!response.ok) throw new Error("Erreur lors de la réservation.");
 
-			const storedReservations = JSON.parse(
-				localStorage.getItem("reservations") ?? "[]",
-			);
-			// Mettre à jour localStorage avec la nouvelle réservation
-			const updatedReservations = [...storedReservations, selectedSlot];
+	await fetch(`${import.meta.env.VITE_API_URL}/api/send-confirmation-email`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: user.token,
+		},
+		body: JSON.stringify({
+			email: user.email,
+			reservation: reservationData,
+		}),
+	});
+
+			const updatedReservations = [...reservedSlots, selectedSlot];
+			setReservedSlots(updatedReservations);
 			localStorage.setItem("reservations", JSON.stringify(updatedReservations));
 
-			setReservedSlots(updatedReservations); // Mise à jour de l'état local
-
 			setIsModalOpen(false);
-			navigate(`/profile/${userId}`);
+			navigate(`/profile/${user.id}`);
 		} catch (err) {
-			console.error("Erreur :", err);
+			setError((err as Error).message);
 		}
 	};
 
@@ -152,14 +161,14 @@ const AdvertDetails = () => {
 									{advert.main_tag_name} & {advert.sub_tag_name}
 								</p>
 								<p className="goat-name">
-									Cour donné par : {advert.goat_firstname}.
+									Cours donné par : {advert.goat_firstname}.
 								</p>
 								<p>{advert.description}</p>
 								<p className="date">
 									Date : {selectedSlot?.date} à {selectedSlot?.hour}
 								</p>
 								<p className="message">
-									Mon message pour {advert.goat_firstname} (facultatif){" "}
+									Mon message pour {advert.goat_firstname} (facultatif)
 								</p>
 								<input
 									type="text"
@@ -171,6 +180,7 @@ const AdvertDetails = () => {
 									<button type="button" onClick={handleConfirm}>
 										Valider ma réservation
 									</button>
+                  
 									<button type="button" onClick={() => setIsModalOpen(false)}>
 										Annuler
 									</button>
@@ -183,9 +193,5 @@ const AdvertDetails = () => {
 		</div>
 	);
 };
-
-function setReservedSlots(updatedReservations: Slot[]) {
-	localStorage.setItem("reservations", JSON.stringify(updatedReservations));
-}
 
 export default AdvertDetails;
