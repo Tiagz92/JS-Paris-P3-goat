@@ -1,33 +1,36 @@
-const nodemailer = require("nodemailer");
+import nodemailer from "nodemailer";
+import "dotenv/config";
 
-export interface ReservationData {
-  start_at: string;
-  meet_link: string;
-}
+// Configuration du transporteur SMTP Brevo
+const transporter = nodemailer.createTransport({
+	host: "smtp-relay.brevo.com", // Serveur SMTP Brevo
+	port: 587, // Port 587 pour TLS (ou 465 pour SSL)
+	auth: {
+		user: process.env.BREVO_SMTP_USER, // Ton email Brevo
+		pass: process.env.BREVO_SMTP_PASSWORD, // Ton mot de passe SMTP (clé API)
+	},
+});
 
-const sendConfirmationEmail = async (userEmail: string, reservationData: ReservationData): Promise<void> => {
-  const transporter = nodemailer.createTransport({
-    service: "gmail", // Ou autre service SMTP (ex: SendGrid, Mailgun)
-    auth: {
-      user: process.env.EMAIL_USER, // Ton email (ex: noreply@tonsite.com)
-      pass: process.env.EMAIL_PASS, // Mot de passe ou clé API SMTP
-    },
-  });
+// Fonction pour envoyer un e-mail de confirmation
+export const sendConfirmationEmail = async (
+	userEmail: string,
+	reservationData: { start_at: string; meet_link: string; duration: number },
+) => {
+	const mailOptions = {
+		from: "goapprendretransmettre@gmail.com", // Expéditeur (doit être un email validé sur Brevo)
+		to: userEmail, // Destinataire
+		subject: "Confirmation de votre réservation",
+		text: `Votre reservation a bien ete prise en compte. Voici les details:
+    📅 Date et heure :  ${reservationData.start_at}.
+      Lien meet : ${reservationData.meet_link}
+    🕒duree : ${reservationData.duration} heure(s)
+    Si vous avez des questions ou si vous devez modifier votre réservation, n’hésitez pas à nous contacter.
+    Cordialement, l’equipe GoApprendreTransmettre`,
+	};
 
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: userEmail,
-    subject: "Confirmation de votre réservation",
-    text: `Votre réservation est confirmée pour le ${reservationData.start_at}.
-  Lien de rencontre : ${reservationData.meet_link}`,
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log("E-mail envoyé avec succès !");
+	try {
+		await transporter.sendMail(mailOptions);
   } catch (error) {
-    console.error("Erreur lors de l'envoi de l'email :", error);
-  }
+		console.error("Erreur lors de l'envoi de l'email :", error);
+	}
 };
-
-export { sendConfirmationEmail };
