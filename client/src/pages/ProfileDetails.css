@@ -32,7 +32,7 @@
 
 .pictureGoat {
 	height: 30vh;
-	clip-path:ellipse(50% 50%);
+	clip-path: ellipse(50% 50%);
 	object-fit: cover;
 	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
@@ -57,7 +57,7 @@
 	margin-bottom: 30rem;
 }
 
-.booking-button{
+.booking-button {
 	margin-bottom: 10rem;
 }
 
@@ -65,14 +65,12 @@
 	margin: 1rem;
 }
 
-
 h2 {
 	font-size: 3dvh;
 	margin: 1rem;
 }
 
-.collapse-content{
+.collapse-content {
 	display: flex;
 	flex-direction: column;
 }
-

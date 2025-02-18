@@ -28,7 +28,7 @@ function ProfilDetails() {
 	const { user } = useOutletContext<AppContextInterface>();
 	const [activeSection, setActiveSection] = useState<string | null>(null);
 
-	const toggleSection = (section : string) => {
+	const toggleSection = (section: string) => {
 		setActiveSection(activeSection === section ? null : section);
 	};
 
