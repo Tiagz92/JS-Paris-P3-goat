@@ -30,17 +30,9 @@
 	gap: 1rem;
 }
 
-.pictureContainer {
-	width: 30vh;
-	height: 15vh;
-	border-radius: 50%;
-	object-fit: cover;
-	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-	background-color: red;
-}
-
 .pictureGoat {
-	border-radius: 50%;
+	height: 30vh;
+	clip-path:ellipse(50% 50%);
 	object-fit: cover;
 	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }

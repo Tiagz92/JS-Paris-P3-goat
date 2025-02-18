@@ -70,7 +70,11 @@ function ProfilDetails() {
 					<div className="pictureContainer">
 						<img
 							className="pictureGoat"
-							src={`${import.meta.env.VITE_API_URL}/upload/${profile.picture}`}
+							src={
+								profile.picture.startsWith("https")
+									? profile.picture
+									: `http://localhost:3310/upload/${profile.picture}`
+							}							
 							alt={profile.firstname}
 						/>
 					</div>
@@ -103,10 +107,10 @@ function ProfilDetails() {
 				</div>
 				<div>
 					<h1>Modification</h1>
-					<button type="button" className="yellow-button">
+					<button type="button" className="darkblue-button">
 						Modifier mon profil
 					</button>
-					<button type="button" className="yellow-button">
+					<button type="button" className="darkblue-button">
 						Modifier une annonce
 					</button>
 				</div>

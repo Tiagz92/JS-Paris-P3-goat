@@ -10,19 +10,20 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	gap: 3rem;
+	gap: 2rem;
 }
 
 .logo {
-	height: 8rem;
+	height: 10rem;
 	width: auto;
 	cursor: pointer;
 }
 
 .connexion-icon {
-	height: 6rem;
+	height: 4rem;
 	width: auto;
 	cursor: pointer;
+	margin-right: 1rem;
 }
 
 .title-container {

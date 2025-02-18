@@ -42,6 +42,11 @@
 	transform: none;
 }
 
+.tag-button {
+	height: 4rem;
+	width: auto;
+}
+
 .filter-container h1 {
 	text-align: center;
 	font-size: 1.3rem;
@@ -64,6 +69,4 @@
 	.filter-btn {
 		margin: .5rem;
 	}
-
-	
 }
