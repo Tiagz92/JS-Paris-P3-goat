@@ -22,24 +22,28 @@ const isAuth = (req: Request, res: Response, next: NextFunction) => {
 	const authHeader = req.headers.authorization;
 
 	if (!authHeader || !authHeader.startsWith("Bearer ")) {
-		return res.sendStatus(401);
+		res.sendStatus(401);
+		return;
 	}
 
 	const token = authHeader.split(" ")[1];
 
 	if (!token) {
-		return res.sendStatus(401);
+		res.sendStatus(401);
+		return;
 	}
 
 	try {
 		const isTokenValid = jwt.verify(token, process.env.APP_SECRET as Secret);
 		if (!isTokenValid) {
-			return res.sendStatus(401);
+			res.sendStatus(401);
+			return;
 		}
 		next();
 	} catch (error) {
 		console.error("Erreur JWT:", error);
-		return res.sendStatus(403);
+		res.sendStatus(403);
+		return;
 	}
 };
 
