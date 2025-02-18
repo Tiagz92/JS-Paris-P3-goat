@@ -14,18 +14,20 @@ const transporter = nodemailer.createTransport({
 // Fonction pour envoyer un e-mail de confirmation
 export const sendConfirmationEmail = async (
 	userEmail: string,
-	reservationData: { start_at: string; meet_link: string; duration: number },
+	reservationData: { start_at: string; meet_link: string; duration: number; first_name: string },
 ) => {
 	const mailOptions = {
 		from: "goapprendretransmettre@gmail.com", // Expéditeur (doit être un email validé sur Brevo)
-		to: userEmail, // Destinataire
+		to: userEmail, 
 		subject: "Confirmation de votre réservation",
-		text: `Votre reservation a bien ete prise en compte. Voici les details:
-    📅 Date et heure :  ${reservationData.start_at}.
-      Lien meet : ${reservationData.meet_link}
-    🕒duree : ${reservationData.duration} heure(s)
-    Si vous avez des questions ou si vous devez modifier votre réservation, n’hésitez pas à nous contacter.
-    Cordialement, l’equipe GoApprendreTransmettre`,
+		text: `Bonjour: ${reservationData.Us.first_name},
+      Votre reservation a bien ete prise en compte. Voici les details:
+    📅 Date et heure : ${reservationData.start_at}.
+    📎 Lien meet : ${reservationData.meet_link}
+    🕒 duree : ${reservationData.duration} heure
+      Si vous avez des questions ou si vous devez modifier votre réservation, n’hésitez pas à nous contacter.
+      Cordialement, 
+      l’equipe GoApprendreTransmettre`,
 	};
 
 	try {

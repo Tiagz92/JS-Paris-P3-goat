@@ -64,6 +64,8 @@ const reservationData = advert && selectedSlot && {
 		advert_id: Number(id),
 		user_id: user.id,
 		goat_id: advert.goat_id,
+    user_firstname: user.firstname,
+    goat_firstname: advert.goat_firstname,
 		start_at: `${selectedSlot.date} ${selectedSlot.hour}`,
 		duration: 1,
 		meet_link: "https://meet.jit.si/GoApprendreTransmettre",
