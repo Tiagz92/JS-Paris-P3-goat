@@ -1,10 +1,10 @@
-import type { RequestHandler, NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, RequestHandler, Response } from "express";
 import type { Slot } from "../../types/slot";
 import goatRepository from "../goat/goatRepository";
 import mainTagRepository from "../mainTag/mainTagRepository";
+import slotRepository from "../slot/slotRepository";
 import subTagRepository from "../subTag/subTagRepository";
 import advertRepository from "./advertRepository";
-import slotRepository from "../slot/slotRepository";
 
 interface Advert {
 	goat_id: number;
