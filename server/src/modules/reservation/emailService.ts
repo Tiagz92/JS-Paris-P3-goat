@@ -20,7 +20,7 @@ export const sendConfirmationEmail = async (
 		from: "goapprendretransmettre@gmail.com", // Expéditeur (doit être un email validé sur Brevo)
 		to: userEmail, 
 		subject: "Confirmation de votre réservation",
-		text: `Bonjour: ${reservationData.Us.first_name},
+		text: `Bonjour: ${reservationData.first_name},
       Votre reservation a bien ete prise en compte. Voici les details:
     📅 Date et heure : ${reservationData.start_at}.
     📎 Lien meet : ${reservationData.meet_link}

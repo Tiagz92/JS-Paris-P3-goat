@@ -20,8 +20,10 @@ interface Advert {
 }
 
 const AdvertDetails = () => {
-	const { id } = useParams<{ id: string }>();
+	const { id } = useParams();
 	const navigate = useNavigate();
+	const { user } = useOutletContext<AppContextInterface>();
+
 	const [advert, setAdvert] = useState<Advert | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
@@ -29,7 +31,6 @@ const AdvertDetails = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [message, setMessage] = useState("");
 	const [reservedSlots, setReservedSlots] = useState<Slot[]>([]);
-	const { user } = useOutletContext<AppContextInterface>();
 
 	useEffect(() => {
 		if (!user?.token) {
@@ -43,7 +44,7 @@ const AdvertDetails = () => {
 				const response = await fetch(
 					`${import.meta.env.VITE_API_URL}/api/adverts/${id}`,
 					{
-						headers: { Authorization: user.token },
+						headers: { Authorization: `Bearer ${user.token}` },
 					},
 				);
 				if (!response.ok)
@@ -59,21 +60,24 @@ const AdvertDetails = () => {
 		fetchAdvertDetails();
 	}, [id, user]);
 
-const reservationData = advert && selectedSlot && {
-		advert_id: Number(id),
-		user_id: user.id,
-		goat_id: advert.goat_id,
-    goat_firstname: advert.goat_firstname,
-		start_at: `${selectedSlot.date} ${selectedSlot.hour}`,
-		duration: 1,
-		meet_link: "https://meet.jit.si/GoApprendreTransmettre",
-		comment: message,
-	};
 	const handleConfirm = async () => {
+	if (selectedSlot === null) {
+		setError("Veuillez sélectionner un créneau");
+	} else if (reservedSlots.some((slot) => slot === selectedSlot)) {
+		setError("Ce créneau est occupé.");
+	}
+
 		if (!selectedSlot || !user?.token || !advert) return;
 
-		const formattedDate = `${selectedSlot.date}T${selectedSlot.hour}:00Z`;
-		const date = new Date(formattedDate);
+		const reservationData = {
+			advert_id: Number(id),
+			user_id: user.id,
+			goat_id: advert.goat_id,
+			start_at: `${selectedSlot.date} ${selectedSlot.hour}`,
+			duration: 1,
+			meet_link: "toto",
+			comment: message,
+		};
 
 		try {
 			const response = await fetch(
@@ -82,25 +86,13 @@ const reservationData = advert && selectedSlot && {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: user.token,
+						Authorization: `Bearer ${user.token}`,
 					},
 					body: JSON.stringify(reservationData),
 				},
 			);
 
 			if (!response.ok) throw new Error("Erreur lors de la réservation.");
-
-	await fetch(`${import.meta.env.VITE_API_URL}/api/send-confirmation-email`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: user.token,
-		},
-		body: JSON.stringify({
-			email: user.email,
-			reservation: reservationData,
-		}),
-	});
 
 			const updatedReservations = [...reservedSlots, selectedSlot];
 			setReservedSlots(updatedReservations);
@@ -123,7 +115,7 @@ const reservationData = advert && selectedSlot && {
 				<div className="profile-header">
 					<img
 						className="img-goat"
-						src={`http://localhost:3310/upload/${advert.goat_picture}`}
+						src={advert.goat_picture}
 						alt={advert.goat_firstname}
 					/>
 					<h1 className="profile-name">{advert.goat_firstname}</h1>
@@ -190,9 +182,8 @@ const reservationData = advert && selectedSlot && {
 					)}
 				</div>
 			</div>
-			</div>
+		</div>
 	);
 };
-	
 
 export default AdvertDetails;
