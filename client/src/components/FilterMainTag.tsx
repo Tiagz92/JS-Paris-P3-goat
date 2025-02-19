@@ -46,7 +46,7 @@ function FilterMainTag() {
 					<button
 						key={tag.id}
 						type="button"
-						className="darkblue-button"
+						className="darkblue-button tag-button"
 						onClick={() => handleTagClick(tag)}
 					>
 						{tag.name}

@@ -114,7 +114,11 @@ const AdvertDetails = () => {
 				<div className="profile-header">
 					<img
 						className="img-goat"
-						src={advert.goat_picture}
+						src={
+							advert.goat_picture.startsWith("https")
+								? advert.goat_picture
+								: `http://localhost:3310/upload/${advert.goat_picture}`
+						}
 						alt={advert.goat_firstname}
 					/>
 					<h1 className="profile-name">{advert.goat_firstname}</h1>
