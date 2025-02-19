@@ -71,7 +71,7 @@
 	justify-content: space-evenly;
 	align-items: center;
 	margin-bottom: 20rem;
-  gap:2rem;
+	gap: 2rem;
 	animation: fadeIn 0.8s ease-in-out;
 }
 
@@ -138,12 +138,12 @@ h2 {
 	.pictureGoat {
 		height: 25vh;
 	}
-  .booking-button {
-    margin-bottom: 5rem;
-  }
-  .yellow-button {
-    padding: 8px 16px;
-  }
+	.booking-button {
+		margin-bottom: 5rem;
+	}
+	.yellow-button {
+		padding: 8px 16px;
+	}
 }
 
 @media screen and (max-width: 768px) {
@@ -162,8 +162,7 @@ h2 {
 	.booking-button {
 		margin-bottom: 5rem;
 	}
-	
-	}
+}
 
 @media screen and (max-width: 480px) {
 	.profileContainer {
@@ -177,6 +176,6 @@ h2 {
 
 	.yellow-button {
 		padding: 12px 12px;
-    width: auto;
+		width: auto;
 	}
 }
