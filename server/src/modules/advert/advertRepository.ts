@@ -1,28 +1,7 @@
 import databaseClient from "../../../database/client";
 import type { Result, Rows } from "../../../database/client";
-
-type Advert = {
-	id: number;
-	description: string;
-	goat_id: number;
-	main_tag_id: number;
-	sub_tag_id: number;
-	goat_picture: string;
-	goat_firstname: string;
-	main_tag_name: string;
-	sub_tag_name: string;
-	goat_name: string;
-	advert_date: string;
-	advert_time: string;
-};
-
-interface Slot {
-	start_at: string;
-	duration: number;
-	meet_link: string;
-	comment: string;
-	advert_id: number;
-}
+import type { Slot } from "../../types/slot";
+import type { Advert } from "../../types/advert"
 
 class AdvertRepository {
 	async create(advert: Omit<Advert, "id">): Promise<number> {
