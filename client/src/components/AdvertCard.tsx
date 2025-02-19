@@ -1,7 +1,7 @@
 import "../components/AdvertCard.css";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { toast } from "react-toastify";
-import onlineCourse from "../assets/images/onlineCourse.png";
+import onlineCourse from "../assets/onlineCourse.png";
 import type { Advert } from "../types/Advert";
 import type { AppContextInterface } from "../types/appContext.type";
 
