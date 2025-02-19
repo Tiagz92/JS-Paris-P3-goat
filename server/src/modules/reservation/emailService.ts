@@ -14,11 +14,16 @@ const transporter = nodemailer.createTransport({
 // Fonction pour envoyer un e-mail de confirmation
 export const sendConfirmationEmail = async (
 	userEmail: string,
-	reservationData: { start_at: string; meet_link: string; duration: number; first_name: string },
+	reservationData: {
+		start_at: string;
+		meet_link: string;
+		duration: number;
+		first_name: string;
+	},
 ) => {
 	const mailOptions = {
 		from: "goapprendretransmettre@gmail.com", // Expéditeur (doit être un email validé sur Brevo)
-		to: userEmail, 
+		to: userEmail,
 		subject: "Confirmation de votre réservation",
 		text: `Bonjour: ${reservationData.first_name},
       Votre reservation a bien ete prise en compte. Voici les details:
@@ -32,7 +37,7 @@ export const sendConfirmationEmail = async (
 
 	try {
 		await transporter.sendMail(mailOptions);
-  } catch (error) {
+	} catch (error) {
 		console.error("Erreur lors de l'envoi de l'email :", error);
 	}
 };

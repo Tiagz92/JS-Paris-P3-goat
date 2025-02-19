@@ -1,10 +1,10 @@
 import type { RequestHandler, NextFunction, Request, Response } from "express";
+import type { Slot } from "../../types/slot";
 import goatRepository from "../goat/goatRepository";
 import mainTagRepository from "../mainTag/mainTagRepository";
 import subTagRepository from "../subTag/subTagRepository";
 import advertRepository from "./advertRepository";
 import slotRepository from "../slot/slotRepository";
-import type { Slot } from "../../types/slot";
 
 interface Advert {
 	goat_id: number;
@@ -109,7 +109,7 @@ const add: RequestHandler = async (req: Request, res: Response, next) => {
 			sub_tag_id: req.body.sub_tag_id,
 			goat_picture: req.body.goat_picture,
 			goat_firstname: req.body.goat_firstname,
-			goat_name: req.body.goat_name, 
+			goat_name: req.body.goat_name,
 			main_tag_name: req.body.main_tag_name,
 			sub_tag_name: req.body.sub_tag_name,
 			description: req.body.description,

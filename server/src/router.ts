@@ -5,8 +5,8 @@ import authActions from "./modules/auth/authActions";
 import authServices from "./modules/auth/authServices";
 import goatActions from "./modules/goat/goatActions";
 import mainTagActions from "./modules/mainTag/mainTagActions";
-import fileUpload from "./services/fileUpload";
 import confirmReservation from "./modules/reservation/reservationActions";
+import fileUpload from "./services/fileUpload";
 
 const router = express.Router();
 
@@ -45,8 +45,6 @@ router.use(authServices.isAuth);
 // Private routes
 router.post("/api/adverts", advertServices.validateAdvert, advertActions.add);
 router.post("/api/send-confirmation-email", confirmReservation);
-
-
 
 router.post(
 	"/api/goats",

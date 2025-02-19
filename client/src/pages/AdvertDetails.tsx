@@ -1,13 +1,12 @@
-
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import "./AdvertDetails.css";
 import AdvertBooking from "../components/AdvertBooking";
 import type { AppContextInterface } from "../types/appContext.type";
 
 interface Slot {
-  date: string;
-  hour: string;
+	date: string;
+	hour: string;
 }
 
 interface Advert {
@@ -61,11 +60,11 @@ const AdvertDetails = () => {
 	}, [id, user]);
 
 	const handleConfirm = async () => {
-	if (selectedSlot === null) {
-		setError("Veuillez sélectionner un créneau");
-	} else if (reservedSlots.some((slot) => slot === selectedSlot)) {
-		setError("Ce créneau est occupé.");
-	}
+		if (selectedSlot === null) {
+			setError("Veuillez sélectionner un créneau");
+		} else if (reservedSlots.some((slot) => slot === selectedSlot)) {
+			setError("Ce créneau est occupé.");
+		}
 
 		if (!selectedSlot || !user?.token || !advert) return;
 
@@ -172,7 +171,7 @@ const AdvertDetails = () => {
 									<button type="button" onClick={handleConfirm}>
 										Valider ma réservation
 									</button>
-                  
+
 									<button type="button" onClick={() => setIsModalOpen(false)}>
 										Annuler
 									</button>
