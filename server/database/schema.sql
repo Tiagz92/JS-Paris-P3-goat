@@ -109,11 +109,12 @@ COLLATE = utf8mb4_0900_ai_ci;
 CREATE TABLE IF NOT EXISTS `goat_db`.`slot` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `start_at` DATETIME NOT NULL,
+  `duration` INT NOT NULL,
+  `status` ENUM('available', 'booked', 'completed') DEFAULT 'available', -- AJOUT DE LA COLONNE MANQUANTE
   `meet_link` VARCHAR(255) DEFAULT NULL,
   `comment` TEXT NULL DEFAULT NULL,
   `advert_id` INT NOT NULL,
   `goat_id` INT NOT NULL,
-  `meet_link` VARCHAR(255),
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -252,7 +253,7 @@ VALUES
 ('Coréen', 5),
 
 -- Culture
-("Histoire de l'art", 6),
+('Histoire de l''art', 6),
 ('Cinéma et audiovisuel', 6),
 ('Traditions et folklore', 6),
 ('Mythologie et légendes', 6),

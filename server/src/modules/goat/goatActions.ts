@@ -26,23 +26,24 @@ export const goatHandlers = {
 				return;
 			}
 
-		const newGoat = {
-			id: req.body.id,
-			lastname: req.body.lastname,
-			firstname: req.body.firstname,
-			born_at: req.body.born_at,
-			email: req.body.email,
-			password: req.body.password,
-			picture: files[0].filename,
-			presentation: req.body.presentation,
-			video: files[1] ? files[1].filename : null,
-		};
-		const insertId = await goatRepository.createGoat(newGoat);
-		res.status(201).json({ insertId });
-		return;
-	} catch (err) {
-		next(err);
-	}
+			const newGoat = {
+				id: req.body.id,
+				lastname: req.body.lastname,
+				firstname: req.body.firstname,
+				born_at: req.body.born_at,
+				email: req.body.email,
+				password: req.body.password,
+				picture: files[0].filename,
+				presentation: req.body.presentation,
+				video: files[1] ? files[1].filename : null,
+			};
+			const insertId = await goatRepository.createGoat(newGoat);
+			res.status(201).json({ insertId });
+			return;
+		} catch (err) {
+			next(err);
+		}
+	},
 };
 
 export default { read, add };

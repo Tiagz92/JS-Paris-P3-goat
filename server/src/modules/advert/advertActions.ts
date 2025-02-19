@@ -1,4 +1,4 @@
-import type { RequestHandler } from "express";
+import type { Request, RequestHandler, Response } from "express";
 import goatRepository from "../goat/goatRepository";
 import mainTagRepository from "../mainTag/mainTagRepository";
 import subTagRepository from "../subTag/subTagRepository";
@@ -43,19 +43,18 @@ const browse: RequestHandler = async (req, res, next) => {
 	}
 };
 
-	read: async (req: Request, res: Response): Promise<void> => {
-		try {
-			const advert = await AdvertActions.read(Number(req.params.id));
-			if (advert == null) {
-				res.sendStatus(404);
-				return;
-			}
-			res.json(advert);
-		} catch (err) {
-			console.error(err);
-			res.status(500).json({ message: "Error reading advert" });
+const read: RequestHandler = async (req, res, next) => {
+	try {
+		const advert = await advertRepository.read(Number(req.params.id));
+		if (advert == null) {
+			res.sendStatus(404);
+			return;
 		}
-	},
+		res.json(advert);
+	} catch (err) {
+		next(err);
+	}
+};
 
 const add: RequestHandler = async (req, res, next) => {
 	try {
@@ -91,6 +90,7 @@ const add: RequestHandler = async (req, res, next) => {
 					meet_link: slot.meet_link ?? null,
 					comment: slot.comment ?? null,
 					goat_id: slot.goat_id ?? insertId,
+					duration: slot.duration,
 				};
 
 				await slotRepository.create(newSlot);
