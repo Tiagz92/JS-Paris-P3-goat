@@ -1,67 +1,112 @@
 import { useEffect, useState } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import "./AdvertDetails.css";
 import AdvertBooking from "../components/AdvertBooking";
 import type { AppContextInterface } from "../types/appContext.type";
-
-type Advert = {
-	description: string;
-	goat_id: number;
-	main_tag_name: number;
-	sub_tag_name: number;
-	image_url: string;
-	goat_firstname: string;
-	goat_picture: string;
-};
 
 interface Slot {
 	date: string;
 	hour: string;
 }
 
-function AdvertDetails() {
-	const { id } = useParams<{ id: string }>();
+interface Advert {
+	goat_id: number;
+	goat_picture: string;
+	goat_firstname: string;
+	description: string;
+	main_tag_name: string;
+	sub_tag_name: string;
+}
+
+const AdvertDetails = () => {
+	const { id } = useParams();
+	const navigate = useNavigate();
+	const { user } = useOutletContext<AppContextInterface>();
+
 	const [advert, setAdvert] = useState<Advert | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
-	const { user } = useOutletContext<AppContextInterface>();
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [message, setMessage] = useState("");
+	const [reservedSlots, setReservedSlots] = useState<Slot[]>([]);
 
 	useEffect(() => {
+		if (!user?.token) {
+			setError("Utilisateur non authentifié");
+			setLoading(false);
+			return;
+		}
+
 		const fetchAdvertDetails = async () => {
 			try {
 				const response = await fetch(
 					`${import.meta.env.VITE_API_URL}/api/adverts/${id}`,
 					{
-						headers: {
-							Authorization: `Bearer ${user.token}`,
-						},
+						headers: { Authorization: `Bearer ${user.token}` },
 					},
 				);
-
-				if (!response.ok) {
+				if (!response.ok)
 					throw new Error("Erreur lors du chargement des données.");
-				}
-
-				const data: Advert = await response.json();
+				const data = await response.json();
 				setAdvert(data);
-			} catch (err: unknown) {
-				if (err instanceof Error) {
-					setError(err.message || "Une erreur inconnue s'est produite.");
-				} else {
-					setError("Une erreur inconnue s'est produite.");
-				}
+			} catch (err) {
+				setError((err as Error).message);
 			} finally {
 				setLoading(false);
 			}
 		};
-
 		fetchAdvertDetails();
-	}, [id, user.token]);
+	}, [id, user]);
 
-	if (loading) return <div className="status">Chargement...</div>;
-	if (error) return <div className="status">Erreur : {error}</div>;
-	if (!advert) return <div className="status">Aucune annonce trouvée</div>;
+	const handleConfirm = async () => {
+		if (selectedSlot === null) {
+			setError("Veuillez sélectionner un créneau");
+		} else if (reservedSlots.some((slot) => slot === selectedSlot)) {
+			setError("Ce créneau est occupé.");
+		}
+
+		if (!selectedSlot || !user?.token || !advert) return;
+
+		const reservationData = {
+			advert_id: Number(id),
+			user_id: user.id,
+			goat_id: advert.goat_id,
+			start_at: `${selectedSlot.date} ${selectedSlot.hour}`,
+			duration: 1,
+			meet_link: "toto",
+			comment: message,
+		};
+
+		try {
+			const response = await fetch(
+				`${import.meta.env.VITE_API_URL}/api/slots`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${user.token}`,
+					},
+					body: JSON.stringify(reservationData),
+				},
+			);
+
+			if (!response.ok) throw new Error("Erreur lors de la réservation.");
+
+			const updatedReservations = [...reservedSlots, selectedSlot];
+			setReservedSlots(updatedReservations);
+			localStorage.setItem("reservations", JSON.stringify(updatedReservations));
+
+			setIsModalOpen(false);
+			navigate(`/profile/${user.id}`);
+		} catch (err) {
+			setError((err as Error).message);
+		}
+	};
+
+	if (loading) return <div>Chargement...</div>;
+	if (error) return <div>Erreur : {error}</div>;
+	if (!advert) return <div>Aucune annonce trouvée</div>;
 
 	return (
 		<div className="advert-container">
@@ -95,13 +140,53 @@ function AdvertDetails() {
 					setSelectedSlot={setSelectedSlot}
 				/>
 				<div className="advert-reservation">
-					<button type="button" className="reservation-button">
+					<button
+						type="button"
+						className="reservation-button"
+						onClick={() => setIsModalOpen(true)}
+						disabled={!selectedSlot}
+					>
 						Réserver
 					</button>
+					{isModalOpen && (
+						<div className="modal-overlay">
+							<div className="modal-content">
+								<h2>Récapitulatif</h2>
+								<p className="tag-name">
+									{advert.main_tag_name} & {advert.sub_tag_name}
+								</p>
+								<p className="goat-name">
+									Cours donné par : {advert.goat_firstname}.
+								</p>
+								<p>{advert.description}</p>
+								<p className="date">
+									Date : {selectedSlot?.date} à {selectedSlot?.hour}
+								</p>
+								<p className="message">
+									Mon message pour {advert.goat_firstname} (facultatif)
+								</p>
+								<input
+									type="text"
+									placeholder="Laisser un message ..."
+									onChange={(e) => setMessage(e.target.value)}
+									value={message}
+								/>
+								<div className="modal-buttons">
+									<button type="button" onClick={handleConfirm}>
+										Valider ma réservation
+									</button>
+
+									<button type="button" onClick={() => setIsModalOpen(false)}>
+										Annuler
+									</button>
+								</div>
+							</div>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>
 	);
-}
+};
 
 export default AdvertDetails;

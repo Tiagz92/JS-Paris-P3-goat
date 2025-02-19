@@ -1,31 +1,8 @@
-import type { Request, Response } from "express";
-import type { RequestHandler } from "express-serve-static-core";
-import type { RowDataPacket } from "mysql2";
-import type { MainTag } from "../../types/models";
+import type { RequestHandler } from "express";
 import subTagRepository from "../subTag/subTagRepository";
 import mainTagRepository from "./mainTagRepository";
 
-interface SubTag extends RowDataPacket {
-	id: number;
-	name: string;
-	main_tag_id: number;
-}
-
-type CustomRequestHandler<
-	P = Record<string, unknown>,
-	ResBody = unknown,
-	ReqBody = unknown,
-> = (
-	req: Request<P, ResBody, ReqBody>,
-	res: Response<ResBody>,
-) => Promise<Response>;
-
-type JsonResponse<T> = T | { message: string } | { error: string };
-
-const browse: CustomRequestHandler<
-	Record<string, unknown>,
-	JsonResponse<MainTag[]>
-> = async (req, res) => {
+const browse: RequestHandler = async (req, res, next) => {
 	try {
 		const mainTags = await mainTagRepository.readAll();
 
