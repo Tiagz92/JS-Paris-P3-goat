@@ -14,7 +14,7 @@ class subTagRepository {
 		);
 		return subTags;
 	}
-	
+
 	async read(id: number) {
 		const [[rows]] = await databaseClient.query<Rows>(
 			"SELECT * FROM sub_tag WHERE id = ?",
