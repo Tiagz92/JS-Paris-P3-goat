@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import "./AdvertDetails.css";
-import AdvertBooking from "../components/AdvertBooking";
 import type { AppContextInterface } from "../types/appContext.type";
 
 interface Slot {
+	id: number;
 	date: string;
 	hour: string;
+	start_at: string;
 }
 
 interface Advert {
@@ -16,6 +17,7 @@ interface Advert {
 	description: string;
 	main_tag_name: string;
 	sub_tag_name: string;
+	slots: Slot[];
 }
 
 const AdvertDetails = () => {
@@ -62,7 +64,7 @@ const AdvertDetails = () => {
 	const handleConfirm = async () => {
 		if (selectedSlot === null) {
 			setError("Veuillez sélectionner un créneau");
-		} else if (reservedSlots.some((slot) => slot === selectedSlot)) {
+		} else if (reservedSlots.some((slot) => slot.id === selectedSlot.id)) {
 			setError("Ce créneau est occupé.");
 		}
 
@@ -73,8 +75,6 @@ const AdvertDetails = () => {
 			user_id: user.id,
 			goat_id: advert.goat_id,
 			start_at: `${selectedSlot.date} ${selectedSlot.hour}`,
-			duration: 1,
-			meet_link: "toto",
 			comment: message,
 		};
 
@@ -135,10 +135,29 @@ const AdvertDetails = () => {
 			</div>
 			<div className="profile-calendar">
 				<h1>Sélectionnez une date</h1>
-				<AdvertBooking
-					selectedSlot={selectedSlot}
-					setSelectedSlot={setSelectedSlot}
-				/>
+				{advert.slots.map((slot) => (
+					<button
+						key={slot.id}
+						type="button"
+						className={`slot-button ${selectedSlot?.id === slot.id ? "selected" : ""}`}
+						onClick={() => {
+							if (selectedSlot?.id === slot.id) {
+								setSelectedSlot(null);
+							  } else {
+								setSelectedSlot(slot);
+							  }
+							}}
+							disabled={reservedSlots.some(reservedSlot => reservedSlot.id === slot.id)}
+						  >
+						{new Date(slot.start_at).toLocaleString("fr-FR", {
+							weekday: "long",
+							day: "2-digit",
+							month: "long",
+							hour: "2-digit",
+							minute: "2-digit",
+						})}
+					</button>
+				))}
 				<div className="advert-reservation">
 					<button
 						type="button"
@@ -160,7 +179,16 @@ const AdvertDetails = () => {
 								</p>
 								<p>{advert.description}</p>
 								<p className="date">
-									Date : {selectedSlot?.date} à {selectedSlot?.hour}
+									Date :{" "}
+									{selectedSlot
+										? new Date(selectedSlot.start_at).toLocaleString("fr-FR", {
+												weekday: "long",
+												day: "2-digit",
+												month: "long",
+												hour: "2-digit",
+												minute: "2-digit",
+											})
+										: "Non sélectionnée"}
 								</p>
 								<p className="message">
 									Mon message pour {advert.goat_firstname} (facultatif)

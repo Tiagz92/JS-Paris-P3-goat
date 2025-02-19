@@ -66,8 +66,9 @@
 }
 
 .slot-button {
-	background: var(--white);
-	border: 1px solid var(--darkblue);
+	background: var(--light-blue);
+	color: white;
+	border: 1px solid var(--dark-blue);
 	padding: 5px 10px;
 	border-radius: 5px;
 	width: 100%;
@@ -75,11 +76,14 @@
 	cursor: pointer;
 	transition: all 0.3s ease;
 }
-.slot-button.reserved {
-	background-color: #ccc;
-	color: #666;
-	cursor: not-allowed;
+
+
+.slot-button.unavailable {
+    background-color: #ccc;
+    color: white;
+    cursor: not-allowed;
 }
+
 
 .slot-button:hover {
 	background: var(--light-blue);
