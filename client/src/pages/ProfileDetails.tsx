@@ -26,6 +26,17 @@ function ProfilDetails() {
 	const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
 	const navigate = useNavigate();
 	const { user } = useOutletContext<AppContextInterface>();
+	const [activeSection, setActiveSection] = useState<string | null>(null);
+
+	const toggleSection = (section: string) => {
+		setActiveSection(activeSection === section ? null : section);
+	};
+
+	const handleKeyPress = (event: React.KeyboardEvent, section: string) => {
+		if (event.key === "Enter" || event.key === " ") {
+			toggleSection(section);
+		}
+	};
 
 	useEffect(() => {
 		const fetchProfilDetails = async () => {
@@ -70,13 +81,17 @@ function ProfilDetails() {
 					<div className="pictureContainer">
 						<img
 							className="pictureGoat"
-							src={`${import.meta.env.VITE_API_URL}/upload/${profile.picture}`}
+							src={
+								profile.picture.startsWith("https")
+									? profile.picture
+									: `http://localhost:3310/upload/${profile.picture}`
+							}
 							alt={profile.firstname}
 						/>
 					</div>
 					<div className="textContainer">
 						<h1>Bonjour {profile.firstname}</h1>
-						<p className="profileDescription">{profile.presentation}</p>
+						<p className="profilePresentation">{profile.presentation}</p>
 					</div>
 				</div>
 				<div className="calendar">
@@ -87,28 +102,47 @@ function ProfilDetails() {
 				</div>
 			</div>
 			<div className="Recap">
-				<button
-					type="button"
-					className="yellow-button"
-					onClick={() => navigate("/adverts")}
-					onKeyPress={() => navigate("/adverts")}
-				>
-					Réserver un cours
-				</button>
-				<div>
-					<h1>Mes récompenses</h1>
-				</div>
-				<div>
-					<h1>Mes statistiques</h1>
-				</div>
-				<div>
-					<h1>Modification</h1>
-					<button type="button" className="yellow-button">
-						Modifier mon profil
+				<div className="booking-button">
+					<button
+						type="button"
+						className="yellow-button"
+						onClick={() => navigate("/adverts")}
+						onKeyPress={() => navigate("/adverts")}
+					>
+						Réserver un cours
 					</button>
-					<button type="button" className="yellow-button">
-						Modifier une annonce
-					</button>
+				</div>
+				<div className="sous-parties">
+					{[
+						{ key: "recompenses", label: "Mes récompenses" },
+						{ key: "statistiques", label: "Mes statistiques" },
+						{ key: "modifier", label: "Modifier" },
+					].map(({ key, label }) => (
+						<div key={key}>
+							<button
+								type="button"
+								className="lightblue-button"
+								onClick={() => toggleSection(key)}
+								onKeyDown={(e) => handleKeyPress(e, key)}
+							>
+								{label}
+							</button>
+							{activeSection === key && (
+								<div className="collapse-content">
+									{key === "modifier" && (
+										<>
+											<button type="button" className="darkblue-button">
+												Mon profil
+											</button>
+											<button type="button" className="darkblue-button">
+												Une annonce
+											</button>
+										</>
+									)}
+								</div>
+							)}
+						</div>
+					))}
 				</div>
 			</div>
 		</div>
