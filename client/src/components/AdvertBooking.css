@@ -1,128 +1,86 @@
 .week-scheduler {
-	width: 100%;
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 20px;
-	background-color: #f3f4f6;
-	font-family: var(--font);
-	max-height: 800px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background: var(--white);
+	border-radius: 20px;
+	padding: 1rem;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+	height: auto;
 	overflow: auto;
-	border: 2px solid var(--orange);
-	border-radius: 10px;
-	box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
-	margin-bottom: 20px;
+	border: 3px solid var(--orange);
 }
-
 .week-scheduler h2 {
 	font-size: 1.5rem;
-	font-weight: bold;
-	margin-bottom: 16px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	margin-bottom: 10px;
+	color: var(--dark-blue);
 }
-
 .scheduler-header {
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 20px;
+	width: 100%;
+	margin-bottom: 15px;
 }
 
 .scheduler-header button {
-	padding: 8px 16px;
-	font-size: 14px;
+	background: var(--orange);
+	color: white;
+	border: none;
+	padding: 10px 15px;
+	border-radius: 5px;
 	cursor: pointer;
-	background-color: #ffffff;
-	border: 1px solid #d1d5db;
-	border-radius: 8px;
-	transition: background-color 0.3s;
+	transition: background 0.3s ease;
 }
 
 .scheduler-header button:hover {
-	background-color: #e5e7eb;
+	background: var(--white);
+	color: var(--orange);
 }
 
 .scheduler-grid {
 	display: grid;
-	grid-template-columns: 80px repeat(5, 1fr);
-	gap: 5px;
-	overflow-x: auto;
-	border: 1px solid #d1d5db;
-	background-color: #ffffff;
+	align-items: center;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 10px;
+	width: 100%;
+	height: 50vh;
 }
 
-.grid-header {
+.day-column {
+	background: var(--light-gray);
 	padding: 10px;
+	border-radius: 5px;
 	text-align: center;
-	background-color: #f5f5f5;
-	font-weight: bold;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+	width: fit-content;
 }
 
-.time-slot {
-	padding: 10px;
-	text-align: right;
-	background-color: #f5f5f5;
+.day-column strong {
+	display: block;
+	font-size: 0.5rem;
+	margin-bottom: 10px;
+	color: var(--dark-blue);
+	width: 80px;
 }
 
-.slot {
-	aspect-ratio: 1;
-	border: 1px solid #ddd;
-	background: white;
+.slot-button {
+	background: var(--white);
+	border: 1px solid var(--darkblue);
+	padding: 5px 10px;
+	border-radius: 5px;
+	width: 100%;
+	margin: 5px 0;
 	cursor: pointer;
-	transition: all 0.2s;
-	min-height: 40px;
+	transition: all 0.3s ease;
 }
-
-.slot.available {
-	background-color: #e8f5e9;
-}
-
-.slot.unavailable {
-	background-color: #f5f5f5;
+.slot-button.reserved {
+	background-color: #ccc;
+	color: #666;
 	cursor: not-allowed;
 }
 
-.slot:hover:not(:disabled) {
-	background-color: #c8e6c9;
-}
-
-.booking-section {
-	margin-top: 20px;
-	text-align: center;
-}
-
-.booking-button {
-	padding: 10px 20px;
-	font-size: 16px;
-	background-color: #4caf50;
-	color: white;
-	border: none;
-	border-radius: 4px;
-	cursor: pointer;
-}
-
-.booking-button:disabled {
-	background-color: #cccccc;
-	cursor: not-allowed;
-}
-
-.booking-confirmation {
-	margin-top: 20px;
-	padding: 16px;
-	background-color: #e6ffe6;
-	border-radius: 8px;
-	text-align: center;
-}
-
-.meet-link {
-	margin-top: 16px;
-}
-
-.meet-link-button {
-	display: inline-block;
-	padding: 10px 20px;
-	background-color: #4285f4;
+.slot-button:hover {
+	background: var(--light-blue);
 	color: white;
 	text-decoration: none;
 	border-radius: 4px;
@@ -135,38 +93,19 @@
 	margin-top: 8px;
 }
 
-@media (max-width: 600px) {
-	.week-scheduler {
-		max-height: none;
-		padding: 10px;
-	}
+.slot-button.selected {
+	background: var(--orange);
+	color: white;
+	border-color: var(--orange);
+}
 
+@media (max-width: 768px) {
 	.scheduler-grid {
-		grid-template-columns: 80px repeat(5, 1fr);
-		overflow-x: auto;
+		grid-template-columns: repeat(2, 1fr);
 	}
 
-	.week-scheduler h2 {
-		font-size: 1.2rem;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
-	}
-
-	.scheduler-header button {
-		padding: 6px 12px;
-		font-size: 12px;
-	}
-
-	.grid-slot {
-		height: 40px;
-		font-size: 12px;
-	}
-
-	.booking-button {
-		width: 100%;
-		padding: 10px;
-		font-size: 14px;
+	.scheduler-header {
+		flex-direction: column;
+		gap: 10px;
 	}
 }

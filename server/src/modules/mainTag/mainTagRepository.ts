@@ -1,5 +1,6 @@
-import type { RowDataPacket } from "mysql2";
-import database from "../../../database/client";
+import { RowDataPacket } from "mysql2/typings/mysql/lib/protocol/packets/RowDataPacket";
+import databaseClient from "../../../database/client";
+import type { Rows } from "../../../database/client";
 
 interface MainTag extends RowDataPacket {
 	id: number;
@@ -19,15 +20,17 @@ export const MainTagRepository = {
 			"SELECT * FROM main_tag WHERE id = ?",
 			[id],
 		);
-		return rows[0] || null;
-	},
 
-	async readAll(): Promise<MainTag[]> {
-		const [rows] = await database.query<MainTag[]>(
-			"SELECT * FROM main_tag ORDER BY name",
+		return rows as MainTag;
+	}
+
+	async readAll() {
+		const [mainTags] = await databaseClient.query<Rows>(
+			"SELECT * FROM main_tag",
 		);
-		return rows;
-	},
-};
+
+		return mainTags;
+	}
+}
 
 export default MainTagRepository;

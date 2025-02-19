@@ -78,13 +78,22 @@ app.use(express.urlencoded({ extended: true }));
 
 /* ************************************************************************* */
 
+// Serve server resources
+// Define the path to the public folder
+const publicFolderPath = path.join(__dirname, "../../server/public");
+
+// Serve server resources (including /upload)
+if (fs.existsSync(publicFolderPath)) {
+	app.use("/upload", express.static(path.join(publicFolderPath, "upload")));
+	app.use(express.static(publicFolderPath));
+}
+
 // Import the API router
 
 // Mount the API router under the "/api" endpoint
-app.use("/api", router);
-app.use("/api/slots", slotRouter);
-app.use("/api/adverts", advertRouter);
-app.use("/api/reservations", reservationRouter);
+
+// Import the API router and mount it under the "/api" endpoint
+app.use(router);
 
 /* ************************************************************************* */
 
@@ -98,11 +107,7 @@ app.use("/api/reservations", reservationRouter);
 
 // Serve server resources
 
-const publicFolderPath = path.join(__dirname, "../../server/public");
-
-if (fs.existsSync(publicFolderPath)) {
-	app.use(express.static(publicFolderPath));
-}
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 // Serve client resources
 

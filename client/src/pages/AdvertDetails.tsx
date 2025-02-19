@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import "./AdvertDetails.css";
 import AdvertBooking from "../components/AdvertBooking";
+import type { AppContextInterface } from "../types/appContext.type";
 
 type Advert = {
 	description: string;
@@ -13,21 +14,27 @@ type Advert = {
 	goat_picture: string;
 };
 
+interface Slot {
+	date: string;
+	hour: string;
+}
+
 function AdvertDetails() {
 	const { id } = useParams<{ id: string }>();
 	const [advert, setAdvert] = useState<Advert | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
+	const { user } = useOutletContext<AppContextInterface>();
 
 	useEffect(() => {
 		const fetchAdvertDetails = async () => {
 			try {
 				const response = await fetch(
-					`http://localhost:3310/api/adverts/${id}`,
+					`${import.meta.env.VITE_API_URL}/api/adverts/${id}`,
 					{
 						headers: {
-							Accept: "application/json",
-							"Content-Type": "application/json",
+							Authorization: `Bearer ${user.token}`,
 						},
 					},
 				);
@@ -50,7 +57,7 @@ function AdvertDetails() {
 		};
 
 		fetchAdvertDetails();
-	}, [id]);
+	}, [id, user.token]);
 
 	if (loading) return <div className="status">Chargement...</div>;
 	if (error) return <div className="status">Erreur : {error}</div>;
@@ -62,7 +69,11 @@ function AdvertDetails() {
 				<div className="profile-header">
 					<img
 						className="img-goat"
-						src={advert.goat_picture}
+						src={
+							advert.goat_picture.startsWith("https")
+								? advert.goat_picture
+								: `http://localhost:3310/upload/${advert.goat_picture}`
+						}
 						alt={advert.goat_firstname}
 					/>
 					<h1 className="profile-name">{advert.goat_firstname}</h1>
@@ -79,7 +90,10 @@ function AdvertDetails() {
 			</div>
 			<div className="profile-calendar">
 				<h1>Sélectionnez une date</h1>
-				<AdvertBooking advertId={Number.parseInt(id || "0", 10)} />
+				<AdvertBooking
+					selectedSlot={selectedSlot}
+					setSelectedSlot={setSelectedSlot}
+				/>
 				<div className="advert-reservation">
 					<button type="button" className="reservation-button">
 						Réserver

@@ -2,7 +2,20 @@ import type { Request, Response } from "express";
 import type { RequestHandler } from "express-serve-static-core";
 import type { Goat } from "../../types/models";
 import goatRepository from "./goatRepository";
-import type { NewGoat } from "./goatRepository";
+
+const read: RequestHandler = async (req, res, next) => {
+	try {
+		const goatId = Number(req.params.id);
+		const goat = await goatRepository.read(goatId);
+		if (goat == null) {
+			res.sendStatus(404);
+		} else {
+			res.json(goat);
+		}
+	} catch (err) {
+		next(err);
+	}
+};
 
 export const goatHandlers = {
 	add: async (req: Request, res: Response): Promise<void> => {
@@ -13,22 +26,23 @@ export const goatHandlers = {
 				return;
 			}
 
-			const goatData: NewGoat = {
-				first_name: String(req.body.first_name),
-				name: String(req.body.name),
-				email: String(req.body.email),
-				password: String(req.body.password),
-				picture: files[0].filename,
-				presentation: String(req.body.presentation),
-				video: files[1] ? files[1].filename : null,
-			};
+		const newGoat = {
+			id: req.body.id,
+			lastname: req.body.lastname,
+			firstname: req.body.firstname,
+			born_at: req.body.born_at,
+			email: req.body.email,
+			password: req.body.password,
+			picture: files[0].filename,
+			presentation: req.body.presentation,
+			video: files[1] ? files[1].filename : null,
+		};
+		const insertId = await goatRepository.createGoat(newGoat);
+		res.status(201).json({ insertId });
+		return;
+	} catch (err) {
+		next(err);
+	}
+};
 
-			const insertId = await goatRepository.createGoat(goatData);
-			res.status(201).json({ insertId });
-		} catch (err) {
-			console.error(err);
-			res.status(500).json({ message: "Error creating goat" });
-		}
-	},
-	// ... autres handlers
-} as const;
+export default { read, add };

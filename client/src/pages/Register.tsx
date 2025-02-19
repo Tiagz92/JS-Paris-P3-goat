@@ -1,5 +1,4 @@
 import { Avatar } from "@mui/material";
-import Button from "@mui/material/Button";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -8,8 +7,6 @@ import "./Register.css";
 function Register() {
 	const [profilePic, setProfilePic] = useState<string | null>(null);
 	const avatar = useRef<HTMLInputElement | null>(null);
-	const [edit, setEdit] = useState(false);
-
 	const handleFileChange = () => {
 		const file = avatar.current?.files?.[0];
 		if (file) {
@@ -26,7 +23,6 @@ function Register() {
 
 	const [video, setVideo] = useState<string | null>(null);
 	const videoInput = useRef<HTMLInputElement | null>(null);
-
 	const handleVideoChange = () => {
 		const file = videoInput.current?.files?.[0];
 		if (file) {
@@ -65,7 +61,7 @@ function Register() {
 			}
 
 			const result = await response.json();
-			toast.info("Inscription terminée avec succès !", result);
+			toast.info("Inscription terminée avec succès ! ", result);
 			navigate("/profile");
 		} catch (error) {
 			toast.error(
@@ -89,7 +85,6 @@ function Register() {
 									onClick={() => {
 										if (avatar.current) {
 											avatar.current.click();
-											setEdit(true);
 										}
 									}}
 								>
@@ -101,11 +96,6 @@ function Register() {
 										onChange={handleFileChange}
 									/>
 								</button>
-								{edit && (
-									<Button type="button" variant="contained">
-										OK !
-									</Button>
-								)}
 							</section>
 							<form className="form_items">
 								<div className="form_inputs">
@@ -210,7 +200,7 @@ function Register() {
 							onClick={handleSubmit}
 							onSubmit={(e) => {
 								e.preventDefault();
-								handleSubmit;
+								handleSubmit();
 							}}
 						>
 							Valider

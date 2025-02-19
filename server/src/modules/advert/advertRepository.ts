@@ -18,22 +18,29 @@ export interface AdvertWithDetails extends Advert {
 	goat_firstname: string;
 	main_tag_name: string;
 	sub_tag_name: string;
-	goat_name: string;
 }
 
 class AdvertRepository {
-	async read(id: number): Promise<AdvertWithDetails | null> {
-		const [rows] = await database.query<AdvertWithDetails[]>(
-			`SELECT a.*, 
-			 g.picture as goat_picture, 
-			 g.first_name as goat_firstname,
-			 mt.name as main_tag_name,
-			 st.name as sub_tag_name
-			 FROM advert a
-			 JOIN goat g ON a.goat_id = g.id
-			 JOIN main_tag mt ON a.main_tag_id = mt.id
-			 JOIN sub_tag st ON a.sub_tag_id = st.id
-			 WHERE a.id = ?`,
+	async create(advert: Omit<Advert, "id">): Promise<number> {
+		const goatId = advert.goat_id;
+		const mainTagId = advert.main_tag_id;
+		const subTagId = advert.sub_tag_id;
+
+		if (!goatId || !mainTagId || !subTagId) {
+			throw new Error("Goat, main_tag, or sub_tag id is missing");
+		}
+
+		const [result] = await databaseClient.query<Result>(
+			"INSERT INTO advert (goat_id, main_tag_id, sub_tag_id, description) VALUES (?, ?, ?, ?)",
+			[goatId, mainTagId, subTagId, advert.description],
+		);
+
+		return result.insertId;
+	}
+
+	async read(id: number): Promise<Advert | null> {
+		const [rows] = await databaseClient.query<Rows>(
+			"SELECT * FROM advert WHERE id = ?",
 			[id],
 		);
 		return rows[0] || null;

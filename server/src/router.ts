@@ -1,23 +1,11 @@
 import express from "express";
-import type { RequestHandler } from "express";
-import type { ParamsDictionary } from "express-serve-static-core";
-import multer from "multer";
-import { advertHandlers } from "./modules/advert/advertActions";
-import { advertServices } from "./modules/advert/advertServices";
-import { authServices } from "./modules/auth/authServices";
-import { goatHandlers } from "./modules/goat/goatActions";
-import { mainTagHandlers } from "./modules/mainTag/mainTagActions";
-import type { Advert, MainTag, SubTag } from "./types/models";
-const storage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		cb(null, "public/uploads/");
-	},
-	filename: (req, file, cb) => {
-		cb(null, `${Date.now()}-${file.originalname}`);
-	},
-});
-
-const fileUpload = multer({ storage });
+import advertActions from "./modules/advert/advertActions";
+import advertServices from "./modules/advert/advertServices";
+import authActions from "./modules/auth/authActions";
+import authServices from "./modules/auth/authServices";
+import goatActions from "./modules/goat/goatActions";
+import mainTagActions from "./modules/mainTag/mainTagActions";
+import fileUpload from "./services/fileUpload";
 
 const router = express.Router();
 
@@ -25,55 +13,37 @@ const router = express.Router();
 // Define Your API Routes Here
 /* ************************************************************************* */
 
-// Main tags routes
-router.get(
-	"/main-tags",
-	mainTagHandlers.browse as unknown as RequestHandler<
-		ParamsDictionary,
-		MainTag[]
-	>,
+// Public routes
+
+router.post(
+	"/api/goats",
+	fileUpload.any(),
+	authServices.hashPassword,
+	goatActions.add,
 );
-router.get(
-	"/main-tags/:mainTagId/sub-tags",
-	advertHandlers.getSubTagsByMainTag as RequestHandler<
-		{ mainTagId: string },
-		SubTag[]
-	>,
-);
+router.post("/api/login", authActions.login);
+
+router.get("/api/main-tags", mainTagActions.browse);
+router.get("/api/adverts", advertActions.browse);
 
 router.get(
 	"/adverts",
 	advertHandlers.browse as RequestHandler<ParamsDictionary, Advert[]>,
 );
-router.get(
-	"/adverts/:id",
-	advertHandlers.read as RequestHandler<{ id: string }, Advert | null>,
-);
-router.post(
-	"/adverts",
-	advertServices.validateAdvert,
-	advertHandlers.add as RequestHandler<ParamsDictionary, { insertId: number }>,
-);
+router.get("/advert/maintags", advertActions.getMainTags);
 
-// Search routes
-router.get(
-	"/search/subtag/:mainTagId",
-	advertHandlers.getSubTagsByMainTag as RequestHandler<
-		{ mainTagId: string },
-		SubTag[]
-	>,
-);
-router.get(
-	"/search/maintags",
-	advertHandlers.getMainTags as RequestHandler<ParamsDictionary, MainTag[]>,
-);
+router.get("/search/description", advertActions.searchDescription);
+router.get("/search/maintags", advertActions.searchMainTagsByName);
+router.get("/search/subtags", advertActions.searchSubTagsByName);
 
-// Goat routes
-router.post(
-	"/goats",
-	fileUpload.any(),
-	authServices.hashPassword,
-	goatHandlers.add as RequestHandler<ParamsDictionary, { insertId: number }>,
-);
+router.get("/filter/advert", advertActions.filterAdverts);
+
+// Apply auth middleswares for all followings routes
+router.use(authServices.isAuth);
+
+// Private routes
+router.post("/api/adverts", advertServices.validateAdvert, advertActions.add);
+router.get("/api/goats/:id", goatActions.read);
+router.get("/api/adverts/:id", advertActions.read);
 
 export default router;

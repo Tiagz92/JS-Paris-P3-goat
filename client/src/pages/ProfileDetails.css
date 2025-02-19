@@ -1,0 +1,76 @@
+.profileContainer {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+	padding: 1rem;
+	background: var(--white);
+	border: 3px solid var(--orange);
+	border-radius: 10px;
+	box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.3);
+	width: auto;
+	height: auto;
+	overflow: hidden;
+	padding-top: 1rem;
+	margin: 2rem;
+	margin-top: 0;
+	gap: 2rem;
+}
+
+.Profile {
+	display: flex;
+	flex-direction: column;
+	width: 100vh;
+}
+
+.profilePresentation {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 1rem;
+	gap: 1rem;
+}
+
+.pictureGoat {
+	height: 30vh;
+	clip-path: ellipse(50% 50%);
+	object-fit: cover;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.textContainer {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	margin: 1rem;
+}
+
+.profilePresentation {
+	text-align: left;
+	justify-content: center;
+}
+
+.Recap {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: center;
+	margin-bottom: 30rem;
+}
+
+.booking-button {
+	margin-bottom: 10rem;
+}
+
+.yellow-button {
+	margin: 1rem;
+}
+
+h2 {
+	font-size: 3dvh;
+	margin: 1rem;
+}
+
+.collapse-content {
+	display: flex;
+	flex-direction: column;
+}

@@ -1,13 +1,17 @@
-import type { Advert } from "../types/Advert";
 import "../components/AdvertCard.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import { toast } from "react-toastify";
 import onlineCourse from "../assets/images/onlineCourse.png";
+import type { Advert } from "../types/Advert";
+import type { AppContextInterface } from "../types/appContext.type";
 
 interface AdvertCardProps {
 	readonly advert: Advert;
 }
+
 function AdvertCard({ advert }: AdvertCardProps) {
 	const navigate = useNavigate();
+	const { user } = useOutletContext<AppContextInterface>();
 
 	return (
 		<div className="cards">
@@ -18,7 +22,11 @@ function AdvertCard({ advert }: AdvertCardProps) {
 			/>
 			<img
 				className="goat-picture"
-				src={advert.goat_picture}
+				src={
+					advert.goat_picture.startsWith("https")
+						? advert.goat_picture
+						: `http://localhost:3310/upload/${advert.goat_picture}`
+				}
 				alt={advert.goat_firstname}
 			/>
 			<h2 className="goat-firstname">{advert.goat_firstname}</h2>
@@ -30,7 +38,16 @@ function AdvertCard({ advert }: AdvertCardProps) {
 			<button
 				type="button"
 				className="yellow-button"
-				onClick={() => navigate(`/adverts/${advert.id}`)}
+				onClick={() => {
+					if (user) {
+						navigate(`/adverts/${advert.id}`);
+					} else {
+						toast.error(
+							"Tu dois être connecté pour accéder aux détails de l'annonce !",
+						);
+						navigate("/profile");
+					}
+				}}
 			>
 				En savoir plus
 			</button>
