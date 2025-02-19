@@ -19,5 +19,4 @@ const browse: RequestHandler = async (req, res, next) => {
 
 export const mainTagHandlers = {
 	browse,
-	// ... autres handlers
 };

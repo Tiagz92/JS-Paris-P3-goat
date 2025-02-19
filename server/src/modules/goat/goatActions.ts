@@ -1,13 +1,14 @@
-import type { Request, Response } from "express";
+import type { Request, Response, NextFunction } from "express";
 import type { RequestHandler } from "express-serve-static-core";
 import type { Goat } from "../../types/models";
 import goatRepository from "./goatRepository";
 
+// Handler Read corrigé
 const read: RequestHandler = async (req, res, next) => {
 	try {
 		const goatId = Number(req.params.id);
 		const goat = await goatRepository.read(goatId);
-		if (goat == null) {
+		if (!goat) {
 			res.sendStatus(404);
 		} else {
 			res.json(goat);
@@ -18,10 +19,17 @@ const read: RequestHandler = async (req, res, next) => {
 };
 
 export const goatHandlers = {
-	add: async (req: Request, res: Response): Promise<void> => {
+	read,
+
+	add: async (
+		req: Request,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> => {
 		try {
 			const files = req.files as Express.Multer.File[] | undefined;
-			if (!files || files.length === 0 || !files[0]) {
+
+			if (!files?.[0]) {
 				res.status(400).json({ error: "Picture is required" });
 				return;
 			}
@@ -35,15 +43,15 @@ export const goatHandlers = {
 				password: req.body.password,
 				picture: files[0].filename,
 				presentation: req.body.presentation,
-				video: files[1] ? files[1].filename : null,
+				video: files[1]?.filename || null,
 			};
+
 			const insertId = await goatRepository.createGoat(newGoat);
 			res.status(201).json({ insertId });
-			return;
 		} catch (err) {
 			next(err);
 		}
 	},
 };
 
-export default { read, add };
+export default goatHandlers;
