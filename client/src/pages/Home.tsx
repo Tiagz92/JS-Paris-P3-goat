@@ -1,4 +1,4 @@
-import ImageHome from "../assets/images/home_image.jpg";
+import ImageHome from "../assets/home_image.jpg";
 import FilterMainTag from "../components/FilterMainTag";
 import SearchBar from "../components/SearchBar";
 import "./Home.css";
