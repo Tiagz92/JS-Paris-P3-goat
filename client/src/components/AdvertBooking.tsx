@@ -29,14 +29,22 @@ function AdvertBooking({ selectedSlot, setSelectedSlot }: AdvertBookingProps) {
 			startDate.setDate(
 				startDate.getDate() - startDate.getDay() + 1 + weekOffset * 7,
 			);
-			const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+			const days = [
+				"Lundi",
+				"Mardi",
+				"Mercredi",
+				"Jeudi",
+				"Vendredi",
+				"Samedi",
+				"Dimanche",
+			];
 
 			return days.map((day, index) => {
 				const date = new Date(startDate);
 				date.setDate(startDate.getDate() + index);
 				return {
 					name: day,
-					fullDate: date.toLocaleDateString("fr-FR"),
+					fullDate: date.toISOString().split("T")[0],
 				};
 			});
 		};
@@ -87,7 +95,14 @@ function AdvertBooking({ selectedSlot, setSelectedSlot }: AdvertBookingProps) {
 							return (
 								<button
 									key={`${day.fullDate}-${hour}`}
-									className={`slot-button${selectedSlot?.date === day.fullDate && selectedSlot?.hour === `${hour}:00` ? " selected" : ""}${reserved ? " reserved" : ""}`}
+									className={[
+										"slot-button",
+										selectedSlot?.date === day.fullDate &&
+										selectedSlot?.hour === `${hour}:00`
+											? "selected"
+											: "",
+										reserved ? "reserved" : "",
+									].join(" ")}
 									type="button"
 									onClick={() => toggleSlot(day, hour)}
 									disabled={reserved}
