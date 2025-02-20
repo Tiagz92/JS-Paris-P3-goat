@@ -2,8 +2,8 @@ import "./ProfileDetails.css";
 import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import AdvertBooking from "../components/AdvertBooking";
-import type { AppContextInterface } from "../types/appContext.type";
 import type { Advert } from "../types/Advert";
+import type { AppContextInterface } from "../types/appContext.type";
 
 type Goat = {
 	id: number;
@@ -17,7 +17,7 @@ type Goat = {
 interface Slot {
 	date: string;
 	hour: string;
-	advert : Advert;
+	advert: Advert;
 }
 
 function ProfilDetails() {
