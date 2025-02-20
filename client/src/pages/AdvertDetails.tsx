@@ -143,12 +143,14 @@ const AdvertDetails = () => {
 						onClick={() => {
 							if (selectedSlot?.id === slot.id) {
 								setSelectedSlot(null);
-							  } else {
+							} else {
 								setSelectedSlot(slot);
-							  }
-							}}
-							disabled={reservedSlots.some(reservedSlot => reservedSlot.id === slot.id)}
-						  >
+							}
+						}}
+						disabled={reservedSlots.some(
+							(reservedSlot) => reservedSlot.id === slot.id,
+						)}
+					>
 						{new Date(slot.start_at).toLocaleString("fr-FR", {
 							weekday: "long",
 							day: "2-digit",

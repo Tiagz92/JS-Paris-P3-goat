@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./AdvertBooking.css";
 import { useOutletContext } from "react-router-dom";
 import type { AppContextInterface } from "../types/appContext.type";
-import { Advert } from "../types/Advert";
+import type { Advert } from "../types/Advert";
 
 interface ApiSlot {
 	id: number;
@@ -22,7 +22,12 @@ interface AdvertBookingProps {
 	readonly advert: Advert;
 }
 
-function AdvertBooking({ selectedSlot, setSelectedSlot, advert }: AdvertBookingProps) {
+function AdvertBooking({
+	selectedSlot,
+	setSelectedSlot,
+	advert,
+
+}: AdvertBookingProps) {
 	const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
 	const [days, setDays] = useState<{ name: string; fullDate: string }[]>([]);
 	const [availableSlots, setAvailableSlots] = useState<Slot[]>([]);
@@ -32,7 +37,7 @@ function AdvertBooking({ selectedSlot, setSelectedSlot, advert }: AdvertBookingP
 
 	useEffect(() => {
 		const storedReservations: Slot[] = JSON.parse(
-			localStorage.getItem("reservations") ?? "[]"
+			localStorage.getItem("reservations") ?? "[]",
 		);
 
 		if (advert) {
@@ -41,25 +46,24 @@ function AdvertBooking({ selectedSlot, setSelectedSlot, advert }: AdvertBookingP
 				...advert.slots.filter(
 					(reserved) =>
 						!prevSlots.some(
-							(slot) => slot.date !== reserved.date && slot.hour !== reserved.hour
-						)
+							(slot) =>
+								slot.date !== reserved.date && slot.hour !== reserved.hour,
+						),
 				),
 			]);
-			console.log(availableSlots);
-		}
-		else {
+		} else {
 			setAvailableSlots((prevSlots) => [
 				...prevSlots,
 				...storedReservations.filter(
 					(reserved) =>
 						!prevSlots.some(
-							(slot) => slot.date === reserved.date && slot.hour === reserved.hour
-						)
+							(slot) =>
+								slot.date === reserved.date && slot.hour === reserved.hour,
+						),
 				),
 			]);
 		}
-
-	}, []);
+	}, [advert]);
 
 	useEffect(() => {
 		const generateDays = (weekOffset: number) => {
@@ -94,7 +98,9 @@ function AdvertBooking({ selectedSlot, setSelectedSlot, advert }: AdvertBookingP
 
 	const isSlotAvailable = (date: string, hour: number) => {
 		return availableSlots.some(
-			(slot) => slot.date === date && slot.hour === `${hour.toString().padStart(2, "0")}:00`
+			(slot) =>
+				slot.date === date &&
+				slot.hour === `${hour.toString().padStart(2, "0")}:00`,
 		);
 	};
 
@@ -136,7 +142,7 @@ function AdvertBooking({ selectedSlot, setSelectedSlot, advert }: AdvertBookingP
 									className={[
 										"slot-button",
 										selectedSlot?.date === day.fullDate &&
-											selectedSlot?.hour === `${hour}:00`
+										selectedSlot?.hour === `${hour}:00`
 											? "selected"
 											: "",
 										available ? "" : "unavailable",
