@@ -26,8 +26,6 @@ class AdvertRepository {
 			"INSERT INTO slot (start_at, duration, meet_link, comment, advert_id) VALUES (?, ?, ?, ?, ?)",
 			[
 				slot.start_at,
-				slot.duration,
-				slot.meet_link,
 				slot.comment,
 				slot.advert_id,
 			],
