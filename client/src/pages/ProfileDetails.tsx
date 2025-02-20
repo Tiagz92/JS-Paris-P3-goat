@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import AdvertBooking from "../components/AdvertBooking";
 import type { AppContextInterface } from "../types/appContext.type";
+import type { Advert } from "../types/Advert";
 
 type Goat = {
 	id: number;
@@ -16,6 +17,7 @@ type Goat = {
 interface Slot {
 	date: string;
 	hour: string;
+	advert : Advert;
 }
 
 function ProfilDetails() {

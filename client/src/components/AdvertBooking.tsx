@@ -30,9 +30,6 @@ function AdvertBooking({
 	const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
 	const [days, setDays] = useState<{ name: string; fullDate: string }[]>([]);
 	const [availableSlots, setAvailableSlots] = useState<Slot[]>([]);
-	const { user } = useOutletContext<AppContextInterface>();
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		const storedReservations: Slot[] = JSON.parse(
