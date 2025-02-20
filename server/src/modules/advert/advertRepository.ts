@@ -1,7 +1,7 @@
 import databaseClient from "../../../database/client";
 import type { Result, Rows } from "../../../database/client";
+import type { Advert } from "../../types/advert";
 import type { Slot } from "../../types/slot";
-import type { Advert } from "../../types/advert"
 
 class AdvertRepository {
 	async create(advert: Omit<Advert, "id">): Promise<number> {

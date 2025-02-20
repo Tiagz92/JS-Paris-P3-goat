@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import "./AdvertBooking.css";
 import { useOutletContext } from "react-router-dom";
-import type { AppContextInterface } from "../types/appContext.type";
 import type { Advert } from "../types/Advert";
+import type { AppContextInterface } from "../types/appContext.type";
 
 interface ApiSlot {
 	id: number;
@@ -26,7 +26,6 @@ function AdvertBooking({
 	selectedSlot,
 	setSelectedSlot,
 	advert,
-
 }: AdvertBookingProps) {
 	const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
 	const [days, setDays] = useState<{ name: string; fullDate: string }[]>([]);
