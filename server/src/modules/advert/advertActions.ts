@@ -6,16 +6,6 @@ import slotRepository from "../slot/slotRepository";
 import subTagRepository from "../subTag/subTagRepository";
 import advertRepository from "./advertRepository";
 
-interface Advert {
-	goat_id: number;
-	main_tag_id: number;
-	sub_tag_id: number;
-	goat_firstname: string;
-	goat_picture: string;
-	main_tag_name: string;
-	sub_tag_name: string;
-}
-
 const browse: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -78,6 +68,8 @@ const read: RequestHandler = async (req, res, next) => {
 				res.sendStatus(404);
 			}
 			advert.sub_tag_name = subTag.name;
+
+			advert.slots = await slotRepository.readAllByAdvertId(advert.id);
 
 			res.json(advert);
 		}

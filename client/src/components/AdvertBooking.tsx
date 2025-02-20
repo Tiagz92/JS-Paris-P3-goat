@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./AdvertBooking.css";
+import type { Advert } from "../types/Advert";
 
 interface Slot {
 	date: string;
@@ -9,19 +10,47 @@ interface Slot {
 interface AdvertBookingProps {
 	readonly selectedSlot: Slot | null;
 	readonly setSelectedSlot: (slot: Slot | null) => void;
+	readonly advert: Advert;
 }
 
-function AdvertBooking({ selectedSlot, setSelectedSlot }: AdvertBookingProps) {
+function AdvertBooking({
+	selectedSlot,
+	setSelectedSlot,
+	advert,
+}: AdvertBookingProps) {
 	const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
 	const [days, setDays] = useState<{ name: string; fullDate: string }[]>([]);
-	const [reservedSlots, setReservedSlots] = useState<Slot[]>([]);
+	const [availableSlots, setAvailableSlots] = useState<Slot[]>([]);
 
 	useEffect(() => {
-		const storedReservations = JSON.parse(
+		const storedReservations: Slot[] = JSON.parse(
 			localStorage.getItem("reservations") ?? "[]",
 		);
-		setReservedSlots(storedReservations);
-	}, []);
+
+		if (advert) {
+			setAvailableSlots((prevSlots) => [
+				...prevSlots,
+				...advert.slots.filter(
+					(reserved) =>
+						!prevSlots.some(
+							(slot) =>
+								slot.date !== reserved.date && slot.hour !== reserved.hour,
+						),
+				),
+			]);
+		} else {
+			setAvailableSlots((prevSlots) => [
+				...prevSlots,
+				...storedReservations.filter(
+					(reserved) =>
+						!prevSlots.some(
+							(slot) =>
+								slot.date === reserved.date && slot.hour === reserved.hour,
+						),
+				),
+			]);
+		}
+	}, [advert]);
 
 	useEffect(() => {
 		const generateDays = (weekOffset: number) => {
@@ -54,9 +83,11 @@ function AdvertBooking({ selectedSlot, setSelectedSlot }: AdvertBookingProps) {
 
 	const hours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 
-	const isSlotReserved = (date: string, hour: number) => {
-		return reservedSlots.some(
-			(slot) => slot.date === date && slot.hour === `${hour}:00`,
+	const isSlotAvailable = (date: string, hour: number) => {
+		return availableSlots.some(
+			(slot) =>
+				slot.date === date &&
+				slot.hour === `${hour.toString().padStart(2, "0")}:00`,
 		);
 	};
 
@@ -64,12 +95,13 @@ function AdvertBooking({ selectedSlot, setSelectedSlot }: AdvertBookingProps) {
 		day: { name: string; fullDate: string },
 		hour: number,
 	) => {
-		if (isSlotReserved(day.fullDate, hour)) return;
+		if (!isSlotAvailable(day.fullDate, hour)) return;
 		setSelectedSlot({ date: day.fullDate, hour: `${hour}:00` });
 	};
 
 	return (
-		<div className="week-scheduler">
+		<div className="scheduler">
+			<h2>(Semaine {currentWeekOffset})</h2>
 			<div className="scheduler-header">
 				<button
 					type="button"
@@ -89,7 +121,7 @@ function AdvertBooking({ selectedSlot, setSelectedSlot }: AdvertBookingProps) {
 					<div key={day.fullDate} className="day-column">
 						<strong>{day.name}</strong>
 						{hours.map((hour) => {
-							const reserved = isSlotReserved(day.fullDate, hour);
+							const available = isSlotAvailable(day.fullDate, hour);
 
 							return (
 								<button
@@ -100,11 +132,11 @@ function AdvertBooking({ selectedSlot, setSelectedSlot }: AdvertBookingProps) {
 										selectedSlot?.hour === `${hour}:00`
 											? "selected"
 											: "",
-										reserved ? "reserved" : "",
+										available ? "" : "unavailable",
 									].join(" ")}
 									type="button"
 									onClick={() => toggleSlot(day, hour)}
-									disabled={reserved}
+									disabled={!available}
 								>
 									{`${hour}:00`}
 								</button>

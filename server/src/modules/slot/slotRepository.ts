@@ -1,5 +1,5 @@
 import databaseClient from "../../../database/client";
-import type { Result } from "../../../database/client";
+import type { Result, Rows } from "../../../database/client";
 import type { Slot } from "../../types/slot";
 
 class slotRepository {
@@ -9,6 +9,14 @@ class slotRepository {
 			[slot.start_at, slot.advert_id],
 		);
 		return result.insertId;
+	}
+
+	async readAllByAdvertId(advertId: number) {
+		const [slots] = await databaseClient.query<Rows>(
+			"SELECT * FROM slot WHERE slot.advert_id = ?",
+			[advertId],
+		);
+		return slots;
 	}
 }
 
