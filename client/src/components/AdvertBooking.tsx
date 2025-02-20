@@ -113,7 +113,7 @@ function AdvertBooking({
 	};
 
 	return (
-		<div className="week-scheduler">
+		<div className="scheduler">
 			<h2>(Semaine {currentWeekOffset})</h2>
 			<div className="scheduler-header">
 				<button
