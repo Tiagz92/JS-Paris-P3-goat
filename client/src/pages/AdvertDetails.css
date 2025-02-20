@@ -6,7 +6,7 @@ body {
 	padding: 0;
 	justify-content: center;
 	align-items: center;
-}	
+}
 
 .advert-container {
 	display: flex;
@@ -244,8 +244,6 @@ body {
 	border: 2px solid var(--orange);
 	box-shadow: 10px 10px 12px 1px rgba(0, 0, 0, 0.45);
 }
-
-
 
 @keyframes fadeIn {
 	from {
