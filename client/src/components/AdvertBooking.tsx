@@ -1,15 +1,6 @@
 import { useEffect, useState } from "react";
 import "./AdvertBooking.css";
-import { useOutletContext } from "react-router-dom";
 import type { Advert } from "../types/Advert";
-import type { AppContextInterface } from "../types/appContext.type";
-
-interface ApiSlot {
-	id: number;
-	start_at: string;
-	meet_link: string | null;
-	comment: string | null;
-}
 
 interface Slot {
 	date: string;
