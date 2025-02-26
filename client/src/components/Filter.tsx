@@ -20,7 +20,9 @@ function Filter({ onSearch, selectedMainTag, selectedSubTag }: FilterProps) {
 		const fetchMainTags = async () => {
 			setIsLoading(true);
 			try {
-				const response = await fetch("http://localhost:3310/advert/maintags");
+				const response = await fetch(
+					`${import.meta.env.VITE_API_URL}/api/advert/maintags`,
+				);
 				const data = await response.json();
 				setMainTags(data);
 			} catch (error) {
@@ -40,7 +42,7 @@ function Filter({ onSearch, selectedMainTag, selectedSubTag }: FilterProps) {
 				setIsLoading(true);
 				try {
 					const response = await fetch(
-						`http://localhost:3310/advert/search/subtag/${selectedMainTag}`,
+						`${import.meta.env.VITE_API_URL}/api/advert/search/subtag/${selectedMainTag}`,
 					);
 					const data = await response.json();
 					setSubTags(data);

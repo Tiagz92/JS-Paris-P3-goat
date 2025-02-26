@@ -68,7 +68,7 @@ function AdvertForm() {
 	const [isFormValid, setIsFormValid] = useState(false);
 
 	useEffect(() => {
-		fetch("http://localhost:3310/api/main-tags")
+		fetch(`${import.meta.env.VITE_API_URL}/api/main-tags`)
 			.then((response) => response.json())
 			.then((mainTags) => {
 				setMainTags(mainTags);

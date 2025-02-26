@@ -14,7 +14,9 @@ function FilterMainTag() {
 	useEffect(() => {
 		const fetchMainTags = async () => {
 			try {
-				const response = await fetch("http://localhost:3310/advert/maintags");
+				const response = await fetch(
+					`${import.meta.env.VITE_API_URL}/api/advert/maintags`,
+				);
 				if (!response.ok) {
 					throw new Error(
 						`Erreur HTTP : ${response.status} - ${response.statusText}`,

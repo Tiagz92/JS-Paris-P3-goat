@@ -25,7 +25,7 @@ function AdvertCard({ advert }: AdvertCardProps) {
 				src={
 					advert.goat_picture.startsWith("https")
 						? advert.goat_picture
-						: `http://localhost:3310/upload/${advert.goat_picture}`
+						: `${import.meta.env.VITE_API_URL}/upload/${advert.goat_picture}`
 				}
 				alt={advert.goat_firstname}
 			/>

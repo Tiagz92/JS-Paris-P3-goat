@@ -29,13 +29,13 @@ function SearchBar({ onSearchFocus }: SearchBarProps) {
 			const [descriptionResponse, mainTagResponse, subTagResponse] =
 				await Promise.all([
 					fetch(
-						`http://localhost:3310/search/description?q=${encodeURIComponent(searchQuery)}`,
+						`${import.meta.env.VITE_API_URL}/api/search/description?q=${encodeURIComponent(searchQuery)}`,
 					),
 					fetch(
-						`http://localhost:3310/search/maintags?q=${encodeURIComponent(searchQuery)}`,
+						`${import.meta.env.VITE_API_URL}/api/search/maintags?q=${encodeURIComponent(searchQuery)}`,
 					),
 					fetch(
-						`http://localhost:3310/search/subtags?q=${encodeURIComponent(searchQuery)}`,
+						`${import.meta.env.VITE_API_URL}/api/search/subtags?q=${encodeURIComponent(searchQuery)}`,
 					),
 				]);
 
@@ -62,7 +62,7 @@ function SearchBar({ onSearchFocus }: SearchBarProps) {
 	const fetchCategories = useCallback(async (searchQuery: string) => {
 		try {
 			const categoryResponse = await fetch(
-				`http://localhost:3310/search/categories?q=${encodeURIComponent(searchQuery)}`,
+				`${import.meta.env.VITE_API_URL}/api/search/categories?q=${encodeURIComponent(searchQuery)}`,
 			);
 			const categories = await categoryResponse.json();
 			setCategories(categories);

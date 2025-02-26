@@ -86,7 +86,7 @@ function ProfilDetails() {
 							src={
 								profile.picture.startsWith("https")
 									? profile.picture
-									: `http://localhost:3310/upload/${profile.picture}`
+									: `${import.meta.env.VITE_API_URL}/upload/${profile.picture}`
 							}
 							alt={profile.firstname}
 						/>

@@ -46,7 +46,7 @@ function AdvertList() {
 	}, [adverts, searchQuery, selectedMainTag, selectedSubTag]);
 
 	useEffect(() => {
-		fetch("http://localhost:3310/api/adverts")
+		fetch(`${import.meta.env.VITE_API_URL}/api/adverts`)
 			.then((res) => res.json())
 			.then((data: Advert[]) => {
 				setAdverts(data);

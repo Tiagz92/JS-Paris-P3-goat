@@ -29,16 +29,16 @@ router.get("/api/main-tags", mainTagActions.browse);
 router.get("/api/adverts", advertActions.browse);
 
 router.get(
-	"/advert/search/subtag/:mainTagId",
+	"/api/advert/search/subtag/:mainTagId",
 	advertActions.getSubTagsByMainTag,
 );
-router.get("/advert/maintags", advertActions.getMainTags);
+router.get("/api/advert/maintags", advertActions.getMainTags);
 
-router.get("/search/description", advertActions.searchDescription);
-router.get("/search/maintags", advertActions.searchMainTagsByName);
-router.get("/search/subtags", advertActions.searchSubTagsByName);
+router.get("/api/search/description", advertActions.searchDescription);
+router.get("/api/search/maintags", advertActions.searchMainTagsByName);
+router.get("/api/search/subtags", advertActions.searchSubTagsByName);
 
-router.get("/filter/advert", advertActions.filterAdverts);
+router.get("/api/filter/advert", advertActions.filterAdverts);
 router.patch("/api/slots/:slotId", slotActions.book);
 // Apply auth middleswares for all followings routes
 router.use(authServices.isAuth);

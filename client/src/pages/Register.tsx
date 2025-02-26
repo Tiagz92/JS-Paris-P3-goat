@@ -52,7 +52,7 @@ function Register() {
 		} else form.append("video", "");
 
 		try {
-			const response = await fetch("http://localhost:3310/api/goats", {
+			const response = await fetch(`${import.meta.env.VITE_API_URL}/api/goats`, {
 				method: "POST",
 				body: form,
 			});
