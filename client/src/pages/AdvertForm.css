@@ -1,29 +1,33 @@
 .form-page {
 	border: 0.1rem solid var(--darkblue);
-	padding: 2rem;
-	margin: 2rem;
+	padding: 1.5rem;
+	margin: 1rem auto;
 	border-radius: 1rem;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	max-width: 800px; /* Empêche d'être trop large sur grand écran */
+	box-sizing: border-box;
 }
 
 .advert-form {
-	margin: 2rem;
+	margin: 0 auto;
 	display: flex;
 	flex-direction: column;
+	width: 100%;
 }
 
 .form-title {
-	font-size: 2rem;
+	font-size: 1.8rem;
 	font-weight: bold;
 	text-align: center;
-	margin: 0 0 2rem 0;
+	margin-bottom: 1.5rem;
 }
 
 .form-group {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin: 0 auto;
+	margin-bottom: 1rem;
+	width: 100%;
 }
 
 .tag-list {
@@ -35,7 +39,8 @@
 	cursor: pointer;
 	width: 40%;
 	padding-right: 1rem;
-	margin: 1rem 0 1rem 0;
+	margin-bottom: 1rem;
+	box-sizing: border-box;
 }
 
 .form-group-description {
